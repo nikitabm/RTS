@@ -179,6 +179,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1001 &344624282
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4700948365662184, guid: 558a1aef838bd444b91ccc836dd68336, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 339.4207
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700948365662184, guid: 558a1aef838bd444b91ccc836dd68336, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 224.78844
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700948365662184, guid: 558a1aef838bd444b91ccc836dd68336, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 138.14235
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700948365662184, guid: 558a1aef838bd444b91ccc836dd68336, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700948365662184, guid: 558a1aef838bd444b91ccc836dd68336, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700948365662184, guid: 558a1aef838bd444b91ccc836dd68336, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700948365662184, guid: 558a1aef838bd444b91ccc836dd68336, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700948365662184, guid: 558a1aef838bd444b91ccc836dd68336, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 558a1aef838bd444b91ccc836dd68336, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,51 +298,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1304134726
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4708103396670646, guid: 5a3bdfd3ed4eb4647aa9722b532b4de4, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -4.450941
-      objectReference: {fileID: 0}
-    - target: {fileID: 4708103396670646, guid: 5a3bdfd3ed4eb4647aa9722b532b4de4, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 2.36
-      objectReference: {fileID: 0}
-    - target: {fileID: 4708103396670646, guid: 5a3bdfd3ed4eb4647aa9722b532b4de4, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -8.925645
-      objectReference: {fileID: 0}
-    - target: {fileID: 4708103396670646, guid: 5a3bdfd3ed4eb4647aa9722b532b4de4, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4708103396670646, guid: 5a3bdfd3ed4eb4647aa9722b532b4de4, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4708103396670646, guid: 5a3bdfd3ed4eb4647aa9722b532b4de4, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4708103396670646, guid: 5a3bdfd3ed4eb4647aa9722b532b4de4, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4708103396670646, guid: 5a3bdfd3ed4eb4647aa9722b532b4de4, type: 2}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114239451912755862, guid: 5a3bdfd3ed4eb4647aa9722b532b4de4,
-        type: 2}
-      propertyPath: m_PlayerPrefab
-      value: 
-      objectReference: {fileID: 1899098554489508, guid: 112280190f557a94793ebaa57ea0cb6e,
-        type: 2}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5a3bdfd3ed4eb4647aa9722b532b4de4, type: 2}
-  m_IsPrefabAsset: 0
