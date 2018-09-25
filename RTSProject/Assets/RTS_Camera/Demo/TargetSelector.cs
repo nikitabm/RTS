@@ -3,7 +3,7 @@ using System.Collections;
 using RTS_Cam;
 
 [RequireComponent(typeof(RTS_Camera))]
-public class TargetSelector : MonoBehaviour 
+public class TargetSelector : MonoBehaviour
 {
     private RTS_Camera cam;
     private new Camera camera;
@@ -15,9 +15,13 @@ public class TargetSelector : MonoBehaviour
         camera = gameObject.GetComponent<Camera>();
     }
 
-    private void Update()
+    void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        //ClickOnObjects();
+    }
+    private void ClickOnObjects()
+    {
+          if(Input.GetMouseButtonDown(0))
         {
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -30,4 +34,5 @@ public class TargetSelector : MonoBehaviour
             }
         }
     }
+
 }

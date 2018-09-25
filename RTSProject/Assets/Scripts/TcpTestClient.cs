@@ -25,6 +25,7 @@ public class TcpTestClient : MonoBehaviour
         {
             SendMessage();
         }
+        
     }
     /// <summary> 	
     /// Setup socket connection. 	

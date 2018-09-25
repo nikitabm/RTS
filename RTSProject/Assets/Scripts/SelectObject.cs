@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class SelectObject : MonoBehaviour
 {
 
@@ -13,6 +12,10 @@ public class SelectObject : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        ClickOnObjects();
+    }
+    private void ClickOnObjects()
     {
         if (Input.GetMouseButtonDown(0))
         {
