@@ -13,7 +13,7 @@ public class SelectObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ClickOnObjects();
+        //ClickOnObjects();
     }
     private void ClickOnObjects()
     {
