@@ -4,18 +4,15 @@ using UnityEngine;
 public class SelectObject : MonoBehaviour
 {
 
-    // Use this for initialization
+    private GameObject _selectedObject = null;
+    private Color _objectColor;
+    private Color _selectionColor;
     void Start()
     {
-
+        _selectionColor=Color.blue;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //ClickOnObjects();
-    }
-    private void ClickOnObjects()
+    public void ClickOnObjects()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -25,7 +22,18 @@ public class SelectObject : MonoBehaviour
             {
                 if (hit.transform.gameObject != null)
                 {
-					Debug.Log(hit.transform.name);
+                    if (_selectedObject != hit.transform.gameObject)
+                    {
+                        if(_selectedObject!=null) GetComponent<Renderer>().material.SetColor("_Color",_objectColor);
+                        _selectedObject = hit.transform.gameObject;
+                        _objectColor = _selectedObject.GetComponent<Renderer>().material.GetColor("_Color");
+                        _selectedObject.GetComponent<Renderer>().material.SetColor("_Color", _selectionColor);
+                    }
+                    else
+                    {
+                        _selectedObject.GetComponent<Renderer>().material.SetColor("_Color",_objectColor);
+                        _selectedObject=null;
+                    }
                 }
             }
         }
