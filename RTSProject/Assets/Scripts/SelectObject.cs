@@ -22,18 +22,7 @@ public class SelectObject : MonoBehaviour
             {
                 if (hit.transform.gameObject != null)
                 {
-                    if (_selectedObject != hit.transform.gameObject)
-                    {
-                        if(_selectedObject!=null) GetComponent<Renderer>().material.SetColor("_Color",_objectColor);
-                        _selectedObject = hit.transform.gameObject;
-                        _objectColor = _selectedObject.GetComponent<Renderer>().material.GetColor("_Color");
-                        _selectedObject.GetComponent<Renderer>().material.SetColor("_Color", _selectionColor);
-                    }
-                    else
-                    {
-                        _selectedObject.GetComponent<Renderer>().material.SetColor("_Color",_objectColor);
-                        _selectedObject=null;
-                    }
+                    
                 }
             }
         }

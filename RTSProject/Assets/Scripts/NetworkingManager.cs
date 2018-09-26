@@ -6,11 +6,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class NetworkingManager : MonoBehaviour
 {
 
-    #region private members 	
+   
+
+    public Text text;
     /// <summary> 	
     /// TCPListener to listen for incomming TCP connection 	
     /// requests. 	
@@ -31,7 +33,6 @@ public class NetworkingManager : MonoBehaviour
     private TcpClient socketConnection;
     private Thread clientReceiveThread;
 
-    #endregion
     void Start()
     {
         // Start TcpServer background thread 		
@@ -158,6 +159,7 @@ public class NetworkingManager : MonoBehaviour
                 // Write byte array to socketConnection stream.               
                 stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);
                 Debug.Log("Server sent his message - should be received by client");
+                text.text+=serverMessage+Environment.NewLine;
             }
         }
         catch (SocketException socketException)
@@ -184,6 +186,8 @@ public class NetworkingManager : MonoBehaviour
                 // Write byte array to socketConnection stream.                 
                 stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
                 Debug.Log("Client sent his message - should be received by server");
+                text.text+=clientMessage+Environment.NewLine;
+
             }
         }
         catch (SocketException socketException)
