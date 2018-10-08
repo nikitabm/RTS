@@ -38,7 +38,6 @@ public class TCPClient : MonoBehaviour
             Debug.Log("Socket error: " + e.Message);
         }
     }
-
     private void Send()
     {
         String Data = Time.time.ToString();

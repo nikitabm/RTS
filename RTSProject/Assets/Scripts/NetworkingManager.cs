@@ -42,7 +42,7 @@ public class NetworkingManager : MonoBehaviour
 
     void Start()
     {
-       
+
     }
 
     public void GoToScene(string scene)
@@ -54,12 +54,16 @@ public class NetworkingManager : MonoBehaviour
     {
         server = gameObject.AddComponent(typeof(TCPServer)) as TCPServer;
         localCLient = gameObject.AddComponent(typeof(TCPClient)) as TCPClient;
-        // GoToScene("Main");
     }
-
+    public void ConnectToGame()
+    {
+        localCLient = gameObject.AddComponent(typeof(TCPClient)) as TCPClient;
+    }
     public void Disconnect()
     {
-        server.Stop();
+        if (server != null)
+            server.Stop();
+            if(localCLient!=null)
     }
 
     //=====================================
