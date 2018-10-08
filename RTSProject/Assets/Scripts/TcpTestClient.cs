@@ -16,7 +16,7 @@ public class TcpTestClient : MonoBehaviour
     // Use this for initialization 	
     void Start()
     {
-        ConnectToTcpServer();
+        //ConnectToTcpServer();
     }
     // Update is called once per frame
     void Update()
@@ -30,7 +30,7 @@ public class TcpTestClient : MonoBehaviour
     /// <summary> 	
     /// Setup socket connection. 	
     /// </summary> 	
-    private void ConnectToTcpServer()
+    public void ConnectToTcpServer()
     {
         try
         {

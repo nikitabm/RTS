@@ -7,16 +7,23 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class NetworkingManager : MonoBehaviour
 {
 
-   
 
-    public Text text;
     /// <summary> 	
     /// TCPListener to listen for incomming TCP connection 	
     /// requests. 	
     /// </summary> 	
+
+    //=============================
+
+    public Text text;
+
+    private TCPServer server;
+    private TCPClient localCLient;
+    //=============================
     private TcpListener tcpListener;
     /// <summary> 
     /// Background thread for TcpServer workload. 	
@@ -27,52 +34,46 @@ public class NetworkingManager : MonoBehaviour
     /// </summary> 	
     private TcpClient connectedTcpClient;
 
-    // private TcpClient localClient;
+    private TcpClient localClient;
 
     //local client
     private TcpClient socketConnection;
     private Thread clientReceiveThread;
 
-    void Start()
+    void Start() { }
+
+    public void GoToScene(string scene)
+    {
+        SceneManager.LoadScene(scene);
+    }
+    public void HostGame()
+    {
+        GoToScene("Main");
+        server = new TCPServer();
+        localCLient = new TCPClient();
+
+    }
+
+
+    //=====================================
+
+    public void StartServer()
     {
         // Start TcpServer background thread 		
         tcpListenerThread = new Thread(new ThreadStart(ListenForIncommingRequests));
         tcpListenerThread.IsBackground = true;
         tcpListenerThread.Start();
-
-        ConnectToTcpServer();
-
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            ServerSendMessage();
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ClientSendMessage();
-        }
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            connectedTcpClient.Close();
-            tcpListener.Stop();
-        }
+        if(server==null) return;
+        text.text = server.GetConnectedClients().ToString();
+        // connectedTcpClient.Close();
+        // tcpListener.Stop();
+
     }
-    private void ConnectToTcpServer()
-    {
-        try
-        {
-            clientReceiveThread = new Thread(new ThreadStart(ListenForData));
-            clientReceiveThread.IsBackground = true;
-            clientReceiveThread.Start();
-        }
-        catch (Exception e)
-        {
-            Debug.Log("On client connect exception " + e);
-        }
-    }
+
     private void ListenForData()
     {
         try
@@ -106,6 +107,7 @@ public class NetworkingManager : MonoBehaviour
     {
         try
         {
+
             // Create listener on localhost port 8052. 			
             tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 8052);
             tcpListener.Start();
@@ -159,7 +161,6 @@ public class NetworkingManager : MonoBehaviour
                 // Write byte array to socketConnection stream.               
                 stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);
                 Debug.Log("Server sent his message - should be received by client");
-                text.text+=serverMessage+Environment.NewLine;
             }
         }
         catch (SocketException socketException)
@@ -167,11 +168,11 @@ public class NetworkingManager : MonoBehaviour
             Debug.Log("Socket exception: " + socketException);
         }
     }
-     private void ClientSendMessage()
+    private void ClientSendMessage()
     {
         if (socketConnection == null)
         {
-			System.Console.WriteLine("socket connection is null, returning...");
+            System.Console.WriteLine("socket connection is null, returning...");
             return;
         }
         try
@@ -186,7 +187,6 @@ public class NetworkingManager : MonoBehaviour
                 // Write byte array to socketConnection stream.                 
                 stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
                 Debug.Log("Client sent his message - should be received by server");
-                text.text+=clientMessage+Environment.NewLine;
 
             }
         }
