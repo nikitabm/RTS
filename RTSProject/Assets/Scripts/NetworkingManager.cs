@@ -63,7 +63,7 @@ public class NetworkingManager : MonoBehaviour
     {
         if (server != null)
             server.Stop();
-            if(localCLient!=null)
+            // if(localCLient!=null)
     }
 
     //=====================================
