@@ -16,7 +16,7 @@ public class TCPServer : MonoBehaviour
     private TcpListener server;
     private bool started = false;
 
-    private void Start()
+    public void Start()
     {
         clients = new List<ServerClient>();
         disconnects = new List<ServerClient>();
@@ -34,6 +34,7 @@ public class TCPServer : MonoBehaviour
         {
             Debug.Log("Socket error: " + e.Message);
         }
+
     }
 
     private void StartListening()
@@ -101,7 +102,12 @@ public class TCPServer : MonoBehaviour
 
     public int GetConnectedClients()
     {
+        if (clients == null) return 0;
         return clients.Count;
+    }
+    public void Stop()
+    {
+        server.Stop();
     }
 }
 

@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
+using System.Security;
 public class TCPClient : MonoBehaviour
 {
 
@@ -24,6 +25,7 @@ public class TCPClient : MonoBehaviour
 
         try
         {
+            
             socket = new TcpClient(IP, port);
             stream = socket.GetStream();
             writer = new StreamWriter(stream);

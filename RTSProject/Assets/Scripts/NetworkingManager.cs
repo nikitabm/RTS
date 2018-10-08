@@ -21,8 +21,8 @@ public class NetworkingManager : MonoBehaviour
 
     public Text text;
 
-    private TCPServer server;
-    private TCPClient localCLient;
+    private TCPServer server = null;
+    private TCPClient localCLient = null;
     //=============================
     private TcpListener tcpListener;
     /// <summary> 
@@ -40,20 +40,27 @@ public class NetworkingManager : MonoBehaviour
     private TcpClient socketConnection;
     private Thread clientReceiveThread;
 
-    void Start() { }
+    void Start()
+    {
+       
+    }
 
     public void GoToScene(string scene)
     {
         SceneManager.LoadScene(scene);
     }
+
     public void HostGame()
     {
-        GoToScene("Main");
-        server = new TCPServer();
-        localCLient = new TCPClient();
-
+        server = gameObject.AddComponent(typeof(TCPServer)) as TCPServer;
+        localCLient = gameObject.AddComponent(typeof(TCPClient)) as TCPClient;
+        // GoToScene("Main");
     }
 
+    public void Disconnect()
+    {
+        server.Stop();
+    }
 
     //=====================================
 
@@ -67,10 +74,9 @@ public class NetworkingManager : MonoBehaviour
 
     void Update()
     {
-        if(server==null) return;
+        if (server == null) return;
         text.text = server.GetConnectedClients().ToString();
-        // connectedTcpClient.Close();
-        // tcpListener.Stop();
+
 
     }
 
