@@ -5,23 +5,17 @@ using UnityEngine;
 [RequireComponent(typeof(SelectObject))]
 public class PlayerController : MonoBehaviour
 {
-	 public enum ECommandType
-    {
-        CM_INVALID,
-        // CM_ATTACK,
-        CM_MOVE
-    };
-	private SelectObject _selectObject;
-	private  ECommandType _command;
+
+    private SelectObject _selectObject;
+
     void Start()
     {
-		_selectObject=GetComponent<SelectObject>();
-	_command= ECommandType.CM_INVALID;
+        _selectObject = GetComponent<SelectObject>();
 
     }
 
     void Update()
     {
-		_selectObject.ClickOnObjects();
+        _selectObject.ClickOnObjects();
     }
 }

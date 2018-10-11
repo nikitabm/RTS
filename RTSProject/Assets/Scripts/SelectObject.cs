@@ -20,9 +20,10 @@ public class SelectObject : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000f))
             {
-                if (hit.transform.gameObject != null)
+                GameObject obj=hit.transform.gameObject;
+                if(obj.GetComponent(typeof(ISelectable))!=null)
                 {
-                    
+                    print(obj.name);
                 }
             }
         }

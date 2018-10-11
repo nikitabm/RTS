@@ -8,7 +8,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-public class NetworkingManager : MonoBehaviour
+public class NetworkingManager : MonoBehaviour,Service
 {
 
 
@@ -78,10 +78,8 @@ public class NetworkingManager : MonoBehaviour
 
     void Update()
     {
-        if (server == null) return;
-        text.text = server.GetConnectedClients().ToString();
-
-
+        // if (server == null) return;
+        // text.text = server.GetConnectedClients().ToString();
     }
 
     private void ListenForData()

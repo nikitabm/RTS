@@ -39,6 +39,7 @@ public class TCPServer : MonoBehaviour
 
     private void StartListening()
     {
+        if(clients.Count<2)
         server.BeginAcceptTcpClient(AcceptTcpClient, server);
     }
 
@@ -47,7 +48,7 @@ public class TCPServer : MonoBehaviour
         TcpListener listener = (TcpListener)ar.AsyncState;
         clients.Add(new ServerClient(listener.EndAcceptTcpClient(ar)));
         Debug.Log("New connection established");
-        StartListening();
+        // StartListening();
     }
 
     private bool isConnected(TcpClient c)

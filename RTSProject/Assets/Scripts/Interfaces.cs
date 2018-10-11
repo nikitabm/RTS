@@ -8,4 +8,8 @@ public interface ISelectable
 	void Diselect();
 }
 
+public interface Service
+{
+
+}
 
