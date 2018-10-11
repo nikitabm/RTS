@@ -16,6 +16,6 @@ public class GameManager : MonoBehaviour,Service {
 		ServiceLocator.ProvideService(_eventManager);
 		ServiceLocator.ProvideService(_networkingManager);
 		ServiceLocator.ProvideService(this);
-		ServiceLocator.GetService();
+		ServiceLocator.GetService<GameManager>();
 	}
 }

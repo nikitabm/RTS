@@ -11,6 +11,5 @@ public class EventManager : MonoBehaviour,Service {
 	}
 	
 	void Update () {
-		
 	}
 }
