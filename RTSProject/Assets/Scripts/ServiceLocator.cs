@@ -6,12 +6,8 @@ using System;
 
 public class ServiceLocator : MonoBehaviour
 {
+    private static List<Service> _services = new List<Service>();
 
-    private static List<Service> _services = null;
-    void Start()
-    {
-        _services = new List<Service>();
-    }
     public static Service GetService(Type type)
     {
 
@@ -24,7 +20,7 @@ public class ServiceLocator : MonoBehaviour
 
     public static void RemoveService(Type type)
     {
-        _services[_services.IndexOf(GetService(type))] = null;
+        _services[_services.IndexOf(GetService(type))] = null;  
     }
 
     public static void ProvideService(Service service)

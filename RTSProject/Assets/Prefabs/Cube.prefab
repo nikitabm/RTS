@@ -22,10 +22,10 @@ GameObject:
   - component: {fileID: 33531079628678406}
   - component: {fileID: 23088965632286346}
   - component: {fileID: 65698713392277894}
-  - component: {fileID: 114904203903039402}
+  - component: {fileID: 114174912120117434}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: team1Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,7 +97,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114904203903039402
+--- !u!114 &114174912120117434
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,6 +105,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1178897262442480}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dd34f4aa10b97f40827217882ad2a34, type: 3}
+  m_Script: {fileID: 11500000, guid: 89a9fc0305f11d94c90622e1219709e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ID: 0

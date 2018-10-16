@@ -21,7 +21,7 @@ public class Command : MonoBehaviour
 }
 public class MoveCommand : Command
 {
-    public Vector3 _position;
+    public Vector4 _position;
     public GameObject _unit;
     public MoveCommand()
     {

@@ -94,6 +94,7 @@ public class TCPServer : MonoBehaviour
             {
                 StreamReader reader = new StreamReader(s, true);
                 string data = reader.ReadLine();
+                print("hasData");
 
                 if (data != null)
                     onIncomingData(c, data);

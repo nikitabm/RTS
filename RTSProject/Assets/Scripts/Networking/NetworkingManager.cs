@@ -8,62 +8,66 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-public class NetworkingManager : MonoBehaviour,Service
+public class NetworkingManager : MonoBehaviour, Service
 {
 
 
-    /// <summary> 	
-    /// TCPListener to listen for incomming TCP connection 	
-    /// requests. 	
-    /// </summary> 	
+    //public
+    public GameObject playerController;
 
+
+    //private
+
+    private PlayerController _pc;
+    //=============================
+    private TCPServer _server = null;
+    private TCPClient _localCLient = null;
     //=============================
 
-    public Text text;
-
-    private TCPServer server = null;
-    private TCPClient localCLient = null;
-    //=============================
-    private TcpListener tcpListener;
+    private TcpListener _tcpListener;
     /// <summary> 
     /// Background thread for TcpServer workload. 	
     /// </summary> 	
-    private Thread tcpListenerThread;
+    private Thread _tcpListenerThread;
     /// <summary> 	
     /// Create handle to connected tcp client. 	
     /// </summary> 	
-    private TcpClient connectedTcpClient;
+    private TcpClient _connectedTcpClient;
 
-    private TcpClient localClient;
+    private TcpClient _localClient;
 
     //local client
-    private TcpClient socketConnection;
-    private Thread clientReceiveThread;
+    private TcpClient _socketConnection;
+    private Thread _clientReceiveThread;
 
     void Start()
     {
-
+        ServiceLocator.ProvideService(this);
+        _pc=playerController.GetComponent<PlayerController>();
     }
 
     public void GoToScene(string scene)
     {
         SceneManager.LoadScene(scene);
     }
-
+    public PlayerController GetOwningPC()
+    {
+        return _pc;
+    }
     public void HostGame()
     {
-        server = gameObject.AddComponent(typeof(TCPServer)) as TCPServer;
-        localCLient = gameObject.AddComponent(typeof(TCPClient)) as TCPClient;
+        _server = gameObject.AddComponent(typeof(TCPServer)) as TCPServer;
+        _localCLient = gameObject.AddComponent(typeof(TCPClient)) as TCPClient;
     }
     public void ConnectToGame()
     {
-        localCLient = gameObject.AddComponent(typeof(TCPClient)) as TCPClient;
+        _localCLient = gameObject.AddComponent(typeof(TCPClient)) as TCPClient;
     }
     public void Disconnect()
     {
-        if (server != null)
-            server.Stop();
-            // if(localCLient!=null)
+        if (_server != null)
+            _server.Stop();
+        // if(localCLient!=null)
     }
 
     //=====================================
@@ -71,9 +75,9 @@ public class NetworkingManager : MonoBehaviour,Service
     public void StartServer()
     {
         // Start TcpServer background thread 		
-        tcpListenerThread = new Thread(new ThreadStart(ListenForIncommingRequests));
-        tcpListenerThread.IsBackground = true;
-        tcpListenerThread.Start();
+        _tcpListenerThread = new Thread(new ThreadStart(ListenForIncommingRequests));
+        _tcpListenerThread.IsBackground = true;
+        _tcpListenerThread.Start();
     }
 
     void Update()
@@ -86,12 +90,12 @@ public class NetworkingManager : MonoBehaviour,Service
     {
         try
         {
-            socketConnection = new TcpClient("localhost", 8052);
+            _socketConnection = new TcpClient("localhost", 8052);
             Byte[] bytes = new Byte[1024];
             while (true)
             {
                 // Get a stream object for reading 				
-                using (NetworkStream stream = socketConnection.GetStream())
+                using (NetworkStream stream = _socketConnection.GetStream())
                 {
                     int length;
                     // Read incomming stream into byte arrary. 					
@@ -117,16 +121,16 @@ public class NetworkingManager : MonoBehaviour,Service
         {
 
             // Create listener on localhost port 8052. 			
-            tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 8052);
-            tcpListener.Start();
+            _tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 8052);
+            _tcpListener.Start();
             Debug.Log("Server is listening");
             Byte[] bytes = new Byte[1024];
             while (true)
             {
-                using (connectedTcpClient = tcpListener.AcceptTcpClient())
+                using (_connectedTcpClient = _tcpListener.AcceptTcpClient())
                 {
                     // Get a stream object for reading 					
-                    using (NetworkStream stream = connectedTcpClient.GetStream())
+                    using (NetworkStream stream = _connectedTcpClient.GetStream())
                     {
                         int length;
                         // Read incomming stream into byte array. 						
@@ -152,7 +156,7 @@ public class NetworkingManager : MonoBehaviour,Service
     /// </summary> 	
     private void ServerSendMessage()
     {
-        if (connectedTcpClient == null)
+        if (_connectedTcpClient == null)
         {
             return;
         }
@@ -160,7 +164,7 @@ public class NetworkingManager : MonoBehaviour,Service
         try
         {
             // Get a stream object for writing. 			
-            NetworkStream stream = connectedTcpClient.GetStream();
+            NetworkStream stream = _connectedTcpClient.GetStream();
             if (stream.CanWrite)
             {
                 string serverMessage = "This is a message from your server.";
@@ -178,7 +182,7 @@ public class NetworkingManager : MonoBehaviour,Service
     }
     private void ClientSendMessage()
     {
-        if (socketConnection == null)
+        if (_socketConnection == null)
         {
             System.Console.WriteLine("socket connection is null, returning...");
             return;
@@ -186,7 +190,7 @@ public class NetworkingManager : MonoBehaviour,Service
         try
         {
             // Get a stream object for writing. 			
-            NetworkStream stream = socketConnection.GetStream();
+            NetworkStream stream = _socketConnection.GetStream();
             if (stream.CanWrite)
             {
                 string clientMessage = "This is a message from one of your clients.";

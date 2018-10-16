@@ -9,15 +9,25 @@ using System.Security;
 public class TCPClient : MonoBehaviour
 {
 
+    //public
+    public string IP = "localhost";
+    public int port = 8888;
+
+    //private 
+    private PlayerController _pcRef;
+    private NetworkingManager _nm;
+    private int count = 0;
     private bool connected = false;
     private TcpClient socket;
     private NetworkStream stream;
     private StreamWriter writer;
     private StreamReader reader;
-    public string IP = "localhost";
-    public int port = 8888;
-    private int count = 0;
 
+    private void Start()
+    {
+        Invoke("connectToServer", 1.0f);
+        // InvokeRepeating("Send", 0.0f, 0.5f);
+    }
     public void connectToServer()
     {
         if (connected)    //already connected
@@ -25,7 +35,7 @@ public class TCPClient : MonoBehaviour
 
         try
         {
-            
+
             socket = new TcpClient(IP, port);
             stream = socket.GetStream();
             writer = new StreamWriter(stream);
@@ -45,18 +55,27 @@ public class TCPClient : MonoBehaviour
             return;
         writer.WriteLine(Data);
         writer.Flush();
-        count = count + 1;
+        // count = count + 1;
     }
 
-    void Start()
+    
+
+    private void SendCommand()
     {
-        Invoke("connectToServer", 1.0f);
-        InvokeRepeating("Send", 0.0f, 0.5f);
+        
+        _nm=ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager;
+        _pcRef=_nm.GetComponent<NetworkingManager>().GetOwningPC();
+        writer.WriteLine(_pcRef._commandList[count]._position);
+        writer.Flush();
+        count++;
     }
-
     void Update()
     {
-        if (count >= 20)
-            CancelInvoke();
+        if(Input.GetKeyUp(KeyCode.Space))
+        {
+            SendCommand();
+        }
+        // if (count >= 20)
+        //     CancelInvoke();
     }
 }
