@@ -9,8 +9,11 @@ using UnityEngine.UI;
 public class TCPServer : MonoBehaviour
 {
 
-
+    
     public int port = 8888;
+
+    private PlayerController _pcRef;
+    private NetworkingManager _nm;
     private List<ServerClient> clients;
     private List<ServerClient> disconnects;
     private TcpListener server;

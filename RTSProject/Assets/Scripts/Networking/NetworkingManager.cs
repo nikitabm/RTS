@@ -18,6 +18,11 @@ public class NetworkingManager : MonoBehaviour, Service
 
     //private
 
+    private float AccumilatedTime = 0f;
+
+    private float FrameLength = 0.05f; //50 miliseconds
+
+
     private PlayerController _pc;
     //=============================
     private TCPServer _server = null;
@@ -43,7 +48,7 @@ public class NetworkingManager : MonoBehaviour, Service
     void Start()
     {
         ServiceLocator.ProvideService(this);
-        _pc=playerController.GetComponent<PlayerController>();
+        _pc = playerController.GetComponent<PlayerController>();
     }
 
     public void GoToScene(string scene)
@@ -80,12 +85,76 @@ public class NetworkingManager : MonoBehaviour, Service
         _tcpListenerThread.Start();
     }
 
-    void Update()
+    //called once per unity frame
+    public void Update()
     {
-        // if (server == null) return;
-        // text.text = server.GetConnectedClients().ToString();
+        //Basically same logic as FixedUpdate, but we can scale it by adjusting FrameLength
+        AccumilatedTime = AccumilatedTime + Time.deltaTime;
+
+        //in case the FPS is too slow, we may need to update the game multiple times a frame
+        while (AccumilatedTime > FrameLength)
+        {
+            GameFrameTurn();
+            AccumilatedTime = AccumilatedTime - FrameLength;
+        }
     }
 
+
+    // private bool NextTurn()
+    // {
+    //     if (confirmedActions.ReadyForNextTurn() && pendingActions.ReadyForNextTurn())
+    //     {
+    //         //increment the turn ID
+    //         LockStepTurnID++;
+    //         //move the confirmed actions to next turn
+    //         confirmedActions.NextTurn();
+    //         //move the pending actions to this turn
+    //         pendingActions.NextTurn();
+
+    //         return true;
+    //     }
+
+    //     return false;
+    // }
+
+
+    private void GameFrameTurn()
+    {
+        //first frame is used to process actions
+        if (GameFrame == 0)
+        {
+            if (LockStepTurn())
+            {
+                GameFrame++;
+            }
+        }
+        else
+        {
+            //update game
+            SceneManager.Manager.TwoDPhysics.Update(GameFramesPerSecond);
+
+            List<IHasGameFrame> finished = new List<IHasGameFrame>();
+            foreach (IHasGameFrame obj in SceneManager.Manager.GameFrameObjects)
+            {
+                obj.GameFrameTurn(GameFramesPerSecond);
+                if (obj.Finished)
+                {
+                    finished.Add(obj);
+                }
+            }
+
+            foreach (IHasGameFrame obj in finished)
+            {
+                SceneManager.Manager.GameFrameObjects.Remove(obj);
+            }
+
+            GameFrame++;
+            if (GameFrame == GameFramesPerLocksetpTurn)
+            {
+                GameFrame = 0;
+            }
+        }
+    }
     private void ListenForData()
     {
         try
