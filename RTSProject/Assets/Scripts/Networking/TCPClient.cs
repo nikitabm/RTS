@@ -60,7 +60,7 @@ public class TCPClient : MonoBehaviour
 
     
 
-    private void SendCommand()
+    public void SendCommand(int turn, PlayerCommandsData commandsData)
     {
         
         _nm=ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager;
@@ -71,11 +71,6 @@ public class TCPClient : MonoBehaviour
     }
     void Update()
     {
-        if(Input.GetKeyUp(KeyCode.Space))
-        {
-            SendCommand();
-        }
-        // if (count >= 20)
-        //     CancelInvoke();
+
     }
 }

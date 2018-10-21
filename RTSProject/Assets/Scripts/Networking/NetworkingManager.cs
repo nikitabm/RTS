@@ -18,11 +18,6 @@ public class NetworkingManager : MonoBehaviour, Service
 
     //private
 
-    private float AccumilatedTime = 0f;
-
-    private float FrameLength = 0.05f; //50 miliseconds
-
-
     private PlayerController _pc;
     //=============================
     private TCPServer _server = null;
@@ -39,21 +34,34 @@ public class NetworkingManager : MonoBehaviour, Service
     /// </summary> 	
     private TcpClient _connectedTcpClient;
 
-    private TcpClient _localClient;
-
+    private bool host=false;
     //local client
     private TcpClient _socketConnection;
     private Thread _clientReceiveThread;
+
 
     void Start()
     {
         ServiceLocator.ProvideService(this);
         _pc = playerController.GetComponent<PlayerController>();
     }
-
+    public TCPServer GetServer()
+    {
+        if(host)
+        return _server;
+        else return null;
+    }
+    public bool HasAuthority()
+    {
+        return host;
+    }
     public void GoToScene(string scene)
     {
         SceneManager.LoadScene(scene);
+    }
+    public TCPClient GetOwningTCPClient()
+    {
+        return _localCLient;
     }
     public PlayerController GetOwningPC()
     {
@@ -61,11 +69,13 @@ public class NetworkingManager : MonoBehaviour, Service
     }
     public void HostGame()
     {
+        host=true;
         _server = gameObject.AddComponent(typeof(TCPServer)) as TCPServer;
         _localCLient = gameObject.AddComponent(typeof(TCPClient)) as TCPClient;
     }
     public void ConnectToGame()
     {
+        host=false;
         _localCLient = gameObject.AddComponent(typeof(TCPClient)) as TCPClient;
     }
     public void Disconnect()
@@ -86,75 +96,7 @@ public class NetworkingManager : MonoBehaviour, Service
     }
 
     //called once per unity frame
-    public void Update()
-    {
-        //Basically same logic as FixedUpdate, but we can scale it by adjusting FrameLength
-        AccumilatedTime = AccumilatedTime + Time.deltaTime;
 
-        //in case the FPS is too slow, we may need to update the game multiple times a frame
-        while (AccumilatedTime > FrameLength)
-        {
-            GameFrameTurn();
-            AccumilatedTime = AccumilatedTime - FrameLength;
-        }
-    }
-
-
-    // private bool NextTurn()
-    // {
-    //     if (confirmedActions.ReadyForNextTurn() && pendingActions.ReadyForNextTurn())
-    //     {
-    //         //increment the turn ID
-    //         LockStepTurnID++;
-    //         //move the confirmed actions to next turn
-    //         confirmedActions.NextTurn();
-    //         //move the pending actions to this turn
-    //         pendingActions.NextTurn();
-
-    //         return true;
-    //     }
-
-    //     return false;
-    // }
-
-
-    private void GameFrameTurn()
-    {
-        //first frame is used to process actions
-        if (GameFrame == 0)
-        {
-            if (LockStepTurn())
-            {
-                GameFrame++;
-            }
-        }
-        else
-        {
-            //update game
-            SceneManager.Manager.TwoDPhysics.Update(GameFramesPerSecond);
-
-            List<IHasGameFrame> finished = new List<IHasGameFrame>();
-            foreach (IHasGameFrame obj in SceneManager.Manager.GameFrameObjects)
-            {
-                obj.GameFrameTurn(GameFramesPerSecond);
-                if (obj.Finished)
-                {
-                    finished.Add(obj);
-                }
-            }
-
-            foreach (IHasGameFrame obj in finished)
-            {
-                SceneManager.Manager.GameFrameObjects.Remove(obj);
-            }
-
-            GameFrame++;
-            if (GameFrame == GameFramesPerLocksetpTurn)
-            {
-                GameFrame = 0;
-            }
-        }
-    }
     private void ListenForData()
     {
         try
@@ -184,6 +126,10 @@ public class NetworkingManager : MonoBehaviour, Service
             Debug.Log("Socket exception: " + socketException);
         }
     }
+    private void LogCommandtoDictionary(string s)
+    {
+        
+    }
     private void ListenForIncommingRequests()
     {
         try
@@ -207,9 +153,11 @@ public class NetworkingManager : MonoBehaviour, Service
                         {
                             var incommingData = new byte[length];
                             Array.Copy(bytes, 0, incommingData, 0, length);
-                            // Convert byte array to string message. 							
+                            //Convert  incomming data to command, save it into _pc.AllplayersTurns to the turn
+                            //send conformation msg to clients and update
                             string clientMessage = Encoding.ASCII.GetString(incommingData);
                             Debug.Log("client message received as: " + clientMessage);
+                            // _pc.AllPlayersTurns.
                         }
                     }
                 }
@@ -242,6 +190,7 @@ public class NetworkingManager : MonoBehaviour, Service
                 // Write byte array to socketConnection stream.               
                 stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);
                 Debug.Log("Server sent his message - should be received by client");
+
             }
         }
         catch (SocketException socketException)
