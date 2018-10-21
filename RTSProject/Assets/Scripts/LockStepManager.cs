@@ -120,6 +120,7 @@ public class LockStepManager : MonoBehaviour
     }
     public void SendTurnData()
     {
+        
         (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
         GetOwningTCPClient().SendCommand(turn,TurnDataToSend[turn]);
     }

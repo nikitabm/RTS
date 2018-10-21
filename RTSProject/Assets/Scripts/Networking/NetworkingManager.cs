@@ -117,6 +117,7 @@ public class NetworkingManager : MonoBehaviour, Service
                         // Convert byte array to string message. 						
                         string serverMessage = Encoding.ASCII.GetString(incommingData);
                         Debug.Log("server message received as: " + serverMessage);
+                        //send connformation of receiving command, increment turn clock;
                     }
                 }
             }

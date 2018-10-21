@@ -17,6 +17,8 @@ public class TCPServer : MonoBehaviour
     private List<ServerClient> clients;
     private List<ServerClient> disconnects;
     private TcpListener server;
+    private StreamWriter writer;
+    private StreamReader reader;
     private bool started = false;
 
     public void Start()
@@ -39,7 +41,11 @@ public class TCPServer : MonoBehaviour
         }
 
     }
-
+    private void SendMessage(NetworkStream pStream, byte[] pMessage)
+    {
+        pStream.Write(BitConverter.GetBytes(pMessage.Length), 0, 4);
+        pStream.Write(pMessage, 0, pMessage.Length);
+    }
     private void StartListening()
     {
         if(clients.Count<2)
@@ -95,12 +101,14 @@ public class TCPServer : MonoBehaviour
             NetworkStream s = c.tcp.GetStream();
             if (s.DataAvailable)
             {
-                StreamReader reader = new StreamReader(s, true);
+                reader = new StreamReader(s, true);
                 string data = reader.ReadLine();
                 print("hasData");
 
                 if (data != null)
                     onIncomingData(c, data);
+                    SendMessage(c.tcp.GetStream(),new byte[0]);
+                    
             }
         }
     }
