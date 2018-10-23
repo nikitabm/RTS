@@ -48,8 +48,7 @@ public class TCPServer : MonoBehaviour
     }
     private void StartListening()
     {
-        if (clients.Count < 2)
-            server.BeginAcceptTcpClient(AcceptTcpClient, server);
+        server.BeginAcceptTcpClient(AcceptTcpClient, server);
     }
 
     private void AcceptTcpClient(IAsyncResult ar)
@@ -57,7 +56,7 @@ public class TCPServer : MonoBehaviour
         TcpListener listener = (TcpListener)ar.AsyncState;
         clients.Add(new ServerClient(listener.EndAcceptTcpClient(ar)));
         Debug.Log("New connection established");
-        // StartListening();
+        StartListening();
     }
 
     private bool isConnected(TcpClient c)
@@ -108,14 +107,14 @@ public class TCPServer : MonoBehaviour
                 if (data != null)
                 {
                     onIncomingData(c, data);
-                    byte[] bArray = new byte[5];
-                    bArray[0] = 1;
-                    bArray[1] = 2;
-                    bArray[2] = 3;
-                    bArray[3] = 4;
-                    bArray[4] = 5;
+                    // byte[] bArray = new byte[5];
+                    // bArray[0] = 1;
+                    // bArray[1] = 2;
+                    // bArray[2] = 3;
+                    // bArray[3] = 4;
+                    // bArray[4] = 5;
 
-                    SendMessage(c.tcp.GetStream(),bArray);
+                    // SendMessage(c.tcp.GetStream(),bArray);
                 }
 
             }

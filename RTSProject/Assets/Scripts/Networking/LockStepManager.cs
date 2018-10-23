@@ -51,8 +51,8 @@ public class LockStepManager : MonoBehaviour
         //in case the FPS is too slow, we may need to update the game multiple times a frame
         while (AccumilatedTime > FrameLength)
         {
-            WriteTurnData();
-            SendTurnData();
+           // WriteTurnData();
+            //SendTurnData();
             // GameFrameTurn();
             
             AccumilatedTime = AccumilatedTime - FrameLength;
@@ -113,8 +113,8 @@ public class LockStepManager : MonoBehaviour
     }
     public void SendTurnData()
     {
-        (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
-        GetOwningTCPClient().SendCommand(turn,TurnDataToSend[turn]);
+        // (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
+        // GetOwningTCPClient().SendCommand(turn,TurnDataToSend[turn]);
     }
 
     private void GameFrameTurn()
