@@ -71,6 +71,5 @@ public class TCPClient : MonoBehaviour
     }
     void Update()
     {
-
     }
 }

@@ -1,43 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using UnityEngine;
-
-
-
-
-public class PlayerCommandsData : MonoBehaviour
-{
-    public int playerID;
-    public List<MoveCommand> moveCommandList = new List<MoveCommand>();
-
-    public PlayerCommandsData(int id, MoveCommand mc)
-    {
-        playerID = id;
-        moveCommandList.Add(mc);
-    }
-}
-
-public class AllPlayersCommandsData : MonoBehaviour
-{
-    public List<MoveCommand> moveCommandListHost = new List<MoveCommand>();
-
-    public List<MoveCommand> moveCommandListClient = new List<MoveCommand>();
-
-
-    public AllPlayersCommandsData(int ID, MoveCommand mc)
-    {
-        if (ID == 0) moveCommandListHost.Add(mc);
-        if (ID == 1) moveCommandListClient.Add(mc);
-
-    }
-
-}
+using System.Security;
 public class LockStepManager : MonoBehaviour
 {
 
     PlayerController pc;
     int turn;
     int playerID;
+    bool approvedCommands;
 
     //contains key which is number of turn commands were issued and
     //player commands data, which is id of player and list of issued commands
@@ -62,6 +37,7 @@ public class LockStepManager : MonoBehaviour
         TurnDataToSend = new Dictionary<int, PlayerCommandsData>();
         AllPlayersTurns = new Dictionary<int, AllPlayersCommandsData>();
         pc = (ServiceLocator.GetService(typeof(NetworkingManager))) as PlayerController;
+        approvedCommands=false;
     }
     void Start()
     {
@@ -75,7 +51,10 @@ public class LockStepManager : MonoBehaviour
         //in case the FPS is too slow, we may need to update the game multiple times a frame
         while (AccumilatedTime > FrameLength)
         {
-            GameFrameTurn();
+            WriteTurnData();
+            SendTurnData();
+            // GameFrameTurn();
+            
             AccumilatedTime = AccumilatedTime - FrameLength;
         }
     }
@@ -98,6 +77,19 @@ public class LockStepManager : MonoBehaviour
     //     return false;
     // }
 
+    public void IncrementTurn()
+    {
+        if(approvedCommands)
+        {
+            turn++;
+            ExecuteCommands();
+        }
+    }
+    
+    public void ExecuteCommands()
+    {
+        //do commands
+    }
 
     public  void WriteTurnData()
     {
@@ -112,7 +104,8 @@ public class LockStepManager : MonoBehaviour
             pc.ObjectSelector.playerState = PlayerController.StateOfPlayer.Idle;
         }
         //queues commands to dictionaries.
-        TurnDataToSend.Add(turn, new PlayerCommandsData(playerID, moveCommand));
+        PlayerCommandsData data =new PlayerCommandsData(playerID, moveCommand);
+        TurnDataToSend.Add(turn, data );
         AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, moveCommand));
         pc._commandList.Add(moveCommand);
         print("Turn: "+turn);
@@ -120,7 +113,6 @@ public class LockStepManager : MonoBehaviour
     }
     public void SendTurnData()
     {
-        
         (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
         GetOwningTCPClient().SendCommand(turn,TurnDataToSend[turn]);
     }

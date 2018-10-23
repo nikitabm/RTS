@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class TCPServer : MonoBehaviour
 {
 
-    
+
     public int port = 8888;
 
     private PlayerController _pcRef;
@@ -48,8 +48,8 @@ public class TCPServer : MonoBehaviour
     }
     private void StartListening()
     {
-        if(clients.Count<2)
-        server.BeginAcceptTcpClient(AcceptTcpClient, server);
+        if (clients.Count < 2)
+            server.BeginAcceptTcpClient(AcceptTcpClient, server);
     }
 
     private void AcceptTcpClient(IAsyncResult ar)
@@ -106,9 +106,18 @@ public class TCPServer : MonoBehaviour
                 print("hasData");
 
                 if (data != null)
+                {
                     onIncomingData(c, data);
-                    SendMessage(c.tcp.GetStream(),new byte[0]);
-                    
+                    byte[] bArray = new byte[5];
+                    bArray[0] = 1;
+                    bArray[1] = 2;
+                    bArray[2] = 3;
+                    bArray[3] = 4;
+                    bArray[4] = 5;
+
+                    SendMessage(c.tcp.GetStream(),bArray);
+                }
+
             }
         }
     }
