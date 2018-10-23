@@ -22,6 +22,8 @@ public class NetworkingManager : MonoBehaviour, Service
     //=============================
     private TCPServer _server = null;
     private TCPClient _localCLient = null;
+    private TcpTestClient _cl;
+    private TCPTestServer _sr;
     //=============================
 
     private TcpListener _tcpListener;
@@ -70,8 +72,10 @@ public class NetworkingManager : MonoBehaviour, Service
     public void HostGame()
     {
         host=true;
-        _server = gameObject.AddComponent(typeof(TCPServer)) as TCPServer;
-        _localCLient = gameObject.AddComponent(typeof(TCPClient)) as TCPClient;
+        // _server = gameObject.AddComponent(typeof(TCPServer)) as TCPServer;
+        // _localCLient = gameObject.AddComponent(typeof(TCPClient)) as TCPClient;
+        _sr=gameObject.AddComponent<TCPTestServer>();
+        _cl=gameObject.AddComponent<TcpTestClient>();
     }
     public void ConnectToGame()
     {
@@ -80,9 +84,6 @@ public class NetworkingManager : MonoBehaviour, Service
     }
     public void Disconnect()
     {
-        if (_server != null)
-            _server.Stop();
-        // if(localCLient!=null)
     }
 
     //=====================================

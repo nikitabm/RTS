@@ -6,6 +6,10 @@ using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 using System.Security;
+using System.Linq;
+using System.Text;
+using System.Threading;
+
 public class TCPClient : MonoBehaviour
 {
 
@@ -25,7 +29,7 @@ public class TCPClient : MonoBehaviour
 
         try
         {
-            
+
             socket = new TcpClient(IP, port);
             stream = socket.GetStream();
             writer = new StreamWriter(stream);
@@ -41,12 +45,13 @@ public class TCPClient : MonoBehaviour
 
     private void Send()
     {
-        String Data = Time.time.ToString();
-        if (!connected)
-            return;
-        writer.WriteLine(Data);
-        writer.Flush();
-        count = count + 1;
+        // String Data = Time.time.ToString();
+        // if (!connected)
+        //     return;
+        // writer.WriteLine(Data);
+        // writer.Flush();
+        // count = count + 1;
+        TCPHelper.SendString(stream,"Hello I am client",Encoding.UTF8);
     }
 
     void Start()
@@ -57,19 +62,13 @@ public class TCPClient : MonoBehaviour
 
     void Update()
     {
-        if(!connected) return;
-        // if(stream.DataAvailable)
-        // {
-        //     string data=reader.ReadLine();
-        //     print("Client received Data");
-        //     if(data!=null)
-        //     {
-        //         print(data);
-        //     }
-        // }
-      if(Input.GetKeyDown(KeyCode.E))
-      {
-          Send();
-      }
+        if (!connected) return;
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Send();
+
+        }
+        print(TCPHelper.ReceiveString(stream,Encoding.UTF8));
     }
 }

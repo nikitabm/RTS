@@ -12,11 +12,12 @@ public class TcpTestClient : MonoBehaviour
     #region private members 	
     private TcpClient socketConnection;
     private Thread clientReceiveThread;
+    bool isTrue;
     #endregion
     // Use this for initialization 	
     void Start()
     {
-        //ConnectToTcpServer();
+        ConnectToTcpServer();
     }
     // Update is called once per frame
     void Update()
@@ -25,7 +26,31 @@ public class TcpTestClient : MonoBehaviour
         {
             SendMessage();
         }
-        
+
+    }
+    void OnApplicationQuit()
+    {
+        try
+        {
+            socketConnection.Close();
+            isTrue = false;
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+
+        // You must close the tcp listener
+        try
+        {
+            clientReceiveThread.IsBackground = false;
+            clientReceiveThread.Abort();
+            isTrue = false;
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
     }
     /// <summary> 	
     /// Setup socket connection. 	
@@ -37,6 +62,7 @@ public class TcpTestClient : MonoBehaviour
             clientReceiveThread = new Thread(new ThreadStart(ListenForData));
             clientReceiveThread.IsBackground = true;
             clientReceiveThread.Start();
+            print("client is connected");
         }
         catch (Exception e)
         {
@@ -45,12 +71,13 @@ public class TcpTestClient : MonoBehaviour
     }
     /// <summary> 	
     /// Runs in background clientReceiveThread; Listens for incomming data. 	
-    /// </summary>     
+    /// </summary>  
+
     private void ListenForData()
     {
         try
         {
-            socketConnection = new TcpClient("localhost", 8052);
+            socketConnection = new TcpClient("localhost", 8888);
             Byte[] bytes = new Byte[1024];
             while (true)
             {
@@ -65,7 +92,7 @@ public class TcpTestClient : MonoBehaviour
                         Array.Copy(bytes, 0, incommingData, 0, length);
                         // Convert byte array to string message. 						
                         string serverMessage = Encoding.ASCII.GetString(incommingData);
-                        Debug.Log("server message received as: " + serverMessage);
+                        Debug.Log("server message received at: "+ serverMessage);
                     }
                 }
             }
@@ -82,7 +109,7 @@ public class TcpTestClient : MonoBehaviour
     {
         if (socketConnection == null)
         {
-			System.Console.WriteLine("socket connection is null, returning...");
+            System.Console.WriteLine("socket connection is null, returning...");
             return;
         }
         try

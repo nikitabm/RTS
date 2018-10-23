@@ -5,7 +5,10 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
-using UnityEngine.UI;
+using System.Security;
+using System.Linq;
+using System.Text;
+using System.Threading;
 public class TCPServer : MonoBehaviour
 {
 
@@ -30,7 +33,6 @@ public class TCPServer : MonoBehaviour
         {
             server = new TcpListener(IPAddress.Any, port);
             server.Start();
-
             StartListening();
             started = true;
             Debug.Log("Server started on port: " + port.ToString());
@@ -78,6 +80,14 @@ public class TCPServer : MonoBehaviour
     private void onIncomingData(ServerClient c, string data)
     {
         Debug.Log(c.clientName + "Has sent the following message: " + data);
+        byte[] b = new byte[3];
+        b[0] = 0;
+        b[1] = 1;
+        b[2] = 1;
+
+        writer = new StreamWriter(c.tcp.GetStream());
+        writer.WriteLine("test");
+
     }
 
 
@@ -100,22 +110,8 @@ public class TCPServer : MonoBehaviour
             NetworkStream s = c.tcp.GetStream();
             if (s.DataAvailable)
             {
-                reader = new StreamReader(s, true);
-                string data = reader.ReadLine();
-                print("hasData");
-
-                if (data != null)
-                {
-                    onIncomingData(c, data);
-                    // byte[] bArray = new byte[5];
-                    // bArray[0] = 1;
-                    // bArray[1] = 2;
-                    // bArray[2] = 3;
-                    // bArray[3] = 4;
-                    // bArray[4] = 5;
-
-                    // SendMessage(c.tcp.GetStream(),bArray);
-                }
+                print(TCPHelper.ReceiveString(s, Encoding.UTF8));
+                TCPHelper.SendString(s, "CONFIRMED", Encoding.UTF8);
 
             }
         }
