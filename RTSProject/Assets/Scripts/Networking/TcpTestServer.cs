@@ -23,25 +23,30 @@ public class TCPTestServer : MonoBehaviour
     /// Create handle to connected tcp client. 	
     /// </summary> 	
     private TcpClient connectedTcpClient;
+    private int port = 55555;
+    private NetworkStream stream;
+
     #endregion
 
     // Use this for initialization
     void Start()
     {
+        tcpListener = new TcpListener(IPAddress.Any, port);
         // Start TcpServer background thread 		
         tcpListenerThread = new Thread(new ThreadStart(ListenForIncommingRequests));
         tcpListenerThread.IsBackground = true;
         tcpListenerThread.Start();
+
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     SendMessage();
-        // }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SendMessage();
+        }
     }
     void OnApplicationQuit()
     {
@@ -55,7 +60,7 @@ public class TCPTestServer : MonoBehaviour
         }
         try
         {
-            tcpListenerThread.IsBackground=false;
+            tcpListenerThread.IsBackground = false;
             tcpListenerThread.Abort();
         }
         catch (Exception e)
@@ -71,30 +76,25 @@ public class TCPTestServer : MonoBehaviour
     {
         try
         {
-            // Create listener on localhost port 8052. 			
-            tcpListener = new TcpListener(IPAddress.Any, 8888);
+            // Create listener on localhost port 8052. 	
             tcpListener.Start();
+            connectedTcpClient = tcpListener.AcceptTcpClient();
+            stream=connectedTcpClient.GetStream();
             Debug.Log("Server is listening");
             Byte[] bytes = new Byte[1024];
             while (true)
             {
-                using (connectedTcpClient = tcpListener.AcceptTcpClient())
+
+                // Get a stream object for reading 					
+                int length;
+                // Read incomming stream into byte arrary. 						
+                while ((length = stream.Read(bytes, 0, bytes.Length)) != 0)
                 {
-                    // Get a stream object for reading 					
-                    using (NetworkStream stream = connectedTcpClient.GetStream())
-                    {
-                        int length;
-                        // Read incomming stream into byte arrary. 						
-                        while ((length = stream.Read(bytes, 0, bytes.Length)) != 0)
-                        {
-                            var incommingData = new byte[length];
-                            Array.Copy(bytes, 0, incommingData, 0, length);
-                            // Convert byte array to string message. 							
-                            string clientMessage = Encoding.ASCII.GetString(incommingData);
-                            Debug.Log("client msg received at: "+ clientMessage);
-                            SendMessage();
-                        }
-                    }
+                    var incommingData = new byte[length];
+                    Array.Copy(bytes, 0, incommingData, 0, length);
+                    // Convert byte array to string message. 							
+                    string clientMessage = Encoding.ASCII.GetString(incommingData);
+                    Debug.Log("server receives: " + clientMessage);
                 }
             }
         }
@@ -119,12 +119,12 @@ public class TCPTestServer : MonoBehaviour
             NetworkStream stream = connectedTcpClient.GetStream();
             if (stream.CanWrite)
             {
-                string serverMessage = "Server says: I confirm";
+                string serverMessage = "server msg: I confirm";
                 // Convert string message to byte array.                 
                 byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage);
                 // Write byte array to socketConnection stream.               
                 stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);
-                Debug.Log("Server sent his message - should be received by client");
+                Debug.Log("Server SENT msg...");
             }
         }
         catch (SocketException socketException)

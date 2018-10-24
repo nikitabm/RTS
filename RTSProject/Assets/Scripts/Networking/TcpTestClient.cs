@@ -12,7 +12,8 @@ public class TcpTestClient : MonoBehaviour
     #region private members 	
     private TcpClient socketConnection;
     private Thread clientReceiveThread;
-    bool isTrue;
+    private bool isTrue;
+    private  int port=55555;
     #endregion
     // Use this for initialization 	
     void Start()
@@ -57,17 +58,12 @@ public class TcpTestClient : MonoBehaviour
     /// </summary> 	
     public void ConnectToTcpServer()
     {
-        try
-        {
+       
+            socketConnection = new TcpClient("localhost", port);
             clientReceiveThread = new Thread(new ThreadStart(ListenForData));
             clientReceiveThread.IsBackground = true;
             clientReceiveThread.Start();
             print("client is connected");
-        }
-        catch (Exception e)
-        {
-            Debug.Log("On client connect exception " + e);
-        }
     }
     /// <summary> 	
     /// Runs in background clientReceiveThread; Listens for incomming data. 	
@@ -77,7 +73,7 @@ public class TcpTestClient : MonoBehaviour
     {
         try
         {
-            socketConnection = new TcpClient("localhost", 8888);
+            
             Byte[] bytes = new Byte[1024];
             while (true)
             {
@@ -118,12 +114,12 @@ public class TcpTestClient : MonoBehaviour
             NetworkStream stream = socketConnection.GetStream();
             if (stream.CanWrite)
             {
-                string clientMessage = "This is a message from one of your clients.";
+                string clientMessage = "Client msg: I am Hello";
                 // Convert string message to byte array.                 
                 byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(clientMessage);
                 // Write byte array to socketConnection stream.                 
                 stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
-                Debug.Log("Client sent his message - should be received by server");
+                Debug.Log("Client SENT msg...");
             }
         }
         catch (SocketException socketException)
