@@ -38,10 +38,10 @@ public class TCPTestServer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SendMessage();
-        }
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     SendMessage();
+        // }
     }
     void OnApplicationQuit()
     {
@@ -92,6 +92,7 @@ public class TCPTestServer : MonoBehaviour
                             // Convert byte array to string message. 							
                             string clientMessage = Encoding.ASCII.GetString(incommingData);
                             Debug.Log("client msg received at: "+ clientMessage);
+                            SendMessage();
                         }
                     }
                 }
@@ -118,7 +119,7 @@ public class TCPTestServer : MonoBehaviour
             NetworkStream stream = connectedTcpClient.GetStream();
             if (stream.CanWrite)
             {
-                string serverMessage = "This is a message from your server.";
+                string serverMessage = "Server says: I confirm";
                 // Convert string message to byte array.                 
                 byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage);
                 // Write byte array to socketConnection stream.               
