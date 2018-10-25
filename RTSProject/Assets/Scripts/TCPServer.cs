@@ -128,14 +128,4 @@ public class TCPServer : MonoBehaviour
     }
 }
 
-public class ServerClient
-{
-    public TcpClient tcp;
-    public string clientName;
 
-    public ServerClient(TcpClient clientSocket)
-    {
-        clientName = "Guest";
-        tcp = clientSocket;
-    }
-}

@@ -1,29 +1,40 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Net.Sockets;
+using UnityEngine;
+using System.Security;
+using System.Linq;
 using System.Text;
 using System.Threading;
-using UnityEngine;
-
 public class TcpTestClient : MonoBehaviour
 {
+
+    public string IP = "localhost";
 
     #region private members 	
     private TcpClient socketConnection;
     private Thread clientReceiveThread;
+    private NetworkStream stream;
+    private StreamWriter writer;
+    private StreamReader reader;
     private bool isTrue;
-    private  int port=55555;
+    private bool connected;
+    private int port = 8888;
+
+
     #endregion
     // Use this for initialization 	
     void Start()
     {
-        ConnectToTcpServer();
+        Invoke("ConnectToTcpServer", 1.0f);
     }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.J))
         {
             SendMessage();
         }
@@ -58,12 +69,23 @@ public class TcpTestClient : MonoBehaviour
     /// </summary> 	
     public void ConnectToTcpServer()
     {
-       
-            socketConnection = new TcpClient("localhost", port);
+
+        try
+        {
+            socketConnection = new TcpClient(IP, port);
+            stream=socketConnection.GetStream();
+            writer = new StreamWriter(stream);
+            reader = new StreamReader(stream);
+            connected = true;
+            Debug.Log("Connected to: " + IP + ":" + port.ToString());
             clientReceiveThread = new Thread(new ThreadStart(ListenForData));
             clientReceiveThread.IsBackground = true;
             clientReceiveThread.Start();
-            print("client is connected");
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
     }
     /// <summary> 	
     /// Runs in background clientReceiveThread; Listens for incomming data. 	
@@ -77,19 +99,19 @@ public class TcpTestClient : MonoBehaviour
             Byte[] bytes = new Byte[1024];
             while (true)
             {
+                print("CLIENT: getting to listening for data");
                 // Get a stream object for reading 				
-                using (NetworkStream stream = socketConnection.GetStream())
+                stream = socketConnection.GetStream();
+                int length;
+                // Read incomming stream into byte arrary. 					
+                while ((length = stream.Read(bytes, 0, bytes.Length)) != 0)
                 {
-                    int length;
-                    // Read incomming stream into byte arrary. 					
-                    while ((length = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        var incommingData = new byte[length];
-                        Array.Copy(bytes, 0, incommingData, 0, length);
-                        // Convert byte array to string message. 						
-                        string serverMessage = Encoding.ASCII.GetString(incommingData);
-                        Debug.Log("server message received at: "+ serverMessage);
-                    }
+                    var incommingData = new byte[length];
+                    Array.Copy(bytes, 0, incommingData, 0, length);
+                    // Convert byte array to string message. 						
+                    string serverMessage = Encoding.ASCII.GetString(incommingData);
+                    Debug.Log("server message received at: " + serverMessage);
+                    // SendMessage();
                 }
             }
         }
@@ -101,7 +123,7 @@ public class TcpTestClient : MonoBehaviour
     /// <summary> 	
     /// Send message to server using socket connection. 	
     /// </summary> 	
-    private void SendMessage()
+    public void SendMessage()
     {
         if (socketConnection == null)
         {
@@ -119,6 +141,7 @@ public class TcpTestClient : MonoBehaviour
                 byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(clientMessage);
                 // Write byte array to socketConnection stream.                 
                 stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
+                stream.Flush();
                 Debug.Log("Client SENT msg...");
             }
         }
