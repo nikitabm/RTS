@@ -9,21 +9,13 @@ public class PlayerCommandsData
     public int playerID;
     public List<int> units = new List<int>();
     public Vector3 pos;
-    public CustomMoveCommand moveCommand = new CustomMoveCommand();
+    public CustomMoveCommand moveCommand;
 
-    public PlayerCommandsData(int pTurn, int pPlayerID, int pUnitID, Vector3 pPos)
-    {
-        turn = pTurn;
-        moveCommand.pos = pos;
-        moveCommand.units = units;
-        // playerID = pPlayerID;
-        // units.Add(pUnitID);
-        // pos=pPos;
-    }
     public PlayerCommandsData(int pTurn,int pPlayerID, CustomMoveCommand pCommand)
     {
+        moveCommand=new CustomMoveCommand(pCommand.units,pCommand.pos);
         turn = pTurn;
         playerID=pPlayerID;
-        moveCommand = pCommand;
+        
     }
 }

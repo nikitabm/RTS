@@ -103,25 +103,21 @@ public class LockStepManager : MonoBehaviour, Service
 
         if (pc._selectedObj != null && pc.ObjectSelector.playerState == PlayerController.StateOfPlayer.SelectedLocation)
         {
-            int unitID = 10;
             List<int> unitsSelected = new List<int>();
             unitsSelected.Add(pc._selectedObj.GetComponent<Unit>().ID);
 
             CustomMoveCommand moveCommand = new CustomMoveCommand(unitsSelected, pc._clickPosition);
-
-            pc._selectedObj = null;
-            pc.ObjectSelector.playerState = PlayerController.StateOfPlayer.Idle;
-
+            print(moveCommand.units.Count + " " + moveCommand.pos);
 
             AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, moveCommand));
             print("Turn: " + turn);
 
             string s = "";
             commandToSend = new PlayerCommandsData(turn, playerID, moveCommand);
-            s = JsonUtility.ToJson(commandToSend);
+            s = JsonUtility.ToJson(commandToSend.moveCommand);
             print(s);
             (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).GetOwningTCPClient().SendMessage(s);
-
+            pc.ObjectSelector.playerState = PlayerController.StateOfPlayer.Idle;
         }
 
     }
