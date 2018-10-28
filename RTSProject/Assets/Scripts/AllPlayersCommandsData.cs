@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AllPlayersCommandsData : MonoBehaviour
+public class AllPlayersCommandsData
 {
-    public List<MoveCommand> moveCommandListHost = new List<MoveCommand>();
+    public List<CustomMoveCommand> moveCommandListHost = new List<CustomMoveCommand>();
 
-    public List<MoveCommand> moveCommandListClient = new List<MoveCommand>();
+    public List<CustomMoveCommand> moveCommandListClient = new List<CustomMoveCommand>();
 
 
-    public AllPlayersCommandsData(int ID, MoveCommand mc)
+    public AllPlayersCommandsData(int PlayerID, CustomMoveCommand mc)
     {
-        if (ID == 0) moveCommandListHost.Add(mc);
-        if (ID == 1) moveCommandListClient.Add(mc);
+        if (PlayerID == 0) moveCommandListHost.Add(mc);
+        if (PlayerID == 1) moveCommandListClient.Add(mc);
 
     }
 

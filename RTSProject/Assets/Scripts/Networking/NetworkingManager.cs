@@ -21,7 +21,6 @@ public class NetworkingManager : MonoBehaviour, Service
     private PlayerController _pc;
     //=============================
     private TCPServer _server = null;
-    private TCPClient _localCLient = null;
     private TcpTestClient _cl;
     private TCPTestServer _sr;
     //=============================
@@ -61,9 +60,9 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         SceneManager.LoadScene(scene);
     }
-    public TCPClient GetOwningTCPClient()
+    public TcpTestClient GetOwningTCPClient()
     {
-        return _localCLient;
+        return _cl;
     }
     public PlayerController GetOwningPC()
     {
@@ -79,9 +78,5 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         host = false;
         _cl = gameObject.AddComponent<TcpTestClient>();
-    }
-    public void SendTestMsg()
-    {
-        _cl.SendMessage();
     }
 }

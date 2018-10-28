@@ -37,7 +37,6 @@ public class SelectObject : MonoBehaviour
                 {
                     //debug
                     playerState = PlayerController.StateOfPlayer.SelectUnit;
-                    print(obj.name);    
                     _selectedObject=obj;
                     playerState = PlayerController.StateOfPlayer.WaitingToSelectLocation;
                 }

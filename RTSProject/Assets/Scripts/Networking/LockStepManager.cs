@@ -6,7 +6,9 @@ using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 using System.Security;
-public class LockStepManager : MonoBehaviour
+
+
+public class LockStepManager : MonoBehaviour, Service
 {
 
     PlayerController pc;
@@ -16,7 +18,7 @@ public class LockStepManager : MonoBehaviour
 
     //contains key which is number of turn commands were issued and
     //player commands data, which is id of player and list of issued commands
-    public Dictionary<int, PlayerCommandsData> TurnDataToSend = new Dictionary<int, PlayerCommandsData>();
+    public PlayerCommandsData commandToSend;
 
     //contains key- number of turn, and all players commands for this specific turn to execute
     public Dictionary<int, AllPlayersCommandsData> AllPlayersTurns = new Dictionary<int, AllPlayersCommandsData>();
@@ -32,16 +34,16 @@ public class LockStepManager : MonoBehaviour
 
     private void Awake()
     {
+        ServiceLocator.ProvideService(this);
         Instance = this;
         turn = 0;
-        TurnDataToSend = new Dictionary<int, PlayerCommandsData>();
+        //TurnDataToSend = new Dictionary<int, PlayerCommandsData>();
         AllPlayersTurns = new Dictionary<int, AllPlayersCommandsData>();
-        pc = (ServiceLocator.GetService(typeof(NetworkingManager))) as PlayerController;
-        approvedCommands=false;
+        approvedCommands = false;
     }
     void Start()
     {
-
+        pc = (ServiceLocator.GetService(typeof(GameManager)) as GameManager).TeamOneController.GetComponent<PlayerController>();
     }
     public void Update()
     {
@@ -51,10 +53,15 @@ public class LockStepManager : MonoBehaviour
         //in case the FPS is too slow, we may need to update the game multiple times a frame
         while (AccumilatedTime > FrameLength)
         {
-           // WriteTurnData();
-            //SendTurnData();
+            //testing
+            TestListenToCommands();
+
+
+
+            // WriteTurnData();
+            // SendTurnData();
             // GameFrameTurn();
-            
+
             AccumilatedTime = AccumilatedTime - FrameLength;
         }
     }
@@ -79,19 +86,46 @@ public class LockStepManager : MonoBehaviour
 
     public void IncrementTurn()
     {
-        if(approvedCommands)
+        if (approvedCommands)
         {
             turn++;
             ExecuteCommands();
         }
     }
-    
+
     public void ExecuteCommands()
     {
         //do commands
     }
 
-    public  void WriteTurnData()
+    public void TestListenToCommands()
+    {
+
+        if (pc._selectedObj != null && pc.ObjectSelector.playerState == PlayerController.StateOfPlayer.SelectedLocation)
+        {
+            int unitID = 10;
+            List<int> unitsSelected = new List<int>();
+            unitsSelected.Add(pc._selectedObj.GetComponent<Unit>().ID);
+
+            CustomMoveCommand moveCommand = new CustomMoveCommand(unitsSelected, pc._clickPosition);
+
+            pc._selectedObj = null;
+            pc.ObjectSelector.playerState = PlayerController.StateOfPlayer.Idle;
+
+
+            AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, moveCommand));
+            print("Turn: " + turn);
+
+            string s = "";
+            commandToSend = new PlayerCommandsData(turn, playerID, moveCommand);
+            s = JsonUtility.ToJson(commandToSend);
+            print(s);
+            (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).GetOwningTCPClient().SendMessage(s);
+
+        }
+
+    }
+    public void WriteTurnData()
     {
         MoveCommand moveCommand = new MoveCommand();
         if (pc._selectedObj != null && pc.ObjectSelector.playerState == PlayerController.StateOfPlayer.SelectedLocation)
@@ -104,12 +138,12 @@ public class LockStepManager : MonoBehaviour
             pc.ObjectSelector.playerState = PlayerController.StateOfPlayer.Idle;
         }
         //queues commands to dictionaries.
-        PlayerCommandsData data =new PlayerCommandsData(playerID, moveCommand);
-        TurnDataToSend.Add(turn, data );
-        AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, moveCommand));
-        pc._commandList.Add(moveCommand);
-        print("Turn: "+turn);
-        print("Move command: "+moveCommand._position + " " + moveCommand._unit);
+        // PlayerCommandsData data = new PlayerCommandsData(playerID, moveCommand);
+        // TurnDataToSend.Add(turn, data);
+        // AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, moveCommand));
+        // pc._commandList.Add(moveCommand);
+        // print("Turn: " + turn);
+        // print("Move command: " + moveCommand._position + " " + moveCommand._unit);
     }
     public void SendTurnData()
     {

@@ -34,10 +34,10 @@ public class TcpTestClient : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            SendMessage();
-        }
+        // if (Input.GetKeyDown(KeyCode.J))
+        // {
+        //     SendMessage();
+        // }
 
     }
     void OnApplicationQuit()
@@ -123,7 +123,7 @@ public class TcpTestClient : MonoBehaviour
     /// <summary> 	
     /// Send message to server using socket connection. 	
     /// </summary> 	
-    public void SendMessage()
+    public void SendMessage(string s)
     {
         if (socketConnection == null)
         {
@@ -136,13 +136,11 @@ public class TcpTestClient : MonoBehaviour
             NetworkStream stream = socketConnection.GetStream();
             if (stream.CanWrite)
             {
-                string clientMessage = "Client msg: I am Hello";
                 // Convert string message to byte array.                 
-                byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(clientMessage);
+                byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(s);
                 // Write byte array to socketConnection stream.                 
                 stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
                 stream.Flush();
-                Debug.Log("Client SENT msg...");
             }
         }
         catch (SocketException socketException)

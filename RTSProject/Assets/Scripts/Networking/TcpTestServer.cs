@@ -127,7 +127,6 @@ public class TCPTestServer : MonoBehaviour
                         c.tcp.Close();
                         continue;
                     }
-
                     // Get a stream object for reading 					
                     int length;
                     // Read incomming stream into byte arrary. 		
@@ -138,8 +137,17 @@ public class TCPTestServer : MonoBehaviour
                         // Convert byte array to string message. 							
                         string clientMessage = Encoding.ASCII.GetString(incommingData);
                         Debug.Log("server receives: " + clientMessage);
+                        PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(clientMessage);
+                        int turn = command.turn;
+                        int playerID = command.playerID;
+                        CustomMoveCommand cm = command.moveCommand;
                         SendMessage(c.tcp);
+                        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
+                        AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, cm));
 
+                        //print
+                        print((ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
+                        AllPlayersTurns[turn]);
                     }
                 }
             }
@@ -170,7 +178,6 @@ public class TCPTestServer : MonoBehaviour
                 byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage);
                 // Write byte array to socketConnection stream.               
                 stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);
-                Debug.Log("Server SENT msg...");
             }
         }
         catch (SocketException socketException)
