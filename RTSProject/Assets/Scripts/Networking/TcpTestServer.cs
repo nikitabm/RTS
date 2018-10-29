@@ -49,7 +49,6 @@ public class TCPTestServer : MonoBehaviour
         {
             tcpListener = new TcpListener(IPAddress.Any, port);
             tcpListener.Start();
-            StartListening();
             started = true;
 
             TcpClientAcceptThread = new Thread(new ThreadStart(StartListening));
@@ -68,7 +67,7 @@ public class TCPTestServer : MonoBehaviour
     }
     private void StartListening()
     {
-        if (clients != null && clients.Count <= 2)
+        if (clients != null && clients.Count <= 2&&tcpListener.AcceptTcpClient()!=null)
         {
             print("Server registered client to client list");
             clients.Add(new ServerClient(tcpListener.AcceptTcpClient()));
