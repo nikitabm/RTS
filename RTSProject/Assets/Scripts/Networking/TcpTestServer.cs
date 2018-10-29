@@ -27,7 +27,7 @@ public class TCPTestServer : MonoBehaviour
     /// </summary> 	
     private TcpClient connectedTcpClient;
     private List<ServerClient> clients;
-    private int port = 8888;
+    private int port = 55555;
     private bool started;
     private NetworkStream stream;
     private StreamReader reader;
@@ -62,7 +62,18 @@ public class TCPTestServer : MonoBehaviour
 
         tcpListener.BeginAcceptTcpClient(AcceptTcpClient, tcpListener);
     }
+    public void Update()
+    {
+        foreach (ServerClient c in clients)
+        {
+            print("Update is coming there");
+            if(!isConnected(c.tcp))
+            {
+                print("disconnected!: "+c.tcp.Client);
+            }
 
+        }
+    }
     private void AcceptTcpClient(IAsyncResult ar)
     {
         TcpListener listener = (TcpListener)ar.AsyncState;
@@ -122,21 +133,20 @@ public class TCPTestServer : MonoBehaviour
             {
                 foreach (ServerClient c in clients)
                 {
-                    if (!isConnected(c.tcp))
-                    {
-                        c.tcp.Close();
-                        continue;
-                    }
+                   
                     // Get a stream object for reading 					
-                    int length;
-                    // Read incomming stream into byte arrary. 		
-                    while ((length = c.tcp.GetStream().Read(bytes, 0, bytes.Length)) != 0)
+                    int length=0;
+                    // Read incomming stream into byte arrary. 	
+                    length = c.tcp.GetStream().Read(bytes, 0, bytes.Length);
+                    print("Length: "+length);
+                    while (length != 0)
                     {
+                        print("getting here");
                         var incommingData = new byte[length];
                         Array.Copy(bytes, 0, incommingData, 0, length);
                         // Convert byte array to string message. 							
                         string clientMessage = Encoding.ASCII.GetString(incommingData);
-                        Debug.Log("server receives: " + clientMessage);
+                        print("server receives: " + clientMessage);
                         PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(clientMessage);
                         int turn = command.turn;
                         int playerID = command.playerID;

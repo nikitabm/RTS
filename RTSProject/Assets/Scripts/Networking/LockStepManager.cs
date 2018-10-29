@@ -118,6 +118,9 @@ public class LockStepManager : MonoBehaviour, Service
             print(s);
             (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).GetOwningTCPClient().SendMessage(s);
             pc.ObjectSelector.playerState = PlayerController.StateOfPlayer.Idle;
+            turn++;
+            commandToSend=null;
+            pc._selectedObj=null;
         }
 
     }

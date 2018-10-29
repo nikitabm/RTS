@@ -22,7 +22,7 @@ public class TcpTestClient : MonoBehaviour
     private StreamReader reader;
     private bool isTrue;
     private bool connected;
-    private int port = 8888;
+    private int port = 55555;
 
 
     #endregion
@@ -34,10 +34,10 @@ public class TcpTestClient : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.J))
-        // {
-        //     SendMessage();
-        // }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            SendMessage("Test");
+        }
 
     }
     void OnApplicationQuit()
@@ -111,7 +111,6 @@ public class TcpTestClient : MonoBehaviour
                     // Convert byte array to string message. 						
                     string serverMessage = Encoding.ASCII.GetString(incommingData);
                     Debug.Log("server message received at: " + serverMessage);
-                    // SendMessage();
                 }
             }
         }
@@ -123,7 +122,7 @@ public class TcpTestClient : MonoBehaviour
     /// <summary> 	
     /// Send message to server using socket connection. 	
     /// </summary> 	
-    public void SendMessage(string s)
+    public new void SendMessage(string s)
     {
         if (socketConnection == null)
         {
@@ -136,6 +135,7 @@ public class TcpTestClient : MonoBehaviour
             NetworkStream stream = socketConnection.GetStream();
             if (stream.CanWrite)
             {
+                print("sending msg from client to server");
                 // Convert string message to byte array.                 
                 byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(s);
                 // Write byte array to socketConnection stream.                 
