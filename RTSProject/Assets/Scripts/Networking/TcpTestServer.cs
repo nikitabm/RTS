@@ -180,6 +180,7 @@ public class TCPTestServer : MonoBehaviour
                         PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(clientMessage);
                         int turn = command.turn;
                         int playerID = command.playerID;
+                        print(command.pos);
                         SendMessage(c.tcp);
                         print("almost there");
                         print("server receives turn number: "+turn);

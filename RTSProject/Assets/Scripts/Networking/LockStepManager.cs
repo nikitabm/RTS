@@ -15,6 +15,7 @@ public class LockStepManager : MonoBehaviour, Service
     int turn;
     int playerID;
     bool approvedCommands;
+    string s;
 
     //contains key which is number of turn commands were issued and
     //player commands data, which is id of player and list of issued commands
@@ -34,6 +35,7 @@ public class LockStepManager : MonoBehaviour, Service
 
     private void Awake()
     {
+        s = "";
         ServiceLocator.ProvideService(this);
         Instance = this;
         turn = 0;
@@ -54,14 +56,14 @@ public class LockStepManager : MonoBehaviour, Service
         while (AccumilatedTime > FrameLength)
         {
             //testing
-            TestListenToCommands();
+            //TestListenToCommands();
 
 
 
-            // WriteTurnData();
-            // SendTurnData();
-            // GameFrameTurn();
-
+            WriteTurnData();
+            SendTurnData();
+            GameFrameTurn();
+            turn++;
             AccumilatedTime = AccumilatedTime - FrameLength;
         }
     }
@@ -112,24 +114,14 @@ public class LockStepManager : MonoBehaviour, Service
 
 
             CustomMoveCommand moveCommand = new CustomMoveCommand(unitsSelected, pc._clickPosition);
-            print(moveCommand.units.Count + " " + moveCommand.pos);
 
             AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, moveCommand));
-            print("Turn: " + turn);
 
-            string s = "";
-            string t = "";
+            commandToSend = new PlayerCommandsData("", turn, playerID, unitsSelected, pc._clickPosition);
 
-            //{ "turn":0,"playerID":0, {"units":[0],"pos":{"x":6.5235595703125,"y":-1.3772476548898187e-18,"z":-13.682971954345704}}
-            commandToSend = new PlayerCommandsData("",turn, playerID, unitsSelected,pc._clickPosition);
-            // t = JsonUtility.ToJson(moveCommand);
-            // t.Remove(0, 1);
-            // t.Replace("{ ", ", ");
-            // s.Replace("}}", "},");
-            // s = "{ \"turn\":" + turn + ",\"playerID\":" + playerID + ", " + "\"MoveCommand\":" + t;
-            // print(s);
-            s=JsonUtility.ToJson(commandToSend);
-            
+
+            s = JsonUtility.ToJson(commandToSend);
+
             //send to server
             (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).GetOwningTCPClient().SendMessage(s);
 
@@ -142,28 +134,29 @@ public class LockStepManager : MonoBehaviour, Service
     }
     public void WriteTurnData()
     {
-        MoveCommand moveCommand = new MoveCommand();
+        CustomMoveCommand moveCommand;
+        List<int> unitsSelected = new List<int>();
         if (pc._selectedObj != null && pc.ObjectSelector.playerState == PlayerController.StateOfPlayer.SelectedLocation)
         {
-            moveCommand._unit = pc._selectedObj;
-            moveCommand._position = pc._clickPosition;
-            moveCommand._position.w = pc._selectedObj.GetComponent<Unit>().ID;
-            pc._clickPosition = Vector3.zero;
-            pc._selectedObj = null;
-            pc.ObjectSelector.playerState = PlayerController.StateOfPlayer.Idle;
+            unitsSelected.Add(pc._selectedObj.GetComponent<Unit>().ID);
+            moveCommand = new CustomMoveCommand(unitsSelected, pc._clickPosition);
+
+            AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, moveCommand));
+
+            commandToSend = new PlayerCommandsData("", turn, playerID, unitsSelected, pc._clickPosition);
+
+
         }
+        s = JsonUtility.ToJson(commandToSend);
         //queues commands to dictionaries.
-        // PlayerCommandsData data = new PlayerCommandsData(playerID, moveCommand);
-        // TurnDataToSend.Add(turn, data);
         // AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, moveCommand));
         // pc._commandList.Add(moveCommand);
-        // print("Turn: " + turn);
-        // print("Move command: " + moveCommand._position + " " + moveCommand._unit);
     }
     public void SendTurnData()
     {
-        // (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
-        // GetOwningTCPClient().SendCommand(turn,TurnDataToSend[turn]);
+        (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
+        GetOwningTCPClient().SendMessage(s);
+        s = "";
     }
 
     private void GameFrameTurn()
