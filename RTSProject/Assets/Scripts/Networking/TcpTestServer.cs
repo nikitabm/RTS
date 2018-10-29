@@ -180,14 +180,14 @@ public class TCPTestServer : MonoBehaviour
                         PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(clientMessage);
                         int turn = command.turn;
                         int playerID = command.playerID;
-                        CustomMoveCommand cm = command.moveCommand;
                         SendMessage(c.tcp);
                         print("almost there");
+                        print("server receives turn number: "+turn);
 
                         // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
                         // AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, cm));
 
-                        //print
+                        // //print
                         // print((ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
                         // AllPlayersTurns[turn]);
 

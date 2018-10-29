@@ -103,8 +103,13 @@ public class LockStepManager : MonoBehaviour, Service
 
         if (pc._selectedObj != null && pc.ObjectSelector.playerState == PlayerController.StateOfPlayer.SelectedLocation)
         {
+            print(pc._selectedObj.GetComponent<Unit>().ID);
             List<int> unitsSelected = new List<int>();
             unitsSelected.Add(pc._selectedObj.GetComponent<Unit>().ID);
+            unitsSelected.Add(10);
+            unitsSelected.Add(11);
+            unitsSelected.Add(12);
+
 
             CustomMoveCommand moveCommand = new CustomMoveCommand(unitsSelected, pc._clickPosition);
             print(moveCommand.units.Count + " " + moveCommand.pos);
@@ -113,14 +118,25 @@ public class LockStepManager : MonoBehaviour, Service
             print("Turn: " + turn);
 
             string s = "";
-            commandToSend = new PlayerCommandsData(turn, playerID, moveCommand);
-            s = JsonUtility.ToJson(commandToSend.moveCommand);
-            print(s);
+            string t = "";
+
+            //{ "turn":0,"playerID":0, {"units":[0],"pos":{"x":6.5235595703125,"y":-1.3772476548898187e-18,"z":-13.682971954345704}}
+            commandToSend = new PlayerCommandsData("",turn, playerID, unitsSelected,pc._clickPosition);
+            // t = JsonUtility.ToJson(moveCommand);
+            // t.Remove(0, 1);
+            // t.Replace("{ ", ", ");
+            // s.Replace("}}", "},");
+            // s = "{ \"turn\":" + turn + ",\"playerID\":" + playerID + ", " + "\"MoveCommand\":" + t;
+            // print(s);
+            s=JsonUtility.ToJson(commandToSend);
+            
+            //send to server
             (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).GetOwningTCPClient().SendMessage(s);
+
             pc.ObjectSelector.playerState = PlayerController.StateOfPlayer.Idle;
             turn++;
-            commandToSend=null;
-            pc._selectedObj=null;
+            commandToSend = null;
+            pc._selectedObj = null;
         }
 
     }
