@@ -99,7 +99,6 @@ public class TcpTestClient : MonoBehaviour
             Byte[] bytes = new Byte[1024];
             while (true)
             {
-                print("CLIENT: getting to listening for data");
                 // Get a stream object for reading 				
                 stream = socketConnection.GetStream();
                 int length;

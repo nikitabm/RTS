@@ -36,6 +36,7 @@ public class TCPTestServer : MonoBehaviour
     private NetworkStream stream;
     private StreamReader reader;
     private StreamWriter writer;
+    private bool clientsConnected;
 
 
     #endregion
@@ -67,19 +68,31 @@ public class TCPTestServer : MonoBehaviour
     }
     private void StartListening()
     {
-        if (clients != null && clients.Count <= 2&&tcpListener.AcceptTcpClient()!=null)
+        while (!clientsConnected)
         {
-            print("Server registered client to client list");
-            clients.Add(new ServerClient(tcpListener.AcceptTcpClient()));
+            Debug.Log("Waiting for a connection...");
+
+            TcpClient client = tcpListener.AcceptTcpClient();
+            if (client != null)
+            {
+                clients.Add(new ServerClient(client));
+                clientsConnected = true;
+                print("Server registered client to client list");
+            }
         }
     }
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.J))
         {
-            // SendMessage(clients[0].tcp);
-            print(tcpListenerThread.IsAlive);
 
+            print("tcpListenerThread is Alive?: " + tcpListenerThread.IsAlive);
+            print("clientAcceptThread is Alive?: " + TcpClientAcceptThread.IsAlive);
+            print("Clients count: " + clients.Count);
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            SendMessage(clients[0].tcp);
         }
     }
     // private void AcceptTcpClient(IAsyncResult ar)
@@ -103,10 +116,11 @@ public class TCPTestServer : MonoBehaviour
         }
         try
         {
-            tcpListenerThread.IsBackground = false;
-            tcpListenerThread.Abort();
             TcpClientAcceptThread.IsBackground = false;
             TcpClientAcceptThread.Abort();
+            tcpListenerThread.IsBackground = false;
+            tcpListenerThread.Abort();
+
         }
         catch (Exception e)
         {
@@ -135,18 +149,19 @@ public class TCPTestServer : MonoBehaviour
 
     private void ListenForIncommingRequests()
     {
-        try
+        while (true)
         {
-            Byte[] bytes = new Byte[1024];
-            while (started)
+            try
             {
+                Byte[] bytes = new Byte[1024];
+
                 foreach (ServerClient c in clients)
                 {
-                    if (!isConnected(clients[0].tcp))
+                    if (!isConnected(c.tcp))
                     {
                         print("closing client");
-                        clients[0].tcp.Close();
-                        disconnects.Add(clients[0]);
+                        c.tcp.Close();
+                        disconnects.Add(c);
                         continue;
                     }
                     // Get a stream object for reading 					
@@ -167,21 +182,23 @@ public class TCPTestServer : MonoBehaviour
                         int playerID = command.playerID;
                         CustomMoveCommand cm = command.moveCommand;
                         SendMessage(c.tcp);
+                        print("almost there");
+
                         // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
                         // AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, cm));
 
                         //print
-                        print("almost there");
                         // print((ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
                         // AllPlayersTurns[turn]);
 
                     }
                 }
             }
-        }
-        catch (SocketException socketException)
-        {
-            Debug.Log("SocketException " + socketException.ToString());
+
+            catch (SocketException socketException)
+            {
+                Debug.Log("SocketException " + socketException.ToString());
+            }
         }
     }
     /// <summary> 	
