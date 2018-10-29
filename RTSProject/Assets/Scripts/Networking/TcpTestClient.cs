@@ -34,9 +34,9 @@ public class TcpTestClient : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        if(Input.GetKeyDown(KeyCode.Tab))
         {
-            SendMessage("Test");
+            SendMessage("CLIENT is calling...");
         }
 
     }
@@ -62,7 +62,7 @@ public class TcpTestClient : MonoBehaviour
         catch (Exception e)
         {
             Debug.Log(e.Message);
-        }
+        }   
     }
     /// <summary> 	
     /// Setup socket connection. 	
@@ -110,7 +110,7 @@ public class TcpTestClient : MonoBehaviour
                     Array.Copy(bytes, 0, incommingData, 0, length);
                     // Convert byte array to string message. 						
                     string serverMessage = Encoding.ASCII.GetString(incommingData);
-                    Debug.Log("server message received at: " + serverMessage);
+                    Debug.Log("server message received as: " + serverMessage);
                 }
             }
         }
@@ -126,13 +126,13 @@ public class TcpTestClient : MonoBehaviour
     {
         if (socketConnection == null)
         {
-            System.Console.WriteLine("socket connection is null, returning...");
+            print("Socket is null");
             return;
         }
         try
         {
             // Get a stream object for writing. 			
-            NetworkStream stream = socketConnection.GetStream();
+            stream = socketConnection.GetStream();
             if (stream.CanWrite)
             {
                 print("sending msg from client to server");
@@ -140,7 +140,7 @@ public class TcpTestClient : MonoBehaviour
                 byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(s);
                 // Write byte array to socketConnection stream.                 
                 stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
-                stream.Flush();
+                // stream.Flush();
             }
         }
         catch (SocketException socketException)
