@@ -23,21 +23,25 @@ public class TcpTestClient : MonoBehaviour
     private bool isTrue;
     public bool connected;
     private int port = 55555;
+    private enum ClientState
+    {
+        Waiting,
+        Ready,
+        Playing
+    }
+    private ClientState _clientState;
 
 
     #endregion
     // Use this for initialization 	
     void Start()
     {
+
         Invoke("ConnectToTcpServer", 1.0f);
     }
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Tab))
-        {
-            SendMessage("CLIENT is calling...");
-        }
 
     }
     void OnApplicationQuit()
@@ -62,7 +66,7 @@ public class TcpTestClient : MonoBehaviour
         catch (Exception e)
         {
             Debug.Log(e.Message);
-        }   
+        }
     }
     /// <summary> 	
     /// Setup socket connection. 	
@@ -73,7 +77,7 @@ public class TcpTestClient : MonoBehaviour
         try
         {
             socketConnection = new TcpClient(IP, port);
-            stream=socketConnection.GetStream();
+            stream = socketConnection.GetStream();
             writer = new StreamWriter(stream);
             reader = new StreamReader(stream);
             connected = true;
@@ -81,6 +85,7 @@ public class TcpTestClient : MonoBehaviour
             clientReceiveThread = new Thread(new ThreadStart(ListenForData));
             clientReceiveThread.IsBackground = true;
             clientReceiveThread.Start();
+
         }
         catch (Exception e)
         {
@@ -95,7 +100,7 @@ public class TcpTestClient : MonoBehaviour
     {
         try
         {
-            
+
             Byte[] bytes = new Byte[1024];
             while (true)
             {

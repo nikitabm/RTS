@@ -37,32 +37,34 @@ public class SelectObject : MonoBehaviour
     }
     public void ClickOnObjects()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonDown(0))
         {
 
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000f))
             {
-                GameObject obj = hit.transform.gameObject;
-                if (obj.GetComponent(typeof(ISelectable)) != null)
+                if (playerState == StateOfPlayer.Idle)
                 {
-                    units.Clear();
-                    playerState = StateOfPlayer.SelectUnit;
-                    units.Add(obj.transform.gameObject.GetComponent<Unit>().ID);
+                    GameObject obj = hit.transform.gameObject;
+                    if (obj.GetComponent(typeof(ISelectable)) != null)
+                    {
+                        units.Clear();
+                        playerState = StateOfPlayer.SelectUnit;
+                        units.Add(obj.transform.gameObject.GetComponent<Unit>().ID);
+                    }
                 }
-                if (playerState == StateOfPlayer.SelectUnit)
+                else if (playerState == StateOfPlayer.SelectUnit)
                 {
                     _clickPoint = hit.point;
                     playerState = StateOfPlayer.SelectedLocation;
                     CreateAndPassCommand(units, _clickPoint);
+                    playerState = StateOfPlayer.Idle;
 
                 }
             }
         }
-        if (Input.GetMouseButtonUp(2) &&
-        (playerState == StateOfPlayer.SelectUnit ||
-        playerState == StateOfPlayer.SelectedLocation))
+        if (Input.GetMouseButtonUp(1))
         {
             playerState = StateOfPlayer.Idle;
         }

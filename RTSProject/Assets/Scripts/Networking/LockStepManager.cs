@@ -114,6 +114,16 @@ public class LockStepManager : MonoBehaviour, Service
     public void ExecuteCommands()
     {
         //do commands
+        List<CustomMoveCommand> hostCommands = new List<CustomMoveCommand>();
+        List<CustomMoveCommand> clientCommands = new List<CustomMoveCommand>();
+
+        hostCommands = playersmoveData.GetCommandsAtTurn(true, turn);
+        clientCommands = playersmoveData.GetCommandsAtTurn(false, turn);
+        for (int i = 0; i < hostCommands.Count; i++)
+        {
+            // hostCommands[i].units
+        }
+
     }
 
     public void TestListenToCommands()
@@ -160,8 +170,8 @@ public class LockStepManager : MonoBehaviour, Service
             commandToSend = new PlayerCommandsData(-1, turn, playerID, emptyIntList, Vector3.zero);
         }
 
-        
-        
+
+
     }
     public void SendTurnData()
     {
