@@ -10,24 +10,15 @@ public class PlayerController : MonoBehaviour
 
  
 
-    public enum StateOfPlayer
-    {
-        Idle,
-        SelectBuilding,
-        SelectUnit,
-        WaitingToSelectLocation,
-        SelectedLocation
-    }
+   
     public List<MoveCommand> _commandList = null;
     public SelectObject ObjectSelector;
     public GameObject _selectedObj;
     public Vector3 _clickPosition;
-    public StateOfPlayer _playerState;
     private void Start()
     {
        
         ObjectSelector = GetComponent<SelectObject>();
-        _playerState = StateOfPlayer.Idle;
         _clickPosition = Vector3.zero;
     }
 

@@ -10,9 +10,9 @@ public class PlayerCommandsData
     public int playerID;
     public List<int> units = new List<int>();
     public Vector3 pos;
-    public string  command;
+    public int  command;
 
-    public PlayerCommandsData(string s,int pTurn,int pPlayerID,List<int> pUnits,Vector3 pPos)
+    public PlayerCommandsData(int s,int pTurn,int pPlayerID,List<int> pUnits,Vector3 pPos)
     {
         command=s;
         units=pUnits;

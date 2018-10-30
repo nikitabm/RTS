@@ -177,21 +177,21 @@ public class TCPTestServer : MonoBehaviour
                         // Convert byte array to string message. 							
                         string clientMessage = Encoding.ASCII.GetString(incommingData);
                         print("server receives: " + clientMessage);
+
                         PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(clientMessage);
-                        int turn = command.turn;
-                        int playerID = command.playerID;
-                        print(command.pos);
+                        if(command.command==-1) print("server receives empty command");
+                        else if(command.command==0) print("server recieves movecommand");
+                        int receivedPlayerTurn = command.turn;
+                        int receivedPlayerID = command.playerID;
+                        print("server receives turn number: " + receivedPlayerTurn);
+
+                        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
+                        AllPlayersTurns.Add(receivedPlayerTurn,
+                        new AllPlayersCommandsData(receivedPlayerID, new CustomMoveCommand(command.units, command.pos)));
+
+                        print((ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
+                        AllPlayersTurns[receivedPlayerTurn]);
                         SendMessage(c.tcp);
-                        print("almost there");
-                        print("server receives turn number: "+turn);
-
-                        // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
-                        // AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, cm));
-
-                        // //print
-                        // print((ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
-                        // AllPlayersTurns[turn]);
-
                     }
                 }
             }
