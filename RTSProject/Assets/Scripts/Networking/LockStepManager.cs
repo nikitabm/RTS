@@ -66,11 +66,15 @@ public class LockStepManager : MonoBehaviour, Service
             //TestListenToCommands();
 
 
-            if ((ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
-            GetOwningTCPClient().GetComponent<TcpTestClient>().connected)
+            if (
+            (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).GetOwningTCPClient() != null &&
+            (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).GetOwningTCPClient().
+            GetComponent<TcpTestClient>().connected
+            )
+            {
                 turn++;
-
-            print("turn: " + turn);
+                print("turn: " + turn);
+            }
             SendTurnData();
             GameFrameTurn();
 
@@ -150,24 +154,24 @@ public class LockStepManager : MonoBehaviour, Service
             inputCommand.turn = turn;
             playersmoveData.RegisterCommand(host, inputCommand);
             commandToSend = new PlayerCommandsData(0, turn, playerID, inputCommand.units, inputCommand.pos);
-
         }
         else
         {
             commandToSend = new PlayerCommandsData(-1, turn, playerID, emptyIntList, Vector3.zero);
         }
 
-        s = JsonUtility.ToJson(commandToSend);
-        inputCommand = null;
+        
+        
     }
     public void SendTurnData()
     {
         if ((ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
         GetOwningTCPClient() != null)
         {
+            s = JsonUtility.ToJson(commandToSend);
             (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
             GetOwningTCPClient().SendMessage(s);
-            s = "";
+            inputCommand = null;
         }
     }
 

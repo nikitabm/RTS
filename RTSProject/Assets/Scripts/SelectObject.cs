@@ -47,7 +47,7 @@ public class SelectObject : MonoBehaviour
                 GameObject obj = hit.transform.gameObject;
                 if (obj.GetComponent(typeof(ISelectable)) != null)
                 {
-
+                    units.Clear();
                     playerState = StateOfPlayer.SelectUnit;
                     units.Add(obj.transform.gameObject.GetComponent<Unit>().ID);
                 }
@@ -65,9 +65,6 @@ public class SelectObject : MonoBehaviour
         playerState == StateOfPlayer.SelectedLocation))
         {
             playerState = StateOfPlayer.Idle;
-            _selectedObject = null;
-            units.Clear();
-            
         }
     }
     public void CreateAndPassCommand(List<int> pUnits, Vector3 pos)
