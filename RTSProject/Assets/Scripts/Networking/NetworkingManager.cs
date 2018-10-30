@@ -36,6 +36,7 @@ public class NetworkingManager : MonoBehaviour, Service
     private TcpClient _connectedTcpClient;
 
     private bool host = false;
+    private bool connection=false;
     //local client
     private TcpClient _socketConnection;
     private Thread _clientReceiveThread;

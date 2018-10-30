@@ -21,7 +21,7 @@ public class TcpTestClient : MonoBehaviour
     private StreamWriter writer;
     private StreamReader reader;
     private bool isTrue;
-    private bool connected;
+    public bool connected;
     private int port = 55555;
 
 

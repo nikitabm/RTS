@@ -66,6 +66,8 @@ public class SelectObject : MonoBehaviour
         {
             playerState = StateOfPlayer.Idle;
             _selectedObject = null;
+            units.Clear();
+            
         }
     }
     public void CreateAndPassCommand(List<int> pUnits, Vector3 pos)

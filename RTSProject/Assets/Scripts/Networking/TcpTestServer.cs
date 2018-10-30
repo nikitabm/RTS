@@ -185,12 +185,12 @@ public class TCPTestServer : MonoBehaviour
                         int receivedPlayerID = command.playerID;
                         print("server receives turn number: " + receivedPlayerTurn);
 
-                        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
-                        AllPlayersTurns.Add(receivedPlayerTurn,
-                        new AllPlayersCommandsData(receivedPlayerID, new CustomMoveCommand(command.units, command.pos)));
+                        // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
+                        // AllPlayersTurns.Add(receivedPlayerTurn,
+                        // new AllPlayersCommandsData(receivedPlayerID, new CustomMoveCommand(command.units, command.pos)));
 
-                        print((ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
-                        AllPlayersTurns[receivedPlayerTurn]);
+                        // print((ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
+                        // AllPlayersTurns[receivedPlayerTurn]);
                         SendMessage(c.tcp);
                     }
                 }

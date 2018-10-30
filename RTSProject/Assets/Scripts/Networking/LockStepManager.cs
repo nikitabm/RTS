@@ -24,7 +24,7 @@ public class LockStepManager : MonoBehaviour, Service
     public PlayerCommandsData commandToSend;
 
     //contains key- number of turn, and all players commands for this specific turn to execute
-    public Dictionary<int, AllPlayersCommandsData> AllPlayersTurns = new Dictionary<int, AllPlayersCommandsData>();
+    public AllPlayersCommandsData playersmoveData;
 
     //public
     LockStepManager Instance;
@@ -37,12 +37,12 @@ public class LockStepManager : MonoBehaviour, Service
 
     private void Awake()
     {
+        playersmoveData = new AllPlayersCommandsData();
         s = "";
         ServiceLocator.ProvideService(this);
         Instance = this;
         turn = 0;
         //TurnDataToSend = new Dictionary<int, PlayerCommandsData>();
-        AllPlayersTurns = new Dictionary<int, AllPlayersCommandsData>();
         approvedCommands = false;
     }
     void Start()
@@ -66,8 +66,10 @@ public class LockStepManager : MonoBehaviour, Service
             //TestListenToCommands();
 
 
+            if ((ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
+            GetOwningTCPClient().GetComponent<TcpTestClient>().connected)
+                turn++;
 
-            turn++;
             print("turn: " + turn);
             SendTurnData();
             GameFrameTurn();
@@ -143,17 +145,20 @@ public class LockStepManager : MonoBehaviour, Service
 
         if (inputCommand != null)
         {
-
-            AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, inputCommand));
+            bool host = (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).HasAuthority();
+            // AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, inputCommand));
+            inputCommand.turn = turn;
+            playersmoveData.RegisterCommand(host, inputCommand);
             commandToSend = new PlayerCommandsData(0, turn, playerID, inputCommand.units, inputCommand.pos);
+
         }
         else
         {
             commandToSend = new PlayerCommandsData(-1, turn, playerID, emptyIntList, Vector3.zero);
-            pc._selectedObj = null;
         }
 
         s = JsonUtility.ToJson(commandToSend);
+        inputCommand = null;
     }
     public void SendTurnData()
     {
