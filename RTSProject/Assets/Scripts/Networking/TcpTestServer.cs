@@ -191,6 +191,7 @@ public class TCPTestServer : MonoBehaviour
                             PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(clientMessage);
                             if (command.command == -1) print("server receives empty command");
                             else if (command.command == 0) print("server recieves movecommand");
+                            
                             int receivedPlayerTurn = command.turn;
                             int receivedPlayerID = command.playerID;
                             print("server receives turn number: " + receivedPlayerTurn);

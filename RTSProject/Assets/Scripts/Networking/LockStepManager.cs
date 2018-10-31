@@ -42,7 +42,7 @@ public class LockStepManager : MonoBehaviour, Service
         s = "";
         ServiceLocator.ProvideService(this);
         Instance = this;
-        turn = 0;
+        turn = -2;
         //TurnDataToSend = new Dictionary<int, PlayerCommandsData>();
         approvedCommands = false;
     }
@@ -75,8 +75,21 @@ public class LockStepManager : MonoBehaviour, Service
 
             }
             SendTurnData();
-            GameFrameTurn();
-
+            //GameFrameTurn();
+            if (client.host)
+            {
+                if (client.otherPlayerDataReceived&&client.myDataConfirmed)
+                {
+                    client.SendDataToClient("3");
+                    client.readyToTurnWheel=true;
+                    client.myDataConfirmed=false;
+                    client.otherPlayerDataReceived=false;
+                }
+            }
+            if(client.readyToTurnWheel)
+            {
+                print("conformation of turn :"+(turn+2));
+            }
             AccumilatedTime = AccumilatedTime - FrameLength;
         }
     }
@@ -162,11 +175,11 @@ public class LockStepManager : MonoBehaviour, Service
             //AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, inputCommand));
             inputCommand.turn = turn;
             playersmoveData.RegisterCommand(host, inputCommand);
-            commandToSend = new PlayerCommandsData(0, turn, playerID, inputCommand.units, inputCommand.pos);
+            commandToSend = new PlayerCommandsData(0, turn+2, playerID, inputCommand.units, inputCommand.pos);
         }
         else
         {
-            commandToSend = new PlayerCommandsData(-1, turn, playerID, emptyIntList, Vector3.zero);
+            commandToSend = new PlayerCommandsData(-1, turn+2, playerID, emptyIntList, Vector3.zero);
         }
 
 
@@ -174,6 +187,7 @@ public class LockStepManager : MonoBehaviour, Service
     }
     public void SendTurnData()
     {
+        //sending turn data to ANOTHER Client
         if (client != null && client._clientState == TcpTestClient.ClientState.Playing)
         {
             print("Sending turns");
@@ -186,7 +200,7 @@ public class LockStepManager : MonoBehaviour, Service
             {
                 client.SendMessage(s);
             }
-            client._turnState = TcpTestClient.TurnState.SendData;
+            client._turnState = TcpTestClient.TurnState.WaitingForOtherPlayerDataAndConformation;
             inputCommand = null;
         }
     }

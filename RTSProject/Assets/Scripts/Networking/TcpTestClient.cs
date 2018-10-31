@@ -26,11 +26,16 @@ public class TcpTestClient : MonoBehaviour
     public bool host;
     private int port = 55555;
     private bool once;
+    public bool otherPlayerDataReceived;
+    public bool readyToTurnWheel;
+    public bool myDataConfirmed;
     public enum TurnState
     {
         none,
-        SendData,
+        DataSent,
+        WaitingForOtherPlayerDataAndConformation,
         WaitingForOtherPlayerData,
+        WaitingForOtherPlayerConformation,
         DataComplete
     }
     public TurnState _turnState;
@@ -61,6 +66,9 @@ public class TcpTestClient : MonoBehaviour
     // Use this for initialization 	
     void Start()
     {
+        myDataConfirmed = false;
+        readyToTurnWheel = false;
+        otherPlayerDataReceived = false;
         once = false;
         _turnState = TurnState.none;
         _clientState = ClientState.none;
@@ -74,6 +82,7 @@ public class TcpTestClient : MonoBehaviour
             DoOnceInvoke("SendStartGameMsg", 3.0f);
 
         }
+        // if ()
     }
     void OnApplicationQuit()
     {
@@ -164,13 +173,24 @@ public class TcpTestClient : MonoBehaviour
                     }
                     if (serverMessage == "2")
                     {
-                       _turnState=TurnState.DataComplete;
+                        myDataConfirmed = true;
+                        _turnState = TurnState.DataComplete;
                     }
+                    if (serverMessage == "3")
+                    {
+                        readyToTurnWheel = true;
+                        otherPlayerDataReceived = false;
+                        myDataConfirmed = false;
+                    }
+
                     else
                     {
                         //save command and send receive conformation
                         PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(serverMessage);
+                        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
+                        playersmoveData.RegisterCommand(host, new CustomMoveCommand(command.units, command.pos, command.turn));
                         SendMessage("2");
+                        otherPlayerDataReceived = true;
                     }
                 }
             }
@@ -189,6 +209,7 @@ public class TcpTestClient : MonoBehaviour
     public void SendDataToClient(string s)
     {
         _server.SendMessageToClient(s);
+        _turnState = TurnState.DataSent;
     }
     public new void SendMessage(string s)
     {
