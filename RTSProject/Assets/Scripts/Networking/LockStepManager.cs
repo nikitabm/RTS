@@ -25,6 +25,7 @@ public class LockStepManager : MonoBehaviour, Service
 
     //contains key- number of turn, and all players commands for this specific turn to execute
     public AllPlayersCommandsData playersmoveData;
+    public TcpTestClient client;
 
     //public
     LockStepManager Instance;
@@ -48,6 +49,7 @@ public class LockStepManager : MonoBehaviour, Service
     void Start()
     {
         pc = (ServiceLocator.GetService(typeof(GameManager)) as GameManager).TeamOneController.GetComponent<PlayerController>();
+        client=(ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).GetOwningTCPClient();
     }
     public void SetInputCommand(CustomMoveCommand cm)
     {
@@ -66,11 +68,7 @@ public class LockStepManager : MonoBehaviour, Service
             //TestListenToCommands();
 
 
-            if (
-            (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).GetOwningTCPClient() != null &&
-            (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).GetOwningTCPClient().
-            GetComponent<TcpTestClient>().connected
-            )
+            if ( client._clientState==TcpTestClient.ClientState.Playing)
             {
                 turn++;
                 print("turn: " + turn);

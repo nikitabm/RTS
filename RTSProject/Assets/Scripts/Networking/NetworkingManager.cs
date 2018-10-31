@@ -36,7 +36,7 @@ public class NetworkingManager : MonoBehaviour, Service
     private TcpClient _connectedTcpClient;
 
     private bool host = false;
-    private bool connection=false;
+    private bool connection = false;
     //local client
     private TcpClient _socketConnection;
     private Thread _clientReceiveThread;
@@ -73,11 +73,15 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         host = true;
         _sr = gameObject.AddComponent<TCPTestServer>();
-        // _cl = gameObject.AddComponent<TcpTestClient>();
+        _cl = gameObject.AddComponent<TcpTestClient>();
+        _cl.Server = _sr;
+        _cl.host=true; 
     }
     public void ConnectToGame()
     {
         host = false;
         _cl = gameObject.AddComponent<TcpTestClient>();
+        _cl.host = true;
+
     }
 }

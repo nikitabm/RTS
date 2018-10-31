@@ -33,17 +33,22 @@ public class TCPTestServer : MonoBehaviour
 
     private int port = 55555;
     private bool started;
-    private NetworkStream stream;
-    private StreamReader reader;
-    private StreamWriter writer;
-    private bool clientsConnected;
+    private bool AllPlayersConnected;
+    private enum GameState
+    {
+        none,
+        WaitingForPlayers,
+        GameStart,
+        GamePause
+    }
+    private GameState _gameState;
 
 
     #endregion
 
-    // Use this for initialization
     void Start()
     {
+        _gameState = GameState.none;
         clients = new List<ServerClient>();
         started = false;
         try
@@ -60,6 +65,7 @@ public class TCPTestServer : MonoBehaviour
             tcpListenerThread.IsBackground = true;
             tcpListenerThread.Start();
             print("Server initialized");
+            _gameState = GameState.WaitingForPlayers;
         }
         catch (Exception e)
         {
@@ -68,7 +74,7 @@ public class TCPTestServer : MonoBehaviour
     }
     private void StartListening()
     {
-        while (!clientsConnected)
+        while (!AllPlayersConnected)
         {
             Debug.Log("Waiting for a connection...");
 
@@ -76,33 +82,19 @@ public class TCPTestServer : MonoBehaviour
             if (client != null)
             {
                 clients.Add(new ServerClient(client));
-                clientsConnected = true;
                 print("Server registered client to client list");
+                if (clients.Count >= 2)
+                {
+                    print("all players Connected");
+                    _gameState = GameState.GameStart;
+                    SendMessage(clients[1].tcp, "0");
+                    AllPlayersConnected = true;
+                    (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
+                    GetOwningTCPClient()._clientState=TcpTestClient.ClientState.InGame;
+                }
             }
         }
     }
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-
-            print("tcpListenerThread is Alive?: " + tcpListenerThread.IsAlive);
-            print("clientAcceptThread is Alive?: " + TcpClientAcceptThread.IsAlive);
-            print("Clients count: " + clients.Count);
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            SendMessage(clients[0].tcp);
-        }
-    }
-    // private void AcceptTcpClient(IAsyncResult ar)
-    // {
-    //     TcpListener listener = (TcpListener)ar.AsyncState;
-    //     clients.Add(new ServerClient(listener.EndAcceptTcpClient(ar)));
-    //     print("Number of clients: " + clients.Count);
-    //     print("New connection established");
-    //     //StartListening();
-    // }
 
     void OnApplicationQuit()
     {
@@ -179,19 +171,21 @@ public class TCPTestServer : MonoBehaviour
                         print("server receives: " + clientMessage);
 
                         PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(clientMessage);
-                        if(command.command==-1) print("server receives empty command");
-                        else if(command.command==0) print("server recieves movecommand");
+                        if (command.command == -1) print("server receives empty command");
+                        else if (command.command == 0) print("server recieves movecommand");
                         int receivedPlayerTurn = command.turn;
                         int receivedPlayerID = command.playerID;
                         print("server receives turn number: " + receivedPlayerTurn);
 
+
+                        //still  need to add command or to send it to local client
                         // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
                         // AllPlayersTurns.Add(receivedPlayerTurn,
                         // new AllPlayersCommandsData(receivedPlayerID, new CustomMoveCommand(command.units, command.pos)));
 
                         // print((ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
                         // AllPlayersTurns[receivedPlayerTurn]);
-                        SendMessage(c.tcp);
+
                     }
                 }
             }
@@ -205,7 +199,11 @@ public class TCPTestServer : MonoBehaviour
     /// <summary> 	
     /// Send message to client using socket connection. 	
     /// </summary> 	
-    private void SendMessage(TcpClient c)
+    public void SendMessageToClient(string s)
+    {
+        SendMessage(clients[1].tcp, s);
+    }
+    private void SendMessage(TcpClient c, string s)
     {
         if (c == null)
         {
@@ -219,7 +217,7 @@ public class TCPTestServer : MonoBehaviour
             NetworkStream stream = c.GetStream();
             if (stream.CanWrite)
             {
-                string serverMessage = "server msg: I confirm";
+                string serverMessage = s;
                 // Convert string message to byte array.                 
                 byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage);
                 // Write byte array to socketConnection stream.               

@@ -16,33 +16,52 @@ public class TcpTestClient : MonoBehaviour
 
     #region private members 	
     private TcpClient socketConnection;
+    private TCPTestServer _server;
     private Thread clientReceiveThread;
     private NetworkStream stream;
     private StreamWriter writer;
     private StreamReader reader;
     private bool isTrue;
     public bool connected;
+    public bool host;
     private int port = 55555;
-    private enum ClientState
+    public enum ClientState
     {
+        none,
         Waiting,
-        Ready,
+        Connected,
+        InGame,
+        Preparing,
         Playing
     }
-    private ClientState _clientState;
+    public TCPTestServer Server
+    {
+        get
+        {
+            return _server;
+        }
+        set
+        {
+            _server = value;
+        }
+    }
+    public ClientState _clientState;
 
 
     #endregion
     // Use this for initialization 	
     void Start()
     {
-
+        _clientState = ClientState.none;
         Invoke("ConnectToTcpServer", 1.0f);
     }
     // Update is called once per frame
     void Update()
     {
-
+        if (host && _clientState == ClientState.InGame)
+        {
+            Invoke("SendStartGameMsg",3.0f);
+        }
     }
     void OnApplicationQuit()
     {
@@ -80,7 +99,7 @@ public class TcpTestClient : MonoBehaviour
             stream = socketConnection.GetStream();
             writer = new StreamWriter(stream);
             reader = new StreamReader(stream);
-            connected = true;
+            _clientState = ClientState.Connected;
             Debug.Log("Connected to: " + IP + ":" + port.ToString());
             clientReceiveThread = new Thread(new ThreadStart(ListenForData));
             clientReceiveThread.IsBackground = true;
@@ -115,6 +134,18 @@ public class TcpTestClient : MonoBehaviour
                     // Convert byte array to string message. 						
                     string serverMessage = Encoding.ASCII.GetString(incommingData);
                     Debug.Log("server message received as: " + serverMessage);
+                    if (serverMessage == "0")
+                    {
+                        _clientState = ClientState.InGame;
+                    }
+                    if (serverMessage == "1")
+                    {
+                        _clientState = ClientState.Playing;
+                    }
+                    if (serverMessage == "2")
+                    {
+                        // _clientState = ClientState.Playing;
+                    }
                 }
             }
         }
@@ -123,9 +154,10 @@ public class TcpTestClient : MonoBehaviour
             Debug.Log("Socket exception: " + socketException);
         }
     }
-    /// <summary> 	
-    /// Send message to server using socket connection. 	
-    /// </summary> 	
+    public void SendStartGameMsg()
+    {
+        _server.SendMessageToClient("1");
+    }
     public new void SendMessage(string s)
     {
         if (socketConnection == null)
