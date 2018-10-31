@@ -49,7 +49,7 @@ public class LockStepManager : MonoBehaviour, Service
     void Start()
     {
         pc = (ServiceLocator.GetService(typeof(GameManager)) as GameManager).TeamOneController.GetComponent<PlayerController>();
-        client=(ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).GetOwningTCPClient();
+
     }
     public void SetInputCommand(CustomMoveCommand cm)
     {
@@ -68,10 +68,11 @@ public class LockStepManager : MonoBehaviour, Service
             //TestListenToCommands();
 
 
-            if ( client._clientState==TcpTestClient.ClientState.Playing)
+            if (client != null && client._clientState == TcpTestClient.ClientState.Playing)
             {
                 turn++;
                 print("turn: " + turn);
+
             }
             SendTurnData();
             GameFrameTurn();
@@ -158,7 +159,7 @@ public class LockStepManager : MonoBehaviour, Service
         if (inputCommand != null)
         {
             bool host = (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).HasAuthority();
-            // AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, inputCommand));
+            //AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, inputCommand));
             inputCommand.turn = turn;
             playersmoveData.RegisterCommand(host, inputCommand);
             commandToSend = new PlayerCommandsData(0, turn, playerID, inputCommand.units, inputCommand.pos);
@@ -173,12 +174,19 @@ public class LockStepManager : MonoBehaviour, Service
     }
     public void SendTurnData()
     {
-        if ((ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
-        GetOwningTCPClient() != null)
+        if (client != null && client._clientState == TcpTestClient.ClientState.Playing)
         {
+            print("Sending turns");
             s = JsonUtility.ToJson(commandToSend);
-            (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
-            GetOwningTCPClient().SendMessage(s);
+            if (client.host)
+            {
+                client.SendDataToClient(s);
+            }
+            else
+            {
+                client.SendMessage(s);
+            }
+            client._turnState = TcpTestClient.TurnState.SendData;
             inputCommand = null;
         }
     }

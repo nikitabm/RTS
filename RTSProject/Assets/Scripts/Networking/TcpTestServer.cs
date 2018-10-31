@@ -30,6 +30,7 @@ public class TCPTestServer : MonoBehaviour
     private TcpClient connectedTcpClient;
     private List<ServerClient> clients;
     private List<ServerClient> disconnects;
+    public TcpTestClient localClient;
 
     private int port = 55555;
     private bool started;
@@ -72,6 +73,16 @@ public class TCPTestServer : MonoBehaviour
             Debug.Log(e.Message);
         }
     }
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            print(tcpListenerThread.IsAlive);
+            print(TcpClientAcceptThread.IsAlive);
+
+        }
+    }
+
     private void StartListening()
     {
         while (!AllPlayersConnected)
@@ -90,7 +101,7 @@ public class TCPTestServer : MonoBehaviour
                     SendMessage(clients[1].tcp, "0");
                     AllPlayersConnected = true;
                     (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
-                    GetOwningTCPClient()._clientState=TcpTestClient.ClientState.InGame;
+                    GetOwningTCPClient()._clientState = TcpTestClient.ClientState.InGame;
                 }
             }
         }
@@ -169,13 +180,21 @@ public class TCPTestServer : MonoBehaviour
                         // Convert byte array to string message. 							
                         string clientMessage = Encoding.ASCII.GetString(incommingData);
                         print("server receives: " + clientMessage);
+                        if (clientMessage == "2")
+                        {
+                            localClient._turnState=TcpTestClient.TurnState.DataComplete;
+                        }
+                        else
+                        {
 
-                        PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(clientMessage);
-                        if (command.command == -1) print("server receives empty command");
-                        else if (command.command == 0) print("server recieves movecommand");
-                        int receivedPlayerTurn = command.turn;
-                        int receivedPlayerID = command.playerID;
-                        print("server receives turn number: " + receivedPlayerTurn);
+
+                            PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(clientMessage);
+                            if (command.command == -1) print("server receives empty command");
+                            else if (command.command == 0) print("server recieves movecommand");
+                            int receivedPlayerTurn = command.turn;
+                            int receivedPlayerID = command.playerID;
+                            print("server receives turn number: " + receivedPlayerTurn);
+                        }
 
 
                         //still  need to add command or to send it to local client

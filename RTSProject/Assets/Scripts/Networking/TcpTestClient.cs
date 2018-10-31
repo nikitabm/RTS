@@ -25,6 +25,15 @@ public class TcpTestClient : MonoBehaviour
     public bool connected;
     public bool host;
     private int port = 55555;
+    private bool once;
+    public enum TurnState
+    {
+        none,
+        SendData,
+        WaitingForOtherPlayerData,
+        DataComplete
+    }
+    public TurnState _turnState;
     public enum ClientState
     {
         none,
@@ -52,6 +61,8 @@ public class TcpTestClient : MonoBehaviour
     // Use this for initialization 	
     void Start()
     {
+        once = false;
+        _turnState = TurnState.none;
         _clientState = ClientState.none;
         Invoke("ConnectToTcpServer", 1.0f);
     }
@@ -60,7 +71,8 @@ public class TcpTestClient : MonoBehaviour
     {
         if (host && _clientState == ClientState.InGame)
         {
-            Invoke("SendStartGameMsg",3.0f);
+            DoOnceInvoke("SendStartGameMsg", 3.0f);
+
         }
     }
     void OnApplicationQuit()
@@ -90,6 +102,14 @@ public class TcpTestClient : MonoBehaviour
     /// <summary> 	
     /// Setup socket connection. 	
     /// </summary> 	
+    public void DoOnceInvoke(string s, float t)
+    {
+        if (!once)
+        {
+            Invoke(s, t);
+            once = true;
+        }
+    }
     public void ConnectToTcpServer()
     {
 
@@ -144,7 +164,13 @@ public class TcpTestClient : MonoBehaviour
                     }
                     if (serverMessage == "2")
                     {
-                        // _clientState = ClientState.Playing;
+                       _turnState=TurnState.DataComplete;
+                    }
+                    else
+                    {
+                        //save command and send receive conformation
+                        PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(serverMessage);
+                        SendMessage("2");
                     }
                 }
             }
@@ -156,7 +182,13 @@ public class TcpTestClient : MonoBehaviour
     }
     public void SendStartGameMsg()
     {
+        print("HOST Starts Game!!!");
         _server.SendMessageToClient("1");
+        _clientState = ClientState.Playing;
+    }
+    public void SendDataToClient(string s)
+    {
+        _server.SendMessageToClient(s);
     }
     public new void SendMessage(string s)
     {

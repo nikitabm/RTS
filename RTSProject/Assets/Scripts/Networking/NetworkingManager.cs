@@ -75,13 +75,14 @@ public class NetworkingManager : MonoBehaviour, Service
         _sr = gameObject.AddComponent<TCPTestServer>();
         _cl = gameObject.AddComponent<TcpTestClient>();
         _cl.Server = _sr;
-        _cl.host=true; 
+        _cl.host = true;
+        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).client = _cl;
     }
     public void ConnectToGame()
     {
         host = false;
         _cl = gameObject.AddComponent<TcpTestClient>();
-        _cl.host = true;
-
+        _cl.host = false;
+        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).client = _cl;
     }
 }
