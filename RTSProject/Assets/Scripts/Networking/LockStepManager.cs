@@ -12,7 +12,8 @@ using UnityEngine.UI;
 public class LockStepManager : MonoBehaviour, Service
 {
 
-    public Text text;
+    public Text turnText;
+    public Text MsgText;
     PlayerController pc;
     int turn;
     int playerID;
@@ -82,6 +83,7 @@ public class LockStepManager : MonoBehaviour, Service
             {
                 if (client.otherPlayerDataReceived && client.myDataConfirmed)
                 {
+                    print("getting here?");
                     client.SendDataToClient("3");
                     client.readyToTurnWheel = true;
                     client.myDataConfirmed = false;
@@ -92,7 +94,7 @@ public class LockStepManager : MonoBehaviour, Service
             {
                 print("conformation of turn :" + (turn + 2));
                 turn = turn + 2;
-                text.text = turn.ToString();
+                turnText.text = turn.ToString();
                 client.readyToTurnWheel = false;
             }
             AccumilatedTime = AccumilatedTime - FrameLength;

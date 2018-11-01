@@ -182,16 +182,19 @@ public class TCPTestServer : MonoBehaviour
                         print("server receives: " + clientMessage);
                         if (clientMessage == "2")
                         {
-                            localClient._turnState=TcpTestClient.TurnState.DataComplete;
+                            print("receiving command");
+                            localClient._turnState = TcpTestClient.TurnState.DataComplete;
+                        }
+                        else if (clientMessage == "HELLO I AM CLIENT")
+                        {
+                            print("its ok now");
                         }
                         else
                         {
-
-
                             PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(clientMessage);
                             if (command.command == -1) print("server receives empty command");
                             else if (command.command == 0) print("server recieves movecommand");
-                            
+
                             int receivedPlayerTurn = command.turn;
                             int receivedPlayerID = command.playerID;
                             print("server receives turn number: " + receivedPlayerTurn);

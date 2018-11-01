@@ -85,4 +85,8 @@ public class NetworkingManager : MonoBehaviour, Service
         _cl.host = false;
         (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).client = _cl;
     }
+    public void SendToServer()
+    {
+        _cl.SendMessage("I am trying to reach server");
+    }
 }

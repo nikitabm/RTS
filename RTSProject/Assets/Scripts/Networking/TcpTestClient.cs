@@ -15,7 +15,7 @@ public class TcpTestClient : MonoBehaviour
     public string IP = "localhost";
 
     #region private members 	
-    private TcpClient socketConnection;
+    public TcpClient socketConnection;
     private TCPTestServer _server;
     private Thread clientReceiveThread;
     private NetworkStream stream;
@@ -81,6 +81,11 @@ public class TcpTestClient : MonoBehaviour
         {
             DoOnceInvoke("SendStartGameMsg", 3.0f);
 
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            SendMessage("HELLO I AM CLIENT");
         }
         // if ()
     }
@@ -158,6 +163,7 @@ public class TcpTestClient : MonoBehaviour
                 // Read incomming stream into byte arrary. 					
                 while ((length = stream.Read(bytes, 0, bytes.Length)) != 0)
                 {
+                    SendMessage("hello from client!");
                     var incommingData = new byte[length];
                     Array.Copy(bytes, 0, incommingData, 0, length);
                     // Convert byte array to string message. 						
@@ -173,11 +179,14 @@ public class TcpTestClient : MonoBehaviour
                     }
                     if (serverMessage == "2")
                     {
+                        // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).MsgText.text = "Client data confirmed";
                         myDataConfirmed = true;
                         _turnState = TurnState.DataComplete;
                     }
                     if (serverMessage == "3")
                     {
+                        // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).MsgText.text = "wheels turning";
+                        print("ready to turn wheels");
                         readyToTurnWheel = true;
                         otherPlayerDataReceived = false;
                         myDataConfirmed = false;
@@ -191,6 +200,10 @@ public class TcpTestClient : MonoBehaviour
                         playersmoveData.RegisterCommand(host, new CustomMoveCommand(command.units, command.pos, command.turn));
                         SendMessage("2");
                         otherPlayerDataReceived = true;
+
+                        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).MsgText.text = serverMessage;
+                        // print("received other player data");
+                        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).MsgText.text = "Received data";
                     }
                 }
             }
@@ -229,7 +242,7 @@ public class TcpTestClient : MonoBehaviour
                 byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(s);
                 // Write byte array to socketConnection stream.                 
                 stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
-                // stream.Flush();
+                stream.Flush();
             }
         }
         catch (SocketException socketException)
