@@ -12,6 +12,7 @@ using UnityEngine.UI;
 public class LockStepManager : MonoBehaviour, Service
 {
 
+    
     public Text turnText;
     public Text MsgText;
     PlayerController pc;

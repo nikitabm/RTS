@@ -16,6 +16,7 @@ public class NetworkingManager : MonoBehaviour, Service
     public Text serverText;
     public Text ClientText;
 
+    private Queue<Command> commandQueue = new Queue<Command>();
 
     //private
     private TCPServer _server = null;
@@ -45,6 +46,12 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         return _cl;
     }
+    private void SendCommands()
+    {
+        // based on host value send command to host or to client...(or make it generic??)
+    }
+
+    #region MethodsForButtons
     public void RunServer()
     {
         if (_sr == null)
@@ -71,5 +78,5 @@ public class NetworkingManager : MonoBehaviour, Service
             _cl = gameObject.AddComponent<TcpTestClient>();
         }
     }
-
+    #endregion
 }

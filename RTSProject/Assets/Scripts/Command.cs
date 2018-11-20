@@ -7,7 +7,7 @@ public class Command : MonoBehaviour
     public enum ECommandType
     {
         CM_INVALID,
-        // CM_ATTACK,
+        CM_ATTACK,
         CM_MOVE
     };
     public ECommandType command = ECommandType.CM_INVALID;
@@ -21,19 +21,28 @@ public class Command : MonoBehaviour
 }
 public class MoveCommand : Command
 {
-    public Vector4 _position;
-    public GameObject _unit;
-    public MoveCommand()
+    private Vector3 _position;
+    private List<int> _units;
+    public MoveCommand(List<int> pUnits, Vector3 pPosition)
     {
-        // _position=pos;
-        // _unit=obj;
+        _units = pUnits;
+        _position = pPosition;
     }
-	void Start()
-	{
+    public override void ProcessCommand()
+    {
 
-	}
-	public override void ProcessCommand()
-	{
-		
-	}
+    }
+}
+public class AttackCommand : Command
+{
+    private List<int> _units;
+    //todo
+    public AttackCommand(List<int> pUnits)
+    {
+
+    }
+    public override void ProcessCommand()
+    {
+
+    }
 }
