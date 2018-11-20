@@ -13,39 +13,19 @@ public class NetworkingManager : MonoBehaviour, Service
 
 
     //public
-    public GameObject playerController;
+    public Text serverText;
+    public Text ClientText;
 
 
     //private
-
-    private PlayerController _pc;
-    //=============================
     private TCPServer _server = null;
     private TcpTestClient _cl;
     private TCPTestServer _sr;
-    //=============================
-
-    private TcpListener _tcpListener;
-    /// <summary> 
-    /// Background thread for TcpServer workload. 	
-    /// </summary> 	
-    private Thread _tcpListenerThread;
-    /// <summary> 	
-    /// Create handle to connected tcp client. 	
-    /// </summary> 	
-    private TcpClient _connectedTcpClient;
-
     private bool host = false;
-    private bool connection = false;
-    //local client
-    private TcpClient _socketConnection;
-    private Thread _clientReceiveThread;
-
 
     void Start()
     {
         ServiceLocator.ProvideService(this);
-        _pc = playerController.GetComponent<PlayerController>();
     }
     public TCPServer GetServer()
     {
@@ -65,28 +45,31 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         return _cl;
     }
-    public PlayerController GetOwningPC()
+    public void RunServer()
     {
-        return _pc;
+        if (_sr == null)
+        {
+            host = true;
+            _sr = gameObject.AddComponent<TCPTestServer>();
+        }
     }
     public void HostGame()
     {
-        host = true;
-        _sr = gameObject.AddComponent<TCPTestServer>();
-        _cl = gameObject.AddComponent<TcpTestClient>();
-        _cl.Server = _sr;
-        _cl.host = true;
-        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).client = _cl;
+        if (_sr == null && _cl == null)
+        {
+            host = true;
+            _cl = gameObject.AddComponent<TcpTestClient>();
+            _sr = gameObject.AddComponent<TCPTestServer>();
+        }
+
     }
     public void ConnectToGame()
     {
-        host = false;
-        _cl = gameObject.AddComponent<TcpTestClient>();
-        _cl.host = false;
-        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).client = _cl;
+        if (_cl == null)
+        {
+            host = false;
+            _cl = gameObject.AddComponent<TcpTestClient>();
+        }
     }
-    public void SendToServer()
-    {
-        _cl.SendMessage("I am trying to reach server");
-    }
+
 }

@@ -14,10 +14,10 @@ public class TcpTestClient : MonoBehaviour
 
     public string IP = "localhost";
 
-    #region private members 	
     public TcpClient socketConnection;
     private TCPTestServer _server;
     private Thread clientReceiveThread;
+    private Thread clientSendThread;
     private NetworkStream stream;
     private StreamWriter writer;
     private StreamReader reader;
@@ -29,6 +29,8 @@ public class TcpTestClient : MonoBehaviour
     public bool otherPlayerDataReceived;
     public bool readyToTurnWheel;
     public bool myDataConfirmed;
+    NetworkingManager nm;
+    string log;
     public enum TurnState
     {
         none,
@@ -62,8 +64,6 @@ public class TcpTestClient : MonoBehaviour
     public ClientState _clientState;
 
 
-    #endregion
-    // Use this for initialization 	
     void Start()
     {
         myDataConfirmed = false;
@@ -73,21 +73,20 @@ public class TcpTestClient : MonoBehaviour
         _turnState = TurnState.none;
         _clientState = ClientState.none;
         Invoke("ConnectToTcpServer", 1.0f);
+        nm = (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager);
     }
-    // Update is called once per frame
+
     void Update()
     {
-        if (host && _clientState == ClientState.InGame)
+        nm.ClientText.text = log;
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            DoOnceInvoke("SendStartGameMsg", 3.0f);
-
+            SendMessage("Hello from client!");
         }
-
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.J))
         {
-            SendMessage("HELLO I AM CLIENT");
+            print(clientReceiveThread.IsAlive);
         }
-        // if ()
     }
     void OnApplicationQuit()
     {
@@ -101,11 +100,12 @@ public class TcpTestClient : MonoBehaviour
             Debug.Log(e.Message);
         }
 
-        // You must close the tcp listener
         try
         {
             clientReceiveThread.IsBackground = false;
             clientReceiveThread.Abort();
+            clientSendThread.IsBackground = false;
+            clientSendThread.Abort();
             isTrue = false;
         }
         catch (Exception e)
@@ -113,9 +113,7 @@ public class TcpTestClient : MonoBehaviour
             Debug.Log(e.Message);
         }
     }
-    /// <summary> 	
-    /// Setup socket connection. 	
-    /// </summary> 	
+
     public void DoOnceInvoke(string s, float t)
     {
         if (!once)
@@ -129,12 +127,14 @@ public class TcpTestClient : MonoBehaviour
 
         try
         {
-            socketConnection = new TcpClient(IP, port);
+            socketConnection = new TcpClient("127.0.0.1", port);
             stream = socketConnection.GetStream();
             writer = new StreamWriter(stream);
             reader = new StreamReader(stream);
             _clientState = ClientState.Connected;
-            Debug.Log("Connected to: " + IP + ":" + port.ToString());
+            string line = "Connected to: " + IP + ":" + port.ToString();
+            Debug.Log(line);
+            log += line + Environment.NewLine;
             clientReceiveThread = new Thread(new ThreadStart(ListenForData));
             clientReceiveThread.IsBackground = true;
             clientReceiveThread.Start();
@@ -145,80 +145,40 @@ public class TcpTestClient : MonoBehaviour
             Debug.Log(e.Message);
         }
     }
-    /// <summary> 	
-    /// Runs in background clientReceiveThread; Listens for incomming data. 	
-    /// </summary>  
 
+    private void SendData()
+    {
+
+    }
     private void ListenForData()
     {
-        try
-        {
 
-            Byte[] bytes = new Byte[1024];
-            while (true)
+
+        Byte[] bytes = new Byte[1024];
+        while (true)
+        {
+            try
             {
-                // Get a stream object for reading 				
                 stream = socketConnection.GetStream();
                 int length;
-                // Read incomming stream into byte arrary. 					
                 while ((length = stream.Read(bytes, 0, bytes.Length)) != 0)
                 {
-                    SendMessage("hello from client!");
                     var incommingData = new byte[length];
                     Array.Copy(bytes, 0, incommingData, 0, length);
-                    // Convert byte array to string message. 						
                     string serverMessage = Encoding.ASCII.GetString(incommingData);
-                    Debug.Log("server message received as: " + serverMessage);
-                    if (serverMessage == "0")
-                    {
-                        _clientState = ClientState.InGame;
-                    }
-                    if (serverMessage == "1")
-                    {
-                        _clientState = ClientState.Playing;
-                    }
-                    if (serverMessage == "2")
-                    {
-                        // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).MsgText.text = "Client data confirmed";
-                        myDataConfirmed = true;
-                        _turnState = TurnState.DataComplete;
-                    }
-                    if (serverMessage == "3")
-                    {
-                        // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).MsgText.text = "wheels turning";
-                        print("ready to turn wheels");
-                        readyToTurnWheel = true;
-                        otherPlayerDataReceived = false;
-                        myDataConfirmed = false;
-                    }
+                    log += "server message received as: " + serverMessage + Environment.NewLine;
 
-                    else
-                    {
-                        //save command and send receive conformation
-                        PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(serverMessage);
-                        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
-                        playersmoveData.RegisterCommand(host, new CustomMoveCommand(command.units, command.pos, command.turn));
-                        SendMessage("2");
-                        otherPlayerDataReceived = true;
-
-                        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).MsgText.text = serverMessage;
-                        // print("received other player data");
-                        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).MsgText.text = "Received data";
-                    }
                 }
             }
+            catch (SocketException socketException)
+            {
+                Debug.Log("Socket exception: " + socketException);
+            }
         }
-        catch (SocketException socketException)
-        {
-            Debug.Log("Socket exception: " + socketException);
-        }
+
     }
-    public void SendStartGameMsg()
-    {
-        print("HOST Starts Game!!!");
-        _server.SendMessageToClient("1");
-        _clientState = ClientState.Playing;
-    }
+
+
     public void SendDataToClient(string s)
     {
         _server.SendMessageToClient(s);
@@ -233,21 +193,19 @@ public class TcpTestClient : MonoBehaviour
         }
         try
         {
-            // Get a stream object for writing. 			
             stream = socketConnection.GetStream();
             if (stream.CanWrite)
             {
                 print("sending msg from client to server");
-                // Convert string message to byte array.                 
+
                 byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(s);
-                // Write byte array to socketConnection stream.                 
                 stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
-                stream.Flush();
             }
         }
         catch (SocketException socketException)
         {
             Debug.Log("Socket exception: " + socketException);
+
         }
     }
 }

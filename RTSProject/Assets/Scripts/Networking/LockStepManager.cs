@@ -216,39 +216,7 @@ public class LockStepManager : MonoBehaviour, Service
 
     private void GameFrameTurn()
     {
-        //first frame is used to process actions
-        // if (GameFrame == 0)
-        // {
-        //     if (LockStepTurn())
-        //     {
-        //         GameFrame++;
-        //     }
-        // }
-        // else
-        // {
-        //update game
-        // SceneManager.Manager.TwoDPhysics.Update(GameFramesPerSecond);
 
-        // List<IHasGameFrame> finished = new List<IHasGameFrame>();
-        // foreach (IHasGameFrame obj in SceneManager.Manager.GameFrameObjects)
-        // {
-        //     obj.GameFrameTurn(GameFramesPerSecond);
-        //     if (obj.Finished)
-        //     {
-        //         finished.Add(obj);
-        //     }
-        // }
 
-        // foreach (IHasGameFrame obj in finished)
-        // {
-        //     SceneManager.Manager.GameFrameObjects.Remove(obj);
-        // }
-
-        // GameFrame++;
-        // if (GameFrame == GameFramesPerLocksetpTurn)
-        // {
-        //     GameFrame = 0;
-        // }
-        // }
     }
 }

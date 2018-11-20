@@ -5,7 +5,6 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
-using System.Security;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -21,8 +20,9 @@ public class TCPTestServer : MonoBehaviour
     /// <summary> 
     /// Background thread for TcpServer workload. 	
     /// </summary> 	
-    private Thread tcpListenerThread;
+    private Thread TcpListenerThread;
     private Thread TcpClientAcceptThread;
+    private Thread TcpSendThread;
 
     /// <summary> 	
     /// Create handle to connected tcp client. 	
@@ -35,6 +35,7 @@ public class TCPTestServer : MonoBehaviour
     private int port = 55555;
     private bool started;
     private bool AllPlayersConnected;
+    string log;
     private enum GameState
     {
         none,
@@ -43,7 +44,9 @@ public class TCPTestServer : MonoBehaviour
         GamePause
     }
     private GameState _gameState;
-
+    public delegate void ServerSendAction();
+    public static ServerSendAction OnSend;
+    NetworkingManager nm;
 
     #endregion
 
@@ -54,19 +57,19 @@ public class TCPTestServer : MonoBehaviour
         started = false;
         try
         {
-            tcpListener = new TcpListener(IPAddress.Any, port);
+            tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 55555);
             tcpListener.Start();
-            started = true;
-
             TcpClientAcceptThread = new Thread(new ThreadStart(StartListening));
             TcpClientAcceptThread.IsBackground = true;
             TcpClientAcceptThread.Start();
 
-            tcpListenerThread = new Thread(new ThreadStart(ListenForIncommingRequests));
-            tcpListenerThread.IsBackground = true;
-            tcpListenerThread.Start();
-            print("Server initialized");
-            _gameState = GameState.WaitingForPlayers;
+            TcpListenerThread = new Thread(new ThreadStart(ListenForIncommingRequests));
+            TcpListenerThread.IsBackground = true;
+            TcpListenerThread.Start();
+            log += "Server initialized" + Environment.NewLine;
+            nm = (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager);
+
+
         }
         catch (Exception e)
         {
@@ -75,35 +78,39 @@ public class TCPTestServer : MonoBehaviour
     }
     public void Update()
     {
+        nm.serverText.text = log;
         if (Input.GetKeyDown(KeyCode.K))
         {
-            print(tcpListenerThread.IsAlive);
+            print(TcpListenerThread.IsAlive);
             print(TcpClientAcceptThread.IsAlive);
 
+
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            foreach (ServerClient c in clients)
+            {
+                SendMessage(c.tcp, "Hello from server to " + clients.IndexOf(c).ToString());
+            }
         }
     }
-
+    private void SendData()
+    {
+    }
     private void StartListening()
     {
-        while (!AllPlayersConnected)
+        while (true)
         {
-            Debug.Log("Waiting for a connection...");
-
-            TcpClient client = tcpListener.AcceptTcpClient();
-            if (client != null)
+            if (tcpListener.Pending())
             {
+                TcpClient client = tcpListener.AcceptTcpClient();
                 clients.Add(new ServerClient(client));
                 print("Server registered client to client list");
-                if (clients.Count >= 2)
-                {
-                    print("all players Connected");
-                    _gameState = GameState.GameStart;
-                    SendMessage(clients[1].tcp, "0");
-                    AllPlayersConnected = true;
-                    (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).
-                    GetOwningTCPClient()._clientState = TcpTestClient.ClientState.InGame;
-                }
+                log += "registered client to client list, client count: " + clients.Count + Environment.NewLine;
+
+                print(clients.Count);
             }
+
         }
     }
 
@@ -121,8 +128,10 @@ public class TCPTestServer : MonoBehaviour
         {
             TcpClientAcceptThread.IsBackground = false;
             TcpClientAcceptThread.Abort();
-            tcpListenerThread.IsBackground = false;
-            tcpListenerThread.Abort();
+            TcpListenerThread.IsBackground = false;
+            TcpListenerThread.Abort();
+            TcpSendThread.IsBackground = false;
+            TcpSendThread.Abort();
 
         }
         catch (Exception e)
@@ -149,82 +158,63 @@ public class TCPTestServer : MonoBehaviour
         }
 
     }
+    private bool inClientList(TcpClient connectedTcpClient)
+    {
+        for (int i = 0; i < clients.Count - 1; i++)
+        {
+            if (connectedTcpClient == clients[i].tcp)
+            {
 
+            }
+            else return false;
+        }
+        return true;
+    }
     private void ListenForIncommingRequests()
     {
+        // try
+        // {
+        Byte[] bytes = new Byte[1024];
+
         while (true)
         {
-            try
-            {
-                Byte[] bytes = new Byte[1024];
 
-                foreach (ServerClient c in clients)
+
+            for (int i = 0; i < clients.Count; i++)
+            {
+                int length = 0;
+                if (clients[i].tcp.Available > 0)
                 {
-                    if (!isConnected(c.tcp))
-                    {
-                        print("closing client");
-                        c.tcp.Close();
-                        disconnects.Add(c);
-                        continue;
-                    }
-                    // Get a stream object for reading 					
-                    int length = 0;
-                    // Read incomming stream into byte arrary. 	
-                    length = c.tcp.GetStream().Read(bytes, 0, bytes.Length);
-                    print("Length: " + length);
-                    if (length != 0)
-                    {
-                        print("getting here");
-                        var incommingData = new byte[length];
-                        Array.Copy(bytes, 0, incommingData, 0, length);
-                        // Convert byte array to string message. 							
-                        string clientMessage = Encoding.ASCII.GetString(incommingData);
-                        print("server receives: " + clientMessage);
-                        if (clientMessage == "2")
-                        {
-                            print("receiving command");
-                            localClient._turnState = TcpTestClient.TurnState.DataComplete;
-                        }
-                        else if (clientMessage == "HELLO I AM CLIENT")
-                        {
-                            print("its ok now");
-                        }
-                        else
-                        {
-                            PlayerCommandsData command = JsonUtility.FromJson<PlayerCommandsData>(clientMessage);
-                            if (command.command == -1) print("server receives empty command");
-                            else if (command.command == 0) print("server recieves movecommand");
 
-                            int receivedPlayerTurn = command.turn;
-                            int receivedPlayerID = command.playerID;
-                            print("server receives turn number: " + receivedPlayerTurn);
-                        }
+                    //?
+                    length = clients[i].tcp.GetStream().Read(bytes, 0, bytes.Length);
 
-
-                        //still  need to add command or to send it to local client
-                        // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
-                        // AllPlayersTurns.Add(receivedPlayerTurn,
-                        // new AllPlayersCommandsData(receivedPlayerID, new CustomMoveCommand(command.units, command.pos)));
-
-                        // print((ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).
-                        // AllPlayersTurns[receivedPlayerTurn]);
-
-                    }
+                    var incommingData = new byte[length];
+                    Array.Copy(bytes, 0, incommingData, 0, length);
+                    string clientMessage = Encoding.ASCII.GetString(incommingData);
+                    string s = "server receives msg from client # " + i + ": " + clientMessage;
+                    log += s + Environment.NewLine;
                 }
-            }
-
-            catch (SocketException socketException)
-            {
-                Debug.Log("SocketException " + socketException.ToString());
             }
         }
     }
-    /// <summary> 	
-    /// Send message to client using socket connection. 	
-    /// </summary> 	
+
+
+
+
+
+
     public void SendMessageToClient(string s)
     {
         SendMessage(clients[1].tcp, s);
+    }
+    private void SendTestMsg()
+    {
+        if (clients[0] != null)
+            SendMessage(clients[0].tcp, "Hello from Server To client 0");
+        if (clients[1] != null)
+            SendMessage(clients[1].tcp, "Hello from Server To client 1");
+
     }
     private void SendMessage(TcpClient c, string s)
     {
@@ -236,14 +226,11 @@ public class TCPTestServer : MonoBehaviour
 
         try
         {
-            // Get a stream object for writing. 			
             NetworkStream stream = c.GetStream();
             if (stream.CanWrite)
             {
                 string serverMessage = s;
-                // Convert string message to byte array.                 
                 byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage);
-                // Write byte array to socketConnection stream.               
                 stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);
             }
         }
