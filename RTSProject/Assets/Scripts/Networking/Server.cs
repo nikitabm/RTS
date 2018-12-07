@@ -69,7 +69,9 @@ public class Server : MonoBehaviour
             log += "Server initialized" + Environment.NewLine;
             nm = (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager);
 
-
+            TcpSendThread = new Thread(new ThreadStart(SendData));
+            TcpSendThread.IsBackground = true;
+            TcpSendThread.Start();
         }
         catch (Exception e)
         {
@@ -107,7 +109,6 @@ public class Server : MonoBehaviour
                 clients.Add(new ServerClient(client));
                 print("Server registered client to client list");
                 log += "registered client to client list, client count: " + clients.Count + Environment.NewLine;
-
                 print(clients.Count);
             }
 
