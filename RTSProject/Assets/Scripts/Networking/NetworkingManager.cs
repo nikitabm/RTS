@@ -19,21 +19,15 @@ public class NetworkingManager : MonoBehaviour, Service
     private Queue<Command> commandQueue = new Queue<Command>();
 
     //private
-    private TCPServer _server = null;
-    private TcpTestClient _cl;
-    private TCPTestServer _sr;
+    private Client _cl;
+    private Server _sr;
     private bool host = false;
 
     void Start()
     {
         ServiceLocator.ProvideService(this);
     }
-    public TCPServer GetServer()
-    {
-        if (host)
-            return _server;
-        else return null;
-    }
+
     public bool HasAuthority()
     {
         return host;
@@ -42,7 +36,7 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         SceneManager.LoadScene(scene);
     }
-    public TcpTestClient GetOwningTCPClient()
+    public Client GetOwningTCPClient()
     {
         return _cl;
     }
@@ -51,13 +45,13 @@ public class NetworkingManager : MonoBehaviour, Service
         // based on host value send command to host or to client...(or make it generic??)
     }
 
-    #region MethodsForButtons
+    #region Methods Called From Buttons
     public void RunServer()
     {
         if (_sr == null)
         {
             host = true;
-            _sr = gameObject.AddComponent<TCPTestServer>();
+            _sr = gameObject.AddComponent<Server>();
         }
     }
     public void HostGame()
@@ -65,8 +59,8 @@ public class NetworkingManager : MonoBehaviour, Service
         if (_sr == null && _cl == null)
         {
             host = true;
-            _cl = gameObject.AddComponent<TcpTestClient>();
-            _sr = gameObject.AddComponent<TCPTestServer>();
+            _cl = gameObject.AddComponent<Client>();
+            _sr = gameObject.AddComponent<Server>();
         }
 
     }
@@ -75,7 +69,7 @@ public class NetworkingManager : MonoBehaviour, Service
         if (_cl == null)
         {
             host = false;
-            _cl = gameObject.AddComponent<TcpTestClient>();
+            _cl = gameObject.AddComponent<Client>();
         }
     }
     #endregion

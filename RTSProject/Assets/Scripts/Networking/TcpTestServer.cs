@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-public class TCPTestServer : MonoBehaviour
+public class Server : MonoBehaviour
 {
     #region private members 	
     /// <summary> 	
@@ -30,7 +30,7 @@ public class TCPTestServer : MonoBehaviour
     private TcpClient connectedTcpClient;
     private List<ServerClient> clients;
     private List<ServerClient> disconnects;
-    public TcpTestClient localClient;
+    public Client localClient;
 
     private int port = 55555;
     private bool started;

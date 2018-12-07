@@ -29,7 +29,7 @@ public class LockStepManager : MonoBehaviour, Service
 
     //contains key- number of turn, and all players commands for this specific turn to execute
     public AllPlayersCommandsData playersmoveData;
-    public TcpTestClient client;
+    public Client client;
 
     //public
     LockStepManager Instance;
@@ -72,7 +72,7 @@ public class LockStepManager : MonoBehaviour, Service
             //TestListenToCommands();
 
 
-            if (client != null && client._clientState == TcpTestClient.ClientState.Playing)
+            if (client != null && client._clientState == Client.ClientState.Playing)
             {
                 turn++;
                 print("turn: " + turn);
@@ -196,7 +196,7 @@ public class LockStepManager : MonoBehaviour, Service
     public void SendTurnData()
     {
         //sending turn data to ANOTHER Client
-        if (client != null && client._clientState == TcpTestClient.ClientState.Playing)
+        if (client != null && client._clientState == Client.ClientState.Playing)
         {
 
             s = JsonUtility.ToJson(commandToSend);
@@ -210,7 +210,7 @@ public class LockStepManager : MonoBehaviour, Service
                 print("Sending turns as CLIENT");
                 client.SendMessage(s);
             }
-            client._turnState = TcpTestClient.TurnState.WaitingForOtherPlayerDataAndConformation;
+            client._turnState = Client.TurnState.WaitingForOtherPlayerDataAndConformation;
             inputCommand = null;
         }
     }

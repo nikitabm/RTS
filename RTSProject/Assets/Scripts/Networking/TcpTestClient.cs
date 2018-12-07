@@ -9,13 +9,13 @@ using System.Security;
 using System.Linq;
 using System.Text;
 using System.Threading;
-public class TcpTestClient : MonoBehaviour
+public class Client : MonoBehaviour
 {
 
     public string IP = "localhost";
 
     public TcpClient socketConnection;
-    private TCPTestServer _server;
+    private Server _server;
     private Thread clientReceiveThread;
     private Thread clientSendThread;
     private NetworkStream stream;
@@ -50,7 +50,7 @@ public class TcpTestClient : MonoBehaviour
         Preparing,
         Playing
     }
-    public TCPTestServer Server
+    public Server Server
     {
         get
         {
