@@ -15,7 +15,7 @@ public class LockStepManager : MonoBehaviour, Service
 
     public Text turnText;
     public Text MsgText;
-    int turn;
+
     int playerID;
     bool approvedCommands;
     string s;
@@ -32,14 +32,22 @@ public class LockStepManager : MonoBehaviour, Service
 
 
     //private
+
+    //game related variables
     private bool _gameStarted;
     private float _accumilatedTime = 0f;
-
+    private int turn;
     private float _frameLength = 1.0f; //50 ms
 
 
     private void Awake()
     {
+
+    }
+    void Start()
+    {
+        //TODO:  move this logic to server (instantiate by server and etc etc)
+
         playersmoveData = new AllPlayersCommandsData();
         s = "";
         ServiceLocator.ProvideService(this);
@@ -47,10 +55,6 @@ public class LockStepManager : MonoBehaviour, Service
         turn = -2;
         //TurnDataToSend = new Dictionary<int, PlayerCommandsData>();
         approvedCommands = false;
-    }
-    void Start()
-    {
-        //TODO:  move this logic to server (instantiate by server and etc etc)
     }
     public void SetInputCommand(CustomMoveCommand cm)
     {
@@ -67,8 +71,10 @@ public class LockStepManager : MonoBehaviour, Service
         //in case the FPS is too slow, we may need to update the game multiple times a frame
         while (_accumilatedTime > _frameLength)
         {
+            print("Turn: " + turn);
+            turn++;
             //server send clients "send me data and update" command
-            NetworkingManager n = ServiceLocator.GetService<NetworkingManager>();
+            // ServiceLocator.GetService<NetworkingManager>().Send
 
             _accumilatedTime = _accumilatedTime - _frameLength;
 
@@ -178,18 +184,18 @@ public class LockStepManager : MonoBehaviour, Service
     public void WriteTurnData()
     {
 
-        if (inputCommand != null)
-        {
-            bool host = (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).HasAuthority();
-            //AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, inputCommand));
-            inputCommand.turn = turn;
-            playersmoveData.RegisterCommand(host, inputCommand);
-            commandToSend = new PlayerCommandsData(0, turn + 2, playerID, inputCommand.units, inputCommand.pos);
-        }
-        else
-        {
-            commandToSend = new PlayerCommandsData(-1, turn + 2, playerID, emptyIntList, Vector3.zero);
-        }
+        // if (inputCommand != null)
+        // {
+        //     // bool host = (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager).HasAuthority();
+        //     //AllPlayersTurns.Add(turn, new AllPlayersCommandsData(playerID, inputCommand));
+        //     inputCommand.turn = turn;
+        //     // playersmoveData.RegisterCommand(host, inputCommand);
+        //     commandToSend = new PlayerCommandsData(0, turn + 2, playerID, inputCommand.units, inputCommand.pos);
+        // }
+        // else
+        // {
+        //     commandToSend = new PlayerCommandsData(-1, turn + 2, playerID, emptyIntList, Vector3.zero);
+        // }
 
 
 
@@ -204,7 +210,7 @@ public class LockStepManager : MonoBehaviour, Service
             if (client.host)
             {
                 print("Sending turns as HOST");
-                client.SendDataToClient(s);
+                // client.SendDataToClient(s);
             }
             else
             {

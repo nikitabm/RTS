@@ -58,6 +58,7 @@ public class NetworkingManager : MonoBehaviour, Service
     private void ClientSend()
     {
         //TODO:
+        // _cl.send
         //client send data to server method
         //make it generic
     }
@@ -68,11 +69,11 @@ public class NetworkingManager : MonoBehaviour, Service
     }
     private void CreatePlayer()
     {
-        _playerRef = (ServiceLocator.GetService(typeof(GameManager)) as GameManager).CreatePlayer();
+        _playerRef = ServiceLocator.GetService<GameManager>().CreatePlayer();
     }
     private void Update()
     {
-      
+
     }
 
     #region Methods Called From Buttons

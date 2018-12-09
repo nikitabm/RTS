@@ -10,8 +10,8 @@ public class Unit : MonoBehaviour, ISelectable
     private GameManager _gm;
     void Start()
     {
-         _gm = ServiceLocator.GetService(typeof(GameManager)) as GameManager;
-        _gm.AddToTeam(0,this.gameObject);
+        _gm = ServiceLocator.GetService<GameManager>();
+        _gm.AddToTeam(0, this.gameObject);
     }
     void ISelectable.Diselect()
     {

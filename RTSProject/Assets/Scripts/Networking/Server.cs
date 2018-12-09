@@ -11,22 +11,14 @@ using System.Threading;
 
 public class Server : MonoBehaviour
 {
-    #region private members 	
-    /// <summary> 	
-    /// TCPListener to listen for incomming TCP connection 	
-    /// requests. 	
-    /// </summary> 	
+
     private TcpListener tcpListener;
-    /// <summary> 
-    /// Background thread for TcpServer workload. 	
-    /// </summary> 	
+
     private Thread TcpListenerThread;
     private Thread TcpClientAcceptThread;
     private Thread TcpSendThread;
 
-    /// <summary> 	
-    /// Create handle to connected tcp client. 	
-    /// </summary> 	
+
     private TcpClient connectedTcpClient;
     private List<ServerClient> clients;
     private List<ServerClient> disconnects;
@@ -44,12 +36,14 @@ public class Server : MonoBehaviour
         GameStart,
         GamePause
     }
+    private bool _playersConnected;
     private GameState _gameState;
     public delegate void ServerSendAction();
     public static ServerSendAction OnSend;
+    public delegate void ServerAcceptClient(TcpClient t, string s);
+    public static ServerAcceptClient OnAccept;
     NetworkingManager nm;
 
-    #endregion
 
     void Start()
 
@@ -57,7 +51,9 @@ public class Server : MonoBehaviour
         _gameState = GameState.none;
         clients = new List<ServerClient>();
         HostServer();
+        // OnAccept+=SendMessage()
         _lockStepManager = gameObject.AddComponent<LockStepManager>();
+
     }
     void HostServer()
     {
@@ -75,7 +71,7 @@ public class Server : MonoBehaviour
             TcpListenerThread.IsBackground = true;
             TcpListenerThread.Start();
             log += "Server initialized" + Environment.NewLine;
-            nm = (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager);
+            nm = ServiceLocator.GetService<NetworkingManager>();
 
             TcpSendThread = new Thread(new ThreadStart(SendData));
             TcpSendThread.IsBackground = true;
@@ -109,15 +105,19 @@ public class Server : MonoBehaviour
     }
     private void StartListening()
     {
-        while (true)
+        while (!_playersConnected)
         {
             if (tcpListener.Pending())
             {
                 TcpClient client = tcpListener.AcceptTcpClient();
-                clients.Add(new ServerClient(client));
+                ServerClient cl = new ServerClient(client);
+                clients.Add((cl));
                 print("Server registered client to client list");
                 log += "registered client to client list, client count: " + clients.Count + Environment.NewLine;
                 print(clients.Count);
+                OnAccept(client, clients.IndexOf(cl).ToString());
+                if (clients.Count == 2)
+                    _playersConnected = true;
             }
 
         }
@@ -149,9 +149,6 @@ public class Server : MonoBehaviour
         }
     }
 
-    /// <summary> 	
-    /// Runs in background TcpServerThread; Handles incomming TcpClient requests 	
-    /// </summary> 	
     private bool isConnected(TcpClient c)
     {
         try
@@ -163,7 +160,7 @@ public class Server : MonoBehaviour
         }
         catch
         {
-            return false; //not able to reach client
+            return false;
         }
 
     }
@@ -181,20 +178,16 @@ public class Server : MonoBehaviour
     }
     private void ListenForIncommingRequests()
     {
-        // try
-        // {
+
         Byte[] bytes = new Byte[1024];
 
         while (started)
         {
-
-
             for (int i = 0; i < clients.Count; i++)
             {
                 int length = 0;
                 if (clients[i].tcp.Available > 0)
                 {
-
                     //?
                     length = clients[i].tcp.GetStream().Read(bytes, 0, bytes.Length);
 
@@ -209,14 +202,6 @@ public class Server : MonoBehaviour
     }
 
 
-
-
-
-
-    public void SendMessageToClient(string s)
-    {
-        SendMessage(clients[1].tcp, s);
-    }
     private void SendTestMsg()
     {
         if (clients[0] != null)
@@ -253,6 +238,7 @@ public class ServerClient
 {
     public TcpClient tcp;
     public string clientName;
+    public int id;
 
     public ServerClient(TcpClient clientSocket)
     {

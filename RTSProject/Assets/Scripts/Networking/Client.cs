@@ -72,7 +72,7 @@ public class Client : MonoBehaviour
         once = false;
         _turnState = TurnState.none;
         _clientState = ClientState.none;
-        nm = (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager);
+        nm = ServiceLocator.GetService<NetworkingManager>();
         ConnectToTcpServer();
     }
 
@@ -177,13 +177,7 @@ public class Client : MonoBehaviour
         }
 
     }
-
-
-    public void SendDataToClient(string s)
-    {
-        _server.SendMessageToClient(s);
-        _turnState = TurnState.DataSent;
-    }
+    
     public new void SendMessage(string s)
     {
         if (socketConnection == null)
