@@ -6,19 +6,19 @@ using UnityEngine;
 public class PlayerCommandsData
 {
 
-    public int turn;
     public int playerID;
     public List<int> units = new List<int>();
     public Vector3 pos;
-    public int  command;
+    public int command;
+    private List<MoveCommand> commands = new List<MoveCommand>();
+    private int turn;
 
-    public PlayerCommandsData(int s,int pTurn,int pPlayerID,List<int> pUnits,Vector3 pPos)
+    public PlayerCommandsData(int s, int pTurn, int pPlayerID, List<int> pUnits, Vector3 pPos)
     {
-        command=s;
-        units=pUnits;
-        pos=pPos;
-        turn = pTurn;
-        playerID=pPlayerID;
-        
+        command = s;
+        units = pUnits;
+        pos = pPos;
+        playerID = pPlayerID;
+
     }
 }

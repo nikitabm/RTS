@@ -21,10 +21,12 @@ public class Command : MonoBehaviour
 }
 public class MoveCommand : Command
 {
+    int playerID;
     private Vector3 _position;
     private List<int> _units;
-    public MoveCommand(List<int> pUnits, Vector3 pPosition)
+    public MoveCommand(int id, List<int> pUnits, Vector3 pPosition)
     {
+        playerID = id;
         _units = pUnits;
         _position = pPosition;
     }

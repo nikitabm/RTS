@@ -10,6 +10,19 @@ public class SelectObject : MonoBehaviour
     private List<int> units = new List<int>();
     private Color _objectColor;
     private Color _selectionColor;
+    private bool _enabled;
+    private int _playerID;
+    public int PlayerID
+    {
+        get
+        {
+            return _playerID;
+        }
+        set
+        {
+            _playerID = value;
+        }
+    }
     public enum StateOfPlayer
     {
         Idle,
@@ -22,11 +35,14 @@ public class SelectObject : MonoBehaviour
     public StateOfPlayer playerState;
     void Start()
     {
+        _enabled = false;
         _selectionColor = Color.blue;
         playerState = StateOfPlayer.Idle;
     }
-
-
+    public void SetEnabled(bool value)
+    {
+        _enabled = true;
+    }
     public GameObject GetSelectedObject()
     {
         return _selectedObject;
@@ -37,6 +53,7 @@ public class SelectObject : MonoBehaviour
     }
     public void ClickOnObjects()
     {
+        if (!_enabled) return;
         if (Input.GetMouseButtonDown(0))
         {
 
@@ -72,8 +89,9 @@ public class SelectObject : MonoBehaviour
     public void CreateAndPassCommand(List<int> pUnits, Vector3 pos)
     {
         //create
-        CustomMoveCommand inputCommand = new CustomMoveCommand(pUnits, pos);
+        MoveCommand inputCommand = new MoveCommand(1, pUnits, pos);
+
         //send
-        (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).SetInputCommand(inputCommand);
+        // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).SetInputCommand(inputCommand);
     }
 }

@@ -12,10 +12,9 @@ using UnityEngine.UI;
 public class LockStepManager : MonoBehaviour, Service
 {
 
-    
+
     public Text turnText;
     public Text MsgText;
-    PlayerController pc;
     int turn;
     int playerID;
     bool approvedCommands;
@@ -52,7 +51,6 @@ public class LockStepManager : MonoBehaviour, Service
     }
     void Start()
     {
-        pc = (ServiceLocator.GetService(typeof(GameManager)) as GameManager).TeamOneController.GetComponent<PlayerController>();
 
     }
     public void SetInputCommand(CustomMoveCommand cm)

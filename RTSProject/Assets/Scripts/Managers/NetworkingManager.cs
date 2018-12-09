@@ -16,12 +16,18 @@ public class NetworkingManager : MonoBehaviour, Service
     public Text serverText;
     public Text ClientText;
 
-    private Queue<Command> commandQueue = new Queue<Command>();
+
 
     //private
     private Client _cl;
     private Server _sr;
     private bool host = false;
+
+    //command sending related variables
+    private float FrameLength = 1.0f; //should be 50 ms
+    private float AccumilatedTime = 0f;
+
+
 
     void Start()
     {
@@ -42,7 +48,24 @@ public class NetworkingManager : MonoBehaviour, Service
     }
     private void SendCommands()
     {
-        // based on host value send command to host or to client...(or make it generic??)
+        //make it generic
+    }
+    private void CreatePlayer()
+    {
+        
+    }
+    private void Update()
+    {
+        //Basically same logic as FixedUpdate, but we can scale it by adjusting FrameLength
+        AccumilatedTime = AccumilatedTime + Time.deltaTime;
+
+        //in case the FPS is too slow, we may need to update the game multiple times a frame
+        while (AccumilatedTime > FrameLength)
+        {
+            //when turn is finished-send all "Player commands Data" to server
+            //inc "current turn for writing data" or sth like that
+            AccumilatedTime = AccumilatedTime - FrameLength;
+        }
     }
 
     #region Methods Called From Buttons

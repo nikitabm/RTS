@@ -7,10 +7,12 @@ public class GameManager : MonoBehaviour, Service
     //public
     public GameObject TeamOneController;
     public GameObject TeamTwoController;
+    private Player _player;
+    private int _playerID;
 
     //private
-    public List<GameObject> _teamOneUnits=new List<GameObject>();
-    public List<GameObject> _teamTwoUnits=new List<GameObject>();
+    public List<GameObject> _teamOneUnits = new List<GameObject>();
+    public List<GameObject> _teamTwoUnits = new List<GameObject>();
 
     private void Awake()
     {
@@ -18,6 +20,10 @@ public class GameManager : MonoBehaviour, Service
 
     }
 
+    public void CreatePlayer()
+    {
+        _player = new Player();
+    }
     private void InitializeServices()
     {
         ServiceLocator.ProvideService(this);
