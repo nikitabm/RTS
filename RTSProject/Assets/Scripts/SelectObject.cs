@@ -35,13 +35,16 @@ public class SelectObject : MonoBehaviour
     public StateOfPlayer playerState;
     void Start()
     {
-        _enabled = false;
         _selectionColor = Color.blue;
         playerState = StateOfPlayer.Idle;
     }
+    void Update()
+    {
+        ClickOnObjects();
+    }
     public void SetEnabled(bool value)
     {
-        _enabled = true;
+        _enabled = value;
     }
     public GameObject GetSelectedObject()
     {
@@ -56,7 +59,6 @@ public class SelectObject : MonoBehaviour
         if (!_enabled) return;
         if (Input.GetMouseButtonDown(0))
         {
-
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000f))

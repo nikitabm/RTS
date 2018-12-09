@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     {
         _objectSelector = gameObject.AddComponent<SelectObject>();
         _objectSelector.SetEnabled(true);
-        _objectSelector.PlayerID = 1;
+        print("getting here");
     }
 
     void Update()
