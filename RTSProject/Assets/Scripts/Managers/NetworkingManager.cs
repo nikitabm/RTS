@@ -24,9 +24,6 @@ public class NetworkingManager : MonoBehaviour, Service
     private bool host = false;
     private Player _playerRef;
 
-    //command sending related variables
-    private float FrameLength = 1.0f; //should be 50 ms
-    private float AccumilatedTime = 0f;
 
     //TODO: 
     //1. game opens;
@@ -75,18 +72,7 @@ public class NetworkingManager : MonoBehaviour, Service
     }
     private void Update()
     {
-        //Basically same logic as FixedUpdate, but we can scale it by adjusting FrameLength
-        AccumilatedTime = AccumilatedTime + Time.deltaTime;
-
-        //in case the FPS is too slow, we may need to update the game multiple times a frame
-        while (AccumilatedTime > FrameLength)
-        {
-            //TODO:
-            //when turn is finished-send all "Player commands Data" to server
-            //inc "current turn for writing data" or sth like that
-
-            AccumilatedTime = AccumilatedTime - FrameLength;
-        }
+      
     }
 
     #region Methods Called From Buttons

@@ -30,13 +30,12 @@ public class LockStepManager : MonoBehaviour, Service
     public AllPlayersCommandsData playersmoveData;
     public Client client;
 
-    //public
-    LockStepManager Instance;
 
     //private
-    private float AccumilatedTime = 0f;
+    private bool _gameStarted;
+    private float _accumilatedTime = 0f;
 
-    private float FrameLength = 1.0f; //50 ms
+    private float _frameLength = 1.0f; //50 ms
 
 
     private void Awake()
@@ -44,7 +43,7 @@ public class LockStepManager : MonoBehaviour, Service
         playersmoveData = new AllPlayersCommandsData();
         s = "";
         ServiceLocator.ProvideService(this);
-        Instance = this;
+
         turn = -2;
         //TurnDataToSend = new Dictionary<int, PlayerCommandsData>();
         approvedCommands = false;
@@ -59,44 +58,48 @@ public class LockStepManager : MonoBehaviour, Service
     }
     public void Update()
     {
-        WriteTurnData();
+        if (!_gameStarted) return;
+        // WriteTurnData();
+
         //Basically same logic as FixedUpdate, but we can scale it by adjusting FrameLength
-        AccumilatedTime = AccumilatedTime + Time.deltaTime;
+        _accumilatedTime = _accumilatedTime + Time.deltaTime;
 
         //in case the FPS is too slow, we may need to update the game multiple times a frame
-        while (AccumilatedTime > FrameLength)
+        while (_accumilatedTime > _frameLength)
         {
-            //testing
-            //TestListenToCommands();
+            //server send clients "send me data and update" command
+            NetworkingManager n = ServiceLocator.GetService<NetworkingManager>();
 
+            _accumilatedTime = _accumilatedTime - _frameLength;
 
-            if (client != null && client._clientState == Client.ClientState.Playing)
-            {
-                turn++;
-                print("turn: " + turn);
+            #region old
+            // if (client != null && client._clientState == Client.ClientState.Playing)
+            // {
+            //     turn++;
+            //     print("turn: " + turn);
 
-            }
-            SendTurnData();
-            //GameFrameTurn();
-            if (client != null && client.host)
-            {
-                if (client.otherPlayerDataReceived && client.myDataConfirmed)
-                {
-                    print("getting here?");
-                    client.SendDataToClient("3");
-                    client.readyToTurnWheel = true;
-                    client.myDataConfirmed = false;
-                    client.otherPlayerDataReceived = false;
-                }
-            }
-            if (client != null && client.readyToTurnWheel)
-            {
-                print("conformation of turn :" + (turn + 2));
-                turn = turn + 2;
-                turnText.text = turn.ToString();
-                client.readyToTurnWheel = false;
-            }
-            AccumilatedTime = AccumilatedTime - FrameLength;
+            // }
+            // SendTurnData();
+            // //GameFrameTurn();
+            // if (client != null && client.host)
+            // {
+            //     if (client.otherPlayerDataReceived && client.myDataConfirmed)
+            //     {
+            //         print("getting here?");
+            //         client.SendDataToClient("3");
+            //         client.readyToTurnWheel = true;
+            //         client.myDataConfirmed = false;
+            //         client.otherPlayerDataReceived = false;
+            //     }
+            // }
+            // if (client != null && client.readyToTurnWheel)
+            // {
+            //     print("conformation of turn :" + (turn + 2));
+            //     turn = turn + 2;
+            //     turnText.text = turn.ToString();
+            //     client.readyToTurnWheel = false;
+            // }
+            #endregion
         }
     }
 

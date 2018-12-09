@@ -30,6 +30,7 @@ public class Server : MonoBehaviour
     private TcpClient connectedTcpClient;
     private List<ServerClient> clients;
     private List<ServerClient> disconnects;
+    private LockStepManager _lockStepManager;
     public Client localClient;
 
     private int port = 55555;
@@ -51,12 +52,19 @@ public class Server : MonoBehaviour
     #endregion
 
     void Start()
+
     {
         _gameState = GameState.none;
         clients = new List<ServerClient>();
-        started = true;
+        HostServer();
+        _lockStepManager = gameObject.AddComponent<LockStepManager>();
+    }
+    void HostServer()
+    {
+
         try
         {
+            started = true;
             tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 55555);
             tcpListener.Start();
             TcpClientAcceptThread = new Thread(new ThreadStart(StartListening));

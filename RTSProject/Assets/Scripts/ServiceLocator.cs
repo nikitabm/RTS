@@ -13,14 +13,18 @@ public class ServiceLocator : MonoBehaviour
 
         return _services.Find(s => s.GetType() == type);
     }
-    public static Service GetService<T>() where T:Service
+    public static T GetService<T>() where T : Service
     {
-        return GetService(typeof(T));
+        return (T)GetService(typeof(T));
     }
+    // public static T GetService<T>() where T : Service
+    // {
+    //     return GetService(typeof(T));
+    // }
 
     public static void RemoveService(Type type)
     {
-        _services[_services.IndexOf(GetService(type))] = null;  
+        _services[_services.IndexOf(GetService(type))] = null;
     }
 
     public static void ProvideService(Service service)
