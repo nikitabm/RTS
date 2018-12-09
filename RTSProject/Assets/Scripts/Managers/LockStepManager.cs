@@ -51,7 +51,7 @@ public class LockStepManager : MonoBehaviour, Service
     }
     void Start()
     {
-
+        //TODO  move this logic to server (instantiate by server and etc etc)
     }
     public void SetInputCommand(CustomMoveCommand cm)
     {

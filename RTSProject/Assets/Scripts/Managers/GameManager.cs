@@ -7,22 +7,29 @@ public class GameManager : MonoBehaviour, Service
     //public
     public GameObject TeamOneController;
     public GameObject TeamTwoController;
-    private Player _player;
-    private int _playerID;
+
 
     //private
-    public List<GameObject> _teamOneUnits = new List<GameObject>();
-    public List<GameObject> _teamTwoUnits = new List<GameObject>();
+    private List<GameObject> _teamOneUnits = new List<GameObject>();
+    private List<GameObject> _teamTwoUnits = new List<GameObject>();
+    private Player _player;
 
     private void Awake()
     {
         InitializeServices();
 
     }
-
-    public void CreatePlayer()
+    public void Start()
     {
-        _player = new Player();
+    }
+
+    public Player CreatePlayer(int id)
+    {
+        if (_player == null)
+            _player = new Player(id);
+
+        return _player;
+
     }
     private void InitializeServices()
     {

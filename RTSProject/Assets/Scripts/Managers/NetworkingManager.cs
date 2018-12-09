@@ -22,6 +22,7 @@ public class NetworkingManager : MonoBehaviour, Service
     private Client _cl;
     private Server _sr;
     private bool host = false;
+    private Player _playerRef;
 
     //command sending related variables
     private float FrameLength = 1.0f; //should be 50 ms
@@ -50,9 +51,9 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         //make it generic
     }
-    private void CreatePlayer()
+    private void CreatePlayer(int value)
     {
-        
+        _playerRef = (ServiceLocator.GetService(typeof(GameManager)) as GameManager).CreatePlayer(value);
     }
     private void Update()
     {
@@ -62,8 +63,10 @@ public class NetworkingManager : MonoBehaviour, Service
         //in case the FPS is too slow, we may need to update the game multiple times a frame
         while (AccumilatedTime > FrameLength)
         {
+            //TODO 
             //when turn is finished-send all "Player commands Data" to server
             //inc "current turn for writing data" or sth like that
+
             AccumilatedTime = AccumilatedTime - FrameLength;
         }
     }
@@ -73,6 +76,8 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         if (_sr == null)
         {
+            //TODO
+            //
             host = true;
             _sr = gameObject.AddComponent<Server>();
         }

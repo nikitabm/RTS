@@ -6,9 +6,10 @@ public class Player : MonoBehaviour
 {
 
     private SelectObject _objectSelector;
-    public Player()
+    public int id;
+    public Player(int value)
     {
-
+        id = value;
     }
     void Start()
     {
