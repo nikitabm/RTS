@@ -51,7 +51,7 @@ public class Server : MonoBehaviour
         _gameState = GameState.none;
         clients = new List<ServerClient>();
         HostServer();
-        // OnAccept+=SendMessage()
+        OnAccept += SendMessage;
         _lockStepManager = gameObject.AddComponent<LockStepManager>();
 
     }
@@ -135,6 +135,7 @@ public class Server : MonoBehaviour
         }
         try
         {
+            _playersConnected = false;
             started = false;
             TcpClientAcceptThread.IsBackground = false;
             TcpClientAcceptThread.Abort();
