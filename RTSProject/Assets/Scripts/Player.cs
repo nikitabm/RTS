@@ -7,9 +7,9 @@ public class Player : MonoBehaviour
 
     private SelectObject _objectSelector;
     public int id;
-    public Player(int value)
+    public Player()
     {
-        id = value;
+        
     }
     void Start()
     {

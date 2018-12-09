@@ -10,6 +10,7 @@ public class AllPlayersCommandsData
     private List<CustomMoveCommand> moveCommandListClient = new List<CustomMoveCommand>();
 
 
+
     public AllPlayersCommandsData()
     {
     }

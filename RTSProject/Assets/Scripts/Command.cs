@@ -38,7 +38,6 @@ public class MoveCommand : Command
 public class AttackCommand : Command
 {
     private List<int> _units;
-    //todo
     public AttackCommand(List<int> pUnits)
     {
 

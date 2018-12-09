@@ -54,7 +54,7 @@ public class Server : MonoBehaviour
     {
         _gameState = GameState.none;
         clients = new List<ServerClient>();
-        started = false;
+        started = true;
         try
         {
             tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 55555);
@@ -127,13 +127,13 @@ public class Server : MonoBehaviour
         }
         try
         {
+            started = false;
             TcpClientAcceptThread.IsBackground = false;
             TcpClientAcceptThread.Abort();
             TcpListenerThread.IsBackground = false;
             TcpListenerThread.Abort();
             TcpSendThread.IsBackground = false;
             TcpSendThread.Abort();
-
         }
         catch (Exception e)
         {
@@ -177,7 +177,7 @@ public class Server : MonoBehaviour
         // {
         Byte[] bytes = new Byte[1024];
 
-        while (true)
+        while (started)
         {
 
 

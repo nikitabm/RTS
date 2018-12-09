@@ -72,8 +72,8 @@ public class Client : MonoBehaviour
         once = false;
         _turnState = TurnState.none;
         _clientState = ClientState.none;
-        Invoke("ConnectToTcpServer", 1.0f);
         nm = (ServiceLocator.GetService(typeof(NetworkingManager)) as NetworkingManager);
+        ConnectToTcpServer();
     }
 
     void Update()

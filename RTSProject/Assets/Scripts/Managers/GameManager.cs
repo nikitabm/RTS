@@ -23,10 +23,10 @@ public class GameManager : MonoBehaviour, Service
     {
     }
 
-    public Player CreatePlayer(int id)
+    public Player CreatePlayer()
     {
         if (_player == null)
-            _player = new Player(id);
+            _player = new Player();
 
         return _player;
 

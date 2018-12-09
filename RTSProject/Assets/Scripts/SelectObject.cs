@@ -88,8 +88,9 @@ public class SelectObject : MonoBehaviour
     }
     public void CreateAndPassCommand(List<int> pUnits, Vector3 pos)
     {
+        print(pUnits + " " + pos);
         //create
-        MoveCommand inputCommand = new MoveCommand(1, pUnits, pos);
+        //MoveCommand inputCommand = new MoveCommand(1, pUnits, pos);
 
         //send
         // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).SetInputCommand(inputCommand);
