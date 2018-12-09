@@ -13,7 +13,7 @@ public class Client : MonoBehaviour
 {
 
     public string IP = "localhost";
-
+    public int id;
     public TcpClient socketConnection;
     private Server _server;
     private Thread clientReceiveThread;
@@ -30,6 +30,8 @@ public class Client : MonoBehaviour
     public bool readyToTurnWheel;
     public bool myDataConfirmed;
     NetworkingManager nm;
+    public delegate void MessageReceived(string s);
+    public static MessageReceived OnMessageReceived;
     string log;
     public enum TurnState
     {
@@ -74,6 +76,7 @@ public class Client : MonoBehaviour
         _clientState = ClientState.none;
         nm = ServiceLocator.GetService<NetworkingManager>();
         ConnectToTcpServer();
+        OnMessageReceived += nm.DecodeMessage;
     }
 
     void Update()
@@ -114,14 +117,6 @@ public class Client : MonoBehaviour
         }
     }
 
-    public void DoOnceInvoke(string s, float t)
-    {
-        if (!once)
-        {
-            Invoke(s, t);
-            once = true;
-        }
-    }
     public void ConnectToTcpServer()
     {
 
@@ -167,7 +162,7 @@ public class Client : MonoBehaviour
                     Array.Copy(bytes, 0, incommingData, 0, length);
                     string serverMessage = Encoding.ASCII.GetString(incommingData);
                     log += "server message received as: " + serverMessage + Environment.NewLine;
-
+                    OnMessageReceived(serverMessage);
                 }
             }
             catch (SocketException socketException)
@@ -177,7 +172,7 @@ public class Client : MonoBehaviour
         }
 
     }
-    
+
     public new void SendMessage(string s)
     {
         if (socketConnection == null)

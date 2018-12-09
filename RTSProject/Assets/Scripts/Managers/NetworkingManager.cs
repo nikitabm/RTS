@@ -71,10 +71,33 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         _playerRef = ServiceLocator.GetService<GameManager>().CreatePlayer();
     }
+    public void DecodeMessage(string s)
+    {
+        if (_cl != null)
+            if (s.Length == 1)
+            {
+                _cl.id = (int)char.GetNumericValue(s.ToCharArray()[0]);
+                print(_cl.id);
+            }
+    }
+    // public override int DecodeMessage(string s)
+    // {
+    //     if (_cl != null)
+    //         if (s.Length == 1)
+    //         {
+    //             return (int)char.GetNumericValue(s.ToCharArray()[0]);
+    //             // print(_cl.id);
+    //         }
+    //         else return -1;
+    //     else
+    //         return -1;
+    // }
     private void Update()
     {
 
     }
+
+
 
     #region Methods Called From Buttons
     public void RunServer()
