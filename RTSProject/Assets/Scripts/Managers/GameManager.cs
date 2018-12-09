@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour, Service
     public Player CreatePlayer()
     {
         if (_player == null)
-            _player = new Player();
+            _player = gameObject.AddComponent<Player>();
 
         return _player;
 

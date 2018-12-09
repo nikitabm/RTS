@@ -9,11 +9,11 @@ public class Player : MonoBehaviour
     public int id;
     public Player()
     {
-        
+
     }
     void Start()
     {
-        _objectSelector = new SelectObject();
+        _objectSelector = gameObject.AddComponent<SelectObject>();
         _objectSelector.SetEnabled(true);
         _objectSelector.PlayerID = 1;
     }

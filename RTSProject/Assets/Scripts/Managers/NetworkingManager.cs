@@ -103,8 +103,8 @@ public class NetworkingManager : MonoBehaviour, Service
         if (_sr == null && _cl == null)
         {
             host = true;
-            _cl = gameObject.AddComponent<Client>();
             _sr = gameObject.AddComponent<Server>();
+            _cl = gameObject.AddComponent<Client>();
             CreatePlayer();
         }
 
