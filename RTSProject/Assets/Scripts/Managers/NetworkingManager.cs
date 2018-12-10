@@ -15,6 +15,8 @@ public class NetworkingManager : MonoBehaviour, Service
     //public
     public Text serverText;
     public Text ClientText;
+    public Text turnText;
+    public int turn;
 
 
 
@@ -40,6 +42,8 @@ public class NetworkingManager : MonoBehaviour, Service
 
     void Start()
     {
+        turn = -2;
+        turnText.text = turn.ToString();
         ServiceLocator.ProvideService(this);
     }
 
@@ -71,6 +75,23 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         _playerRef = ServiceLocator.GetService<GameManager>().CreatePlayer();
     }
+    public void SendMessage(NetworkStream stream, string s)
+    {
+        try
+        {
+            if (stream.CanWrite)
+            {
+                string serverMessage = s;
+                byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage);
+                stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);
+            }
+        }
+        catch (SocketException socketException)
+        {
+            Debug.Log("Socket exception: " + socketException);
+        }
+    }
+
     public void DecodeMessage(string s)
     {
         if (_cl != null)
@@ -79,22 +100,20 @@ public class NetworkingManager : MonoBehaviour, Service
                 _cl.id = (int)char.GetNumericValue(s.ToCharArray()[0]);
                 print(_cl.id);
             }
+        if (s == "go")
+        {
+            //TODO: important stuff and important method
+        }
+        if (s == "inc")
+        {
+            turn++;
+
+        }
     }
-    // public override int DecodeMessage(string s)
-    // {
-    //     if (_cl != null)
-    //         if (s.Length == 1)
-    //         {
-    //             return (int)char.GetNumericValue(s.ToCharArray()[0]);
-    //             // print(_cl.id);
-    //         }
-    //         else return -1;
-    //     else
-    //         return -1;
-    // }
+
     private void Update()
     {
-
+        turnText.text = turn.ToString();
     }
 
 

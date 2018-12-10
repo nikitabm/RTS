@@ -29,6 +29,9 @@ public class LockStepManager : MonoBehaviour, Service
     //contains key- number of turn, and all players commands for this specific turn to execute
     public AllPlayersCommandsData playersmoveData;
     public Client client;
+    public delegate void OnNextTurn();
+    public static event OnNextTurn NextTurn;
+
 
 
     //private
@@ -60,6 +63,10 @@ public class LockStepManager : MonoBehaviour, Service
     {
         inputCommand = cm;
     }
+    public void StartGame()
+    {
+        _gameStarted = true;
+    }
     public void Update()
     {
         if (!_gameStarted) return;
@@ -72,7 +79,8 @@ public class LockStepManager : MonoBehaviour, Service
         while (_accumilatedTime > _frameLength)
         {
             print("Turn: " + turn);
-            turn++;
+            // turn++;
+            NextTurn();
             //server send clients "send me data and update" command
             // ServiceLocator.GetService<NetworkingManager>().Send
 

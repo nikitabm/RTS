@@ -39,9 +39,12 @@ public class Server : MonoBehaviour
     private bool _playersConnected;
     private GameState _gameState;
     public delegate void ServerSendAction();
-    public static ServerSendAction OnSend;
+    public static event ServerSendAction OnSend;
     public delegate void ServerAcceptClient(TcpClient t, string s);
-    public static ServerAcceptClient OnAccept;
+    public static event ServerAcceptClient OnAccept;
+
+    public delegate void BothPlayersConnected();
+    public static event BothPlayersConnected OnAllPlayersConnected;
     NetworkingManager nm;
 
 
@@ -53,6 +56,15 @@ public class Server : MonoBehaviour
         HostServer();
         OnAccept += SendMessage;
         _lockStepManager = gameObject.AddComponent<LockStepManager>();
+        OnAllPlayersConnected += SendTestMsg;
+        OnAllPlayersConnected += _lockStepManager.StartGame;
+        LockStepManager.NextTurn += incTurns;
+
+    }
+    public void incTurns()
+    {
+        SendMessage(clients[0].tcp, "inc");
+        SendMessage(clients[1].tcp, "inc");
 
     }
     void HostServer()
@@ -117,7 +129,10 @@ public class Server : MonoBehaviour
                 print(clients.Count);
                 OnAccept(client, clients.IndexOf(cl).ToString());
                 if (clients.Count == 2)
+                {
                     _playersConnected = true;
+                    OnAllPlayersConnected();
+                }
             }
 
         }
@@ -206,9 +221,9 @@ public class Server : MonoBehaviour
     private void SendTestMsg()
     {
         if (clients[0] != null)
-            SendMessage(clients[0].tcp, "Hello from Server To client 0");
+            SendMessage(clients[0].tcp, "go");
         if (clients[1] != null)
-            SendMessage(clients[1].tcp, "Hello from Server To client 1");
+            SendMessage(clients[1].tcp, "go");
 
     }
     private void SendMessage(TcpClient c, string s)
