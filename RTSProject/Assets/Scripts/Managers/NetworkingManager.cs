@@ -139,6 +139,12 @@ public class NetworkingManager : MonoBehaviour, Service
             //should it be here?
             turn++;
         }
+        else
+        {
+            PlayerCommandsData playerData = (PlayerCommandsData)JsonUtility.FromJson(s, typeof(PlayerCommandsData));
+            print(s);
+            
+        }
     }
     // public static 
 

@@ -65,6 +65,7 @@ public class Server : MonoBehaviour
     }
     public void incTurns()
     {
+        print("INCREASING TURNS");
         SendMessage(clients[0].tcp, "inc");
         SendMessage(clients[1].tcp, "inc");
 
