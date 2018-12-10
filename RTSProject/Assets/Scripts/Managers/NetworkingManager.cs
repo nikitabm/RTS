@@ -107,14 +107,15 @@ public class NetworkingManager : MonoBehaviour, Service
         }
         if (s == "inc")
         {
-            turn++;
-            //TODO: important thing to make it more smart and not shit code inhere
-            PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
+            //TODO: important thing to make it more smart and not shit code in here
+            PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
 
             // msg = turnData.commands.Count.ToString();
 
             string msg = JsonUtility.ToJson(turnData);
             _cl.SendMessage(msg);
+            //should it be here?
+            turn++;
         }
     }
     // public static 
@@ -122,15 +123,15 @@ public class NetworkingManager : MonoBehaviour, Service
     private void Update()
     {
         turnText.text = turn.ToString();
-        if (Input.GetKeyDown(KeyCode.H))
-        {
+        // if (Input.GetKeyDown(KeyCode.H))
+        // {
 
-            PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
-            string msg = JsonUtility.ToJson(turnData);
-            //_cl.SendMessage(msg);
-            ////print(turnData.commands);
-            print(msg);
-        }
+        //     PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
+        //     string msg = JsonUtility.ToJson(turnData);
+        //     //_cl.SendMessage(msg);
+        //     ////print(turnData.commands);
+        //     print(msg);
+        // }
     }
     //{"playerID":0,"turn":-2,"commands":[{"playerID":0,"NetworkID":0}]}
 
