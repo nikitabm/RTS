@@ -100,12 +100,6 @@ public class SelectObject : MonoBehaviour
         //create
         print("Creating command");
         Command issuedCommand = new Command(_playerID,temp , pos);
-        //ServiceLocator.GetService<CommandManager>().AddToQueue(issuedCommand);
         commandCreated(issuedCommand);
-        //units.Clear();
-        //MoveCommand inputCommand = new MoveCommand(1, pUnits, pos);
-
-        //send
-        // (ServiceLocator.GetService(typeof(LockStepManager)) as LockStepManager).SetInputCommand(inputCommand);
     }
 }

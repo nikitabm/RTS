@@ -134,26 +134,26 @@ public class LockStepManager : MonoBehaviour, Service
         if (approvedCommands)
         {
             turn++;
-            ExecuteCommands();
+            //ExecuteCommands();
         }
     }
 
 
 
-    public void ExecuteCommands()
-    {
-        //do commands
-        List<CustomMoveCommand> hostCommands = new List<CustomMoveCommand>();
-        List<CustomMoveCommand> clientCommands = new List<CustomMoveCommand>();
+    // public void ExecuteCommands()
+    // {
+    //     //do commands
+    //     List<CustomMoveCommand> hostCommands = new List<CustomMoveCommand>();
+    //     List<CustomMoveCommand> clientCommands = new List<CustomMoveCommand>();
 
-        hostCommands = playersmoveData.GetCommandsAtTurn(true, turn);
-        clientCommands = playersmoveData.GetCommandsAtTurn(false, turn);
-        for (int i = 0; i < hostCommands.Count; i++)
-        {
-            // hostCommands[i].units
-        }
+    //     hostCommands = playersmoveData.GetCommandsAtTurn(true, turn);
+    //     clientCommands = playersmoveData.GetCommandsAtTurn(false, turn);
+    //     for (int i = 0; i < hostCommands.Count; i++)
+    //     {
+    //         // hostCommands[i].units
+    //     }
 
-    }
+    // }
 
     public void TestListenToCommands()
     {
@@ -202,31 +202,31 @@ public class LockStepManager : MonoBehaviour, Service
 
 
     }
-    public void SendTurnData()
-    {
-        //sending turn data to ANOTHER Client
-        if (client != null && client._clientState == Client.ClientState.Playing)
-        {
+    // public void SendTurnData()
+    // {
+    //     //sending turn data to ANOTHER Client
+    //     if (client != null && client._clientState == Client.ClientState.Playing)
+    //     {
 
-            s = JsonUtility.ToJson(commandToSend);
-            if (client.host)
-            {
-                print("Sending turns as HOST");
-                // client.SendDataToClient(s);
-            }
-            else
-            {
-                print("Sending turns as CLIENT");
-                client.SendMessage(s);
-            }
-            client._turnState = Client.TurnState.WaitingForOtherPlayerDataAndConformation;
-            inputCommand = null;
-        }
-    }
+    //         s = JsonUtility.ToJson(commandToSend);
+    //         if (client.host)
+    //         {
+    //             print("Sending turns as HOST");
+    //             // client.SendDataToClient(s);
+    //         }
+    //         else
+    //         {
+    //             print("Sending turns as CLIENT");
+    //             client.SendMessage(s);
+    //         }
+    //         client._turnState = Client.TurnState.WaitingForOtherPlayerDataAndConformation;
+    //         inputCommand = null;
+    //     }
+    // }
 
-    private void GameFrameTurn()
-    {
+    // private void GameFrameTurn()
+    // {
 
 
-    }
+    // }
 }
