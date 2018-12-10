@@ -30,6 +30,8 @@ public class MoveCommand : Command
 {
     // int playerID;
     public Vector3 _position;
+    
+    
     public List<int> _units;
     public MoveCommand(int id, List<int> pUnits, Vector3 pPosition)
     {

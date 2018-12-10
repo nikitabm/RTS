@@ -22,7 +22,7 @@ public class CommandManager : MonoBehaviour, Service
     {
         _commandQueue.Enqueue(c);
         // print((c as MoveCommand)._position + " " + (c as MoveCommand)._units[0]);
-        print(_commandQueue.Count);
+        // print(_commandQueue.Count);
         print(JsonUtility.ToJson(c));
     }
     public void SubsribeToEvent()
@@ -44,11 +44,18 @@ public class CommandManager : MonoBehaviour, Service
     {
         // int turn = ServiceLocator.GetService<NetworkingManager>().turn;
         // int playerID = ServiceLocator.GetService<GameManager>().GetPlayer().id;
-
+        string coms = "";
         PlayerCommandsData playerData;
         playerData = new PlayerCommandsData(turn, playerID);
         while (_commandQueue.Count != 0)
-            playerData.AddCommand(_commandQueue.Dequeue());
+        {
+            coms += JsonUtility.ToJson(_commandQueue.Dequeue()) + ",";
+            //playerData.AddCommand(_commandQueue.Dequeue());
+            //{"playerID":0,"NetworkID":0,"_position":{"x":2.9861931800842287,"y":8.448469405058942e-17,"z":-3.80485200881958},"_units":[2]},
+            //{"playerID":0,"NetworkID":0,"_position":{"x":2.878112316131592,"y":7.593503464858013e-17,"z":-3.4198098182678224},"_units":[2]},
+        }
+        print("all commands");
+        print(coms);
         return playerData;
     }
 }

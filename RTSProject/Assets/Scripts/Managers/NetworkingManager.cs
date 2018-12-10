@@ -127,9 +127,11 @@ public class NetworkingManager : MonoBehaviour, Service
             PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
             string msg = JsonUtility.ToJson(turnData);
             _cl.SendMessage(msg);
+            print(turnData.commands);
+            print(msg);
         }
     }
-
+    //{"playerID":0,"turn":-2,"commands":[{"playerID":0,"NetworkID":0}]}
 
 
     #region Methods Called From Buttons
