@@ -34,7 +34,7 @@ public class LockStepManager : MonoBehaviour, Service
     private bool _gameStarted;
     private float _accumilatedTime = 0f;
     private int turn;
-    private float _frameLength = 1.0f; //50 ms
+    private float _frameLength = 5.0f; //50 ms
 
 
     private void Awake()
@@ -49,7 +49,6 @@ public class LockStepManager : MonoBehaviour, Service
         s = "";
         ServiceLocator.ProvideService(this);
 
-        turn = -2;
         //TurnDataToSend = new Dictionary<int, PlayerCommandsData>();
         approvedCommands = false;
     }
@@ -72,7 +71,7 @@ public class LockStepManager : MonoBehaviour, Service
         //in case the FPS is too slow, we may need to update the game multiple times a frame
         while (_accumilatedTime > _frameLength)
         {
-            print("Turn: " + turn);
+            print("Turn: " + ServiceLocator.GetService<NetworkingManager>().turn);
             // turn++;
             NextTurn();
             //server send clients "send me data and update" command

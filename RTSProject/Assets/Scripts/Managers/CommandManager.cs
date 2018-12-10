@@ -16,12 +16,12 @@ public class CommandManager : MonoBehaviour, Service
 
     void Update()
     {
-
+        
     }
     public void AddToQueue(Command c)
     {
         _commandQueue.Enqueue(c);
-        print((c as MoveCommand)._position + " " + (c as MoveCommand)._units);
+        print((c as MoveCommand)._position + " " + (c as MoveCommand)._units[0]);
         print(_commandQueue.Count);
     }
     public void SubsribeToEvent()

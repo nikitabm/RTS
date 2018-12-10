@@ -108,10 +108,12 @@ public class NetworkingManager : MonoBehaviour, Service
         if (s == "inc")
         {
             turn++;
-            //TODO:
+            //TODO: important thing to make it more smart and not shit code inhere
+
             PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
-            string msg = JsonUtility.ToJson(turnData);
-            //_cl.SendMessage(msg);
+            // string msg = JsonUtility.ToJson(turnData);
+            string msg = turnData.commands.Count.ToString();
+            _cl.SendMessage(msg);
             //SendTurnDataToServer;
         }
     }
