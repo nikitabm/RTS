@@ -17,6 +17,8 @@ public class NetworkingManager : MonoBehaviour, Service
     public Text ClientText;
     public Text turnText;
     public int turn;
+    PlayerCommandsData player1;
+    PlayerCommandsData player2;
 
 
 
@@ -93,6 +95,26 @@ public class NetworkingManager : MonoBehaviour, Service
         }
     }
 
+    public void DecodeServerMessage(string s)
+    {
+        PlayerCommandsData playerData = (PlayerCommandsData)JsonUtility.FromJson(s, typeof(PlayerCommandsData));
+        if (playerData.playerID == 0)
+        {
+            player1 = playerData;
+        }
+        else
+        {
+            player2 = playerData;
+        }
+        if (player1 != null && player2 != null)
+        {
+            print("sending data to players");
+            _sr.SendMessageToClients(JsonUtility.ToJson(player2), JsonUtility.ToJson(player1));
+            player1 = null;
+            player2 = null;
+
+        }
+    }
     public void DecodeMessage(string s)
     {
         if (_cl != null)

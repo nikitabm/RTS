@@ -15,6 +15,7 @@ public class LockStepManager : MonoBehaviour, Service
     string s;
     List<int> emptyIntList = new List<int>();
     CustomMoveCommand inputCommand;
+    
 
     //contains key which is number of turn commands were issued and
     //player commands data, which is id of player and list of issued commands

@@ -45,11 +45,14 @@ public class Server : MonoBehaviour
 
     public delegate void BothPlayersConnected();
     public static event BothPlayersConnected OnAllPlayersConnected;
+    public delegate void ReceivedMessage(string s);
+    public static event ReceivedMessage OnMessageReceive;
     NetworkingManager nm;
 
     void Start()
 
     {
+        OnMessageReceive+=ServiceLocator.GetService<NetworkingManager>().DecodeServerMessage;
         _gameState = GameState.none;
         clients = new List<ServerClient>();
         HostServer();
@@ -65,6 +68,11 @@ public class Server : MonoBehaviour
         SendMessage(clients[0].tcp, "inc");
         SendMessage(clients[1].tcp, "inc");
 
+    }
+    public void SendMessageToClients( string s, string s1)
+    {
+        SendMessage(clients[0].tcp,s);
+        SendMessage(clients[1].tcp, s1);
     }
     void HostServer()
     {
@@ -210,6 +218,7 @@ public class Server : MonoBehaviour
                     Array.Copy(bytes, 0, incommingData, 0, length);
                     string clientMessage = Encoding.ASCII.GetString(incommingData);
                     string s = "server receives msg from client # " + i + ": " + clientMessage;
+                    OnMessageReceive(s);
                     log += s + Environment.NewLine;
                 }
             }
