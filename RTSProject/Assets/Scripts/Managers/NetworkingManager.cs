@@ -123,10 +123,6 @@ public class NetworkingManager : MonoBehaviour, Service
                 _cl.id = (int)char.GetNumericValue(s.ToCharArray()[0]);
                 print(_cl.id);
             }
-        if (s == "go")
-        {
-            //TODO: important stuff and important method
-        }
         if (s == "inc")
         {
             //TODO: important thing to make it more smart and not shit code in here

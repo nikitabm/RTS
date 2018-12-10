@@ -46,7 +46,7 @@ public class Server : MonoBehaviour
     public delegate void BothPlayersConnected();
     public static event BothPlayersConnected OnAllPlayersConnected;
     public delegate void ReceivedMessage(string s);
-    public static event ReceivedMessage OnMessageReceive;
+    public static  ReceivedMessage OnMessageReceive;
     NetworkingManager nm;
 
     void Start()
