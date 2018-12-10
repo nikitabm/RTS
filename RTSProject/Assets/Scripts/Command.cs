@@ -7,15 +7,13 @@ using UnityEditor;
 public class Command
 {
     public int playerID;
-    public int NetworkID;
     public Vector3 _position;
 
     public List<int> _units;
     public Command(int id, List<int> pUnits, Vector3 pPosition)
     {
+        //TODO:
         playerID = id;
-        //TODO: change
-        NetworkID = 0;
         _units = pUnits;
         _position = pPosition;
     }
