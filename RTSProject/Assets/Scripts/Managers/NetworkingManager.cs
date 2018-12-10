@@ -109,12 +109,12 @@ public class NetworkingManager : MonoBehaviour, Service
         {
             turn++;
             //TODO: important thing to make it more smart and not shit code inhere
-
             PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
-            // string msg = JsonUtility.ToJson(turnData);
-            string msg = turnData.commands.Count.ToString();
+
+            // msg = turnData.commands.Count.ToString();
+
+            string msg = JsonUtility.ToJson(turnData);
             _cl.SendMessage(msg);
-            //SendTurnDataToServer;
         }
     }
     // public static 
@@ -122,6 +122,12 @@ public class NetworkingManager : MonoBehaviour, Service
     private void Update()
     {
         turnText.text = turn.ToString();
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
+            string msg = JsonUtility.ToJson(turnData);
+            _cl.SendMessage(msg);
+        }
     }
 
 

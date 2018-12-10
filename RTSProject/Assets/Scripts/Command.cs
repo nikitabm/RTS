@@ -6,14 +6,8 @@ using UnityEditor;
 [System.Serializable]
 public class Command
 {
-    public enum ECommandType
-    {
-        CM_INVALID,
-        CM_ATTACK,
-        CM_MOVE
-    };
-    public ECommandType command = ECommandType.CM_INVALID;
-    public int PlayerID = 0;
+
+    public int playerID = 0;
     public int NetworkID = 0;
     public virtual void ProcessCommand()
     {
@@ -30,9 +24,11 @@ public class EmptyCommand : Command
 {
 
 }
+
+[System.Serializable]
 public class MoveCommand : Command
 {
-    int playerID;
+    // int playerID;
     public Vector3 _position;
     public List<int> _units;
     public MoveCommand(int id, List<int> pUnits, Vector3 pPosition)

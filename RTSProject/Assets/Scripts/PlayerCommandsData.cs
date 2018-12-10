@@ -7,18 +7,18 @@ public class PlayerCommandsData
 {
 
     public int playerID;
-    public List<int> units = new List<int>();
-    public Vector3 pos;
-    public int command;
-    public List<Command> commands = new List<Command>();
+
+    [SerializeField]
     private int turn;
+    public List<Command> commands = new List<Command>();
+
 
     public PlayerCommandsData(int pCommand, int pTurn, int pPlayerID, List<int> pUnits, Vector3 pPos)
     {
-        command = pCommand;
-        units = pUnits;
-        pos = pPos;
-        playerID = pPlayerID;
+        // command = pCommand;
+        // units = pUnits;
+        // pos = pPos;
+        // playerID = pPlayerID;
 
     }
     public PlayerCommandsData(int pTurn, int pPlayerID, Command c)
@@ -36,5 +36,9 @@ public class PlayerCommandsData
     public void AddCommand(Command c)
     {
         commands.Add(c);
+    }
+    public string SerializeSelf()
+    {
+        return JsonUtility.ToJson(this);
     }
 }

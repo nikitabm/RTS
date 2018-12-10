@@ -96,7 +96,7 @@ public class Client : MonoBehaviour
         try
         {
             socketConnection.Close();
-            isTrue = false;
+
         }
         catch (Exception e)
         {
@@ -105,11 +105,11 @@ public class Client : MonoBehaviour
 
         try
         {
+            isTrue = false;
             clientReceiveThread.IsBackground = false;
             clientReceiveThread.Abort();
             clientSendThread.IsBackground = false;
             clientSendThread.Abort();
-            isTrue = false;
         }
         catch (Exception e)
         {

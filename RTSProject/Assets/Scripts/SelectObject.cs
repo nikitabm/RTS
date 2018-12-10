@@ -93,8 +93,6 @@ public class SelectObject : MonoBehaviour
     }
     public void CreateAndPassCommand(List<int> pUnits, Vector3 pos)
     {
-        // var
-        print(pUnits[0] + " " + pos);
         //create
         MoveCommand issuedCommand = new MoveCommand(_playerID, pUnits, pos);
         commandCreated(issuedCommand);
