@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-public class Command : MonoBehaviour
+
+[System.Serializable]
+public class Command
 {
     public enum ECommandType
     {
@@ -16,14 +18,23 @@ public class Command : MonoBehaviour
     public virtual void ProcessCommand()
     {
 
+
     }
+    // public static Command CreateCommand(List<int> pUnits, Vector3 pos)
+    // {
+
+    //     // return new MoveCommand();
+    // }
+}
+public class EmptyCommand : Command
+{
 
 }
 public class MoveCommand : Command
 {
     int playerID;
-    private Vector3 _position;
-    private List<int> _units;
+    public Vector3 _position;
+    public List<int> _units;
     public MoveCommand(int id, List<int> pUnits, Vector3 pPosition)
     {
         playerID = id;

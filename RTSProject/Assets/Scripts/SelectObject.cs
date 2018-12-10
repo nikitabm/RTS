@@ -12,6 +12,8 @@ public class SelectObject : MonoBehaviour
     private Color _selectionColor;
     private bool _enabled;
     private int _playerID;
+    public delegate void OnCommandCreated(MoveCommand m);
+    public static event OnCommandCreated commandCreated;
     public int PlayerID
     {
         get
@@ -37,6 +39,7 @@ public class SelectObject : MonoBehaviour
     {
         _selectionColor = Color.blue;
         playerState = StateOfPlayer.Idle;
+        ServiceLocator.GetService<CommandManager>().SubsribeToEvent();
     }
     void Update()
     {
@@ -90,8 +93,11 @@ public class SelectObject : MonoBehaviour
     }
     public void CreateAndPassCommand(List<int> pUnits, Vector3 pos)
     {
+        // var
         print(pUnits + " " + pos);
         //create
+        MoveCommand issuedCommand = new MoveCommand(_playerID, pUnits, pos);
+        commandCreated(issuedCommand);
         //MoveCommand inputCommand = new MoveCommand(1, pUnits, pos);
 
         //send

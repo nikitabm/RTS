@@ -11,12 +11,6 @@ using UnityEngine.UI;
 
 public class LockStepManager : MonoBehaviour, Service
 {
-
-
-    public Text turnText;
-    public Text MsgText;
-
-    int playerID;
     bool approvedCommands;
     string s;
     List<int> emptyIntList = new List<int>();

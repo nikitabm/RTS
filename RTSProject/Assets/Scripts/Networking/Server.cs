@@ -47,7 +47,6 @@ public class Server : MonoBehaviour
     public static event BothPlayersConnected OnAllPlayersConnected;
     NetworkingManager nm;
 
-
     void Start()
 
     {

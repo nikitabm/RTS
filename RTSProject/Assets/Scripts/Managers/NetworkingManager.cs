@@ -20,6 +20,7 @@ public class NetworkingManager : MonoBehaviour, Service
 
 
 
+
     //private
     private Client _cl;
     private Server _sr;
@@ -59,23 +60,23 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         return _cl;
     }
-    private void ClientSend()
-    {
-        //TODO:
-        // _cl.send
-        //client send data to server method
-        //make it generic
-    }
-    private void ServerSend()
-    {
-        //TODO:
-        //same but for server
-    }
+    // private void ClientSend()
+    // {
+    //     //TODO:
+    //     // _cl.send
+    //     //client send data to server method
+    //     //make it generic
+    // }
+    // private void ServerSend()
+    // {
+    //     //TODO:
+    //     //same but for server
+    // }
     private void CreatePlayer()
     {
         _playerRef = ServiceLocator.GetService<GameManager>().CreatePlayer();
     }
-    public void SendMessage(NetworkStream stream, string s)
+    public static void SendMessage(NetworkStream stream, string s)
     {
         try
         {
@@ -107,9 +108,14 @@ public class NetworkingManager : MonoBehaviour, Service
         if (s == "inc")
         {
             turn++;
-
+            //TODO:
+            PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
+            string msg = JsonUtility.ToJson(turnData);
+            //_cl.SendMessage(msg);
+            //SendTurnDataToServer;
         }
     }
+    // public static 
 
     private void Update()
     {
