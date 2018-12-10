@@ -37,8 +37,4 @@ public class PlayerCommandsData
     {
         commands.Add(c);
     }
-    public string SerializeSelf()
-    {
-        return JsonUtility.ToJson(this);
-    }
 }

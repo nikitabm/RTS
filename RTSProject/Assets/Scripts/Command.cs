@@ -6,13 +6,18 @@ using UnityEditor;
 [System.Serializable]
 public class Command
 {
+    public int playerID;
+    public int NetworkID;
+    public Vector3 _position;
 
-    public int playerID = 0;
-    public int NetworkID = 0;
-    public virtual void ProcessCommand()
+    public List<int> _units;
+    public Command(int id, List<int> pUnits, Vector3 pPosition)
     {
-
-
+        playerID = id;
+        //TODO: change
+        NetworkID = 0;
+        _units = pUnits;
+        _position = pPosition;
     }
     // public static Command CreateCommand(List<int> pUnits, Vector3 pos)
     // {
@@ -20,39 +25,36 @@ public class Command
     //     // return new MoveCommand();
     // }
 }
-public class EmptyCommand : Command
-{
+// public class EmptyCommand : Command
+// {
 
-}
+// }
 
-[System.Serializable]
-public class MoveCommand : Command
-{
-    // int playerID;
-    public Vector3 _position;
-    
-    
-    public List<int> _units;
-    public MoveCommand(int id, List<int> pUnits, Vector3 pPosition)
-    {
-        playerID = id;
-        _units = pUnits;
-        _position = pPosition;
-    }
-    public override void ProcessCommand()
-    {
+// [System.Serializable]
+// public class MoveCommand : Command
+// {
+//     // int playerID;
 
-    }
-}
-public class AttackCommand : Command
-{
-    private List<int> _units;
-    public AttackCommand(List<int> pUnits)
-    {
+//     public MoveCommand(int id, List<int> pUnits, Vector3 pPosition)
+//     {
+//         playerID = id;
+//         _units = pUnits;
+//         _position = pPosition;
+//     }
+//     public override void ProcessCommand()
+//     {
 
-    }
-    public override void ProcessCommand()
-    {
+//     }
+// }
+// public class AttackCommand : Command
+// {
+//     private List<int> _units;
+//     public AttackCommand(List<int> pUnits)
+//     {
 
-    }
-}
+//     }
+//     public override void ProcessCommand()
+//     {
+
+//     }
+// }

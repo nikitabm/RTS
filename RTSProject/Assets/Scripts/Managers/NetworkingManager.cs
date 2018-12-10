@@ -124,11 +124,12 @@ public class NetworkingManager : MonoBehaviour, Service
         turnText.text = turn.ToString();
         if (Input.GetKeyDown(KeyCode.H))
         {
-            PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
-            string msg = JsonUtility.ToJson(turnData);
-            _cl.SendMessage(msg);
-            print(turnData.commands);
-            print(msg);
+            print(ServiceLocator.GetService<CommandManager>()._commandList[1]._units[0]);
+            //PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
+            //string msg = JsonUtility.ToJson(turnData);
+            ////_cl.SendMessage(msg);
+            ////print(turnData.commands);
+            //print(msg);
         }
     }
     //{"playerID":0,"turn":-2,"commands":[{"playerID":0,"NetworkID":0}]}

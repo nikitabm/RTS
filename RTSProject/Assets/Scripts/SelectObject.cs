@@ -12,7 +12,7 @@ public class SelectObject : MonoBehaviour
     private Color _selectionColor;
     private bool _enabled;
     private int _playerID;
-    public delegate void OnCommandCreated(MoveCommand m);
+    public delegate void OnCommandCreated(Command m);
     public static event OnCommandCreated commandCreated;
     public int PlayerID
     {
@@ -72,15 +72,15 @@ public class SelectObject : MonoBehaviour
                     if (obj.GetComponent(typeof(ISelectable)) != null)
                     {
                         units.Clear();
-                        playerState = StateOfPlayer.SelectUnit;
                         units.Add(obj.transform.gameObject.GetComponent<Unit>().ID);
+                        playerState = StateOfPlayer.SelectUnit;
                     }
                 }
                 else if (playerState == StateOfPlayer.SelectUnit)
                 {
                     _clickPoint = hit.point;
                     playerState = StateOfPlayer.SelectedLocation;
-                    CreateAndPassCommand(units, _clickPoint);
+                    CreateAndPassCommand(units[0], _clickPoint);
                     playerState = StateOfPlayer.Idle;
 
                 }
@@ -88,14 +88,21 @@ public class SelectObject : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(1))
         {
+            units.Clear();
             playerState = StateOfPlayer.Idle;
         }
     }
-    public void CreateAndPassCommand(List<int> pUnits, Vector3 pos)
+    public void CreateAndPassCommand(int i, Vector3 pos)
     {
+        //TODO: change to ARRAY
+        List<int> temp=new List<int>();
+        temp.Add(i);
         //create
-        MoveCommand issuedCommand = new MoveCommand(_playerID, pUnits, pos);
-        commandCreated(issuedCommand);
+        print("Creating command");
+        Command issuedCommand = new Command(_playerID,temp , pos);
+        ServiceLocator.GetService<CommandManager>().AddToQueue(issuedCommand);
+        //commandCreated(issuedCommand);
+        //units.Clear();
         //MoveCommand inputCommand = new MoveCommand(1, pUnits, pos);
 
         //send
