@@ -99,7 +99,6 @@ public class NetworkingManager : MonoBehaviour, Service
 
     public void DecodeServerMessage(string s)
     {
-        print("getting here");
         PlayerCommandsData playerData = JsonUtility.FromJson<PlayerCommandsData>(s);
 
         if (playerData.playerID == 0)
@@ -113,7 +112,7 @@ public class NetworkingManager : MonoBehaviour, Service
         }
         if (playerOne != null && playerTwo != null)
         {
-            print("sending data to players");
+            print("send data to players");
             _sr.SendMessageToClients(JsonUtility.ToJson(playerTwo), JsonUtility.ToJson(playerOne));
             playerOne = null;
             playerTwo = null;
@@ -156,7 +155,7 @@ public class NetworkingManager : MonoBehaviour, Service
             else
             {
                 //FIXME:
-                _cl.id = (int)char.GetNumericValue(s.ToCharArray()[0]);
+                //_cl.id = (int)char.GetNumericValue(s.ToCharArray()[0]);
                 print(_cl.id);
             }
         }
@@ -191,9 +190,11 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         if (_sr == null && _cl == null)
         {
+
             host = true;
             _sr = gameObject.AddComponent<Server>();
             _cl = gameObject.AddComponent<Client>();
+            _cl.id = 0;
             CreatePlayer();
         }
 
@@ -204,6 +205,7 @@ public class NetworkingManager : MonoBehaviour, Service
         {
             host = false;
             _cl = gameObject.AddComponent<Client>();
+            _cl.id = 1;
             CreatePlayer();
         }
     }
