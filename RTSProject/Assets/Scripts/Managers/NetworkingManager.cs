@@ -105,16 +105,10 @@ public class NetworkingManager : MonoBehaviour, Service
         if (playerData.playerID == 0)
         {
             playerOne = playerData;
-            print(playerOne.playerID);
-            print(playerOne.commands.Count);
-            print(playerOne.commands[0]._position);
         }
         else
         {
             playerTwo = playerData;
-            print(playerTwo.playerID);
-            print(playerTwo.commands.Count);
-            print(playerTwo.commands[0]._position);
 
         }
         if (playerOne != null && playerTwo != null)
@@ -145,7 +139,7 @@ public class NetworkingManager : MonoBehaviour, Service
 
                 string msg = JsonUtility.ToJson(turnData);
 
-                    print(msg);
+                print(msg);
 
 
                 _cl.SendMessage(msg);
@@ -161,6 +155,7 @@ public class NetworkingManager : MonoBehaviour, Service
             }
             else
             {
+                //FIXME:
                 _cl.id = (int)char.GetNumericValue(s.ToCharArray()[0]);
                 print(_cl.id);
             }
@@ -173,19 +168,14 @@ public class NetworkingManager : MonoBehaviour, Service
         turnText.text = turn.ToString();
         if (Input.GetKeyDown(KeyCode.H))
         {
-            PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn+2, _cl.id);
+            PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
             string msg = JsonUtility.ToJson(turnData);
             newData = JsonUtility.FromJson<PlayerCommandsData>(msg);
             _cl.SendMessage(msg);
             print(msg);
         }
-
-
-        //     ////print(turnData.commands);
-        //     print(msg);
-        // }
     }
-    //{"playerID":0,"turn":-2,"commands":[{"playerID":0,"NetworkID":0}]}
+
 
 
     #region Methods Called From Buttons
