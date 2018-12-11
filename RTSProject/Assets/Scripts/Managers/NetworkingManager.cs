@@ -21,6 +21,7 @@ public class NetworkingManager : MonoBehaviour, Service
     PlayerCommandsData playerTwo;
 
     public PlayerCommandsData newData;
+    PlayerCommandsData turnData;
 
 
 
@@ -132,7 +133,7 @@ public class NetworkingManager : MonoBehaviour, Service
             if (s == "inc")
             {
                 //TODO: important thing to make it more smart and not shit code in here
-                PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
+                turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
                 print("client receives INC command and sends turn data");
                 // msg = turnData.commands.Count.ToString();
 
@@ -150,7 +151,8 @@ public class NetworkingManager : MonoBehaviour, Service
             {
                 PlayerCommandsData playerData = JsonUtility.FromJson<PlayerCommandsData>(s);
                 print(s);
-                
+                ServiceLocator.GetService<CommandManager>().ExecuteCommand(playerData);
+                ServiceLocator.GetService<CommandManager>().ExecuteCommand(turnData);
 
             }
             else
@@ -166,14 +168,14 @@ public class NetworkingManager : MonoBehaviour, Service
     private void Update()
     {
         turnText.text = turn.ToString();
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
-            string msg = JsonUtility.ToJson(turnData);
-            newData = JsonUtility.FromJson<PlayerCommandsData>(msg);
-            _cl.SendMessage(msg);
-            print(msg);
-        }
+        // if (Input.GetKeyDown(KeyCode.H))
+        // {
+        //     PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
+        //     string msg = JsonUtility.ToJson(turnData);
+        //     newData = JsonUtility.FromJson<PlayerCommandsData>(msg);
+        //     _cl.SendMessage(msg);
+        //     print(msg);
+        // }
     }
 
 

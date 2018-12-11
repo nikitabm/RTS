@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 public class CommandManager : MonoBehaviour, Service
 {
 
@@ -34,8 +35,11 @@ public class CommandManager : MonoBehaviour, Service
     {
         for (int i = 0; i < commandData.commands.Count; i++)
         {
-            ServiceLocator.GetService<GameManager>().getUnit(commandData.commands[i]._units[0]);
-            
+            if (ServiceLocator.GetService<GameManager>().getUnit(commandData.commands[i]._units[0]) != null)
+            {
+                NavMeshAgent agent = ServiceLocator.GetService<GameManager>().getUnit(commandData.commands[i]._units[0]).GetComponent<Unit>().GetComponent<NavMeshAgent>();
+                agent.destination = commandData.commands[i]._position;
+            }
         }
     }
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
