@@ -45,6 +45,15 @@ public class GameManager : MonoBehaviour, Service
         else _teamTwoUnits.Add(g);
 
     }
+    public GameObject getUnit(int index)
+    {
+        for (int i = 0; i < _teamOneUnits.Count; i++)
+        {
+            if (_teamOneUnits[i].GetComponent<Unit>().ID == index) return _teamOneUnits[i];
+
+        }
+        return null;
+    }
     public List<GameObject> GetTeamOneUnits()
     {
         return _teamOneUnits;

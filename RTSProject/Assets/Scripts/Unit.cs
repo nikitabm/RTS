@@ -12,6 +12,10 @@ public class Unit : MonoBehaviour, ISelectable
     {
         _gm = ServiceLocator.GetService<GameManager>();
         _gm.AddToTeam(0, this.gameObject);
+        gameObject.transform.SetPositionAndRotation(
+             new Vector3(Mathf.Round(gameObject.transform.position.x),
+             gameObject.transform.position.y,
+              Mathf.Round(gameObject.transform.position.z)), Quaternion.identity);
     }
     void ISelectable.Diselect()
     {

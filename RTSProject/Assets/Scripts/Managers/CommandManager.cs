@@ -30,13 +30,20 @@ public class CommandManager : MonoBehaviour, Service
     {
         SelectObject.commandCreated += AddToQueue;
     }
-
+    public void ExecuteCommand(PlayerCommandsData commandData)
+    {
+        for (int i = 0; i < commandData.commands.Count; i++)
+        {
+            ServiceLocator.GetService<GameManager>().getUnit(commandData.commands[i]._units[0]);
+            
+        }
+    }
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {
         PlayerCommandsData playerData;
         playerData = new PlayerCommandsData(turn, playerID);
 
-        if(_commandQueue.Count==0)  playerData.AddCommand(new Command(playerID,new List<int>{-1},Vector3.zero));
+        if (_commandQueue.Count == 0) playerData.AddCommand(new Command(playerID, new List<int> { -1 }, Vector3.zero));
         while (_commandQueue.Count != 0)
         {
             playerData.AddCommand(_commandQueue.Dequeue());

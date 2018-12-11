@@ -150,6 +150,7 @@ public class NetworkingManager : MonoBehaviour, Service
             {
                 PlayerCommandsData playerData = JsonUtility.FromJson<PlayerCommandsData>(s);
                 print(s);
+                
 
             }
             else
