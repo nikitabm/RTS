@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class CommandManager : MonoBehaviour, Service
 {
 
@@ -31,13 +30,13 @@ public class CommandManager : MonoBehaviour, Service
     {
         SelectObject.commandCreated += AddToQueue;
     }
-    
+
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {
         PlayerCommandsData playerData;
         playerData = new PlayerCommandsData(turn, playerID);
 
-        // string coms = "";
+        if(_commandQueue.Count==0)  playerData.AddCommand(new Command(playerID,new List<int>{-1},Vector3.zero));
         while (_commandQueue.Count != 0)
         {
             playerData.AddCommand(_commandQueue.Dequeue());
