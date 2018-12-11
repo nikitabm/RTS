@@ -17,8 +17,10 @@ public class NetworkingManager : MonoBehaviour, Service
     public Text ClientText;
     public Text turnText;
     public int turn;
-    PlayerCommandsData player1;
-    PlayerCommandsData player2;
+    public PlayerCommandsData playerOne;
+    PlayerCommandsData playerTwo;
+
+    public PlayerCommandsData newData;
 
 
 
@@ -97,49 +99,71 @@ public class NetworkingManager : MonoBehaviour, Service
 
     public void DecodeServerMessage(string s)
     {
-        PlayerCommandsData playerData = (PlayerCommandsData)JsonUtility.FromJson(s, typeof(PlayerCommandsData));
+        print("getting here");
+        PlayerCommandsData playerData = JsonUtility.FromJson<PlayerCommandsData>(s);
+
         if (playerData.playerID == 0)
         {
-            player1 = playerData;
+            playerOne = playerData;
+            print(playerOne.playerID);
+            print(playerOne.commands.Count);
+            print(playerOne.commands[0]._position);
         }
         else
         {
-            player2 = playerData;
+            playerTwo = playerData;
+            print(playerTwo.playerID);
+            print(playerTwo.commands.Count);
+            print(playerTwo.commands[0]._position);
+
         }
-        if (player1 != null && player2 != null)
+        if (playerOne != null && playerTwo != null)
         {
             print("sending data to players");
-            _sr.SendMessageToClients(JsonUtility.ToJson(player2), JsonUtility.ToJson(player1));
-            player1 = null;
-            player2 = null;
+            _sr.SendMessageToClients(JsonUtility.ToJson(playerTwo), JsonUtility.ToJson(playerOne));
+            playerOne = null;
+            playerTwo = null;
 
         }
     }
     public void DecodeMessage(string s)
     {
         if (_cl != null)
-            if (s.Length == 1)
+        {
+            // if (s == "1go")
+            // {
+            //     // _cl.id = (int)char.GetNumericValue(s.ToCharArray()[0]);
+            //     _cl.id = 1;
+            //     print(_cl.id);
+            // }
+            if (s == "inc")
+            {
+                //TODO: important thing to make it more smart and not shit code in here
+                PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
+
+                // msg = turnData.commands.Count.ToString();
+
+                string msg = JsonUtility.ToJson(turnData);
+
+                print(msg);
+
+
+                _cl.SendMessage(msg);
+                //should it be here?
+                turn++;
+            }
+
+            else if (s.Length > 10)
+            {
+                PlayerCommandsData playerData = JsonUtility.FromJson<PlayerCommandsData>(s);
+                print(s);
+
+            }
+            else
             {
                 _cl.id = (int)char.GetNumericValue(s.ToCharArray()[0]);
                 print(_cl.id);
             }
-        if (s == "inc")
-        {
-            //TODO: important thing to make it more smart and not shit code in here
-            PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
-
-            // msg = turnData.commands.Count.ToString();
-
-            string msg = JsonUtility.ToJson(turnData);
-            _cl.SendMessage(msg);
-            //should it be here?
-            turn++;
-        }
-        else
-        {
-            PlayerCommandsData playerData = (PlayerCommandsData)JsonUtility.FromJson(s, typeof(PlayerCommandsData));
-            print(s);
-            
         }
     }
     // public static 
@@ -147,12 +171,16 @@ public class NetworkingManager : MonoBehaviour, Service
     private void Update()
     {
         turnText.text = turn.ToString();
-        // if (Input.GetKeyDown(KeyCode.H))
-        // {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
+            string msg = JsonUtility.ToJson(turnData);
+            newData = JsonUtility.FromJson<PlayerCommandsData>(msg);
+            _cl.SendMessage(msg);
+            print(msg);
+        }
 
-        //     PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn, _cl.id);
-        //     string msg = JsonUtility.ToJson(turnData);
-        //     //_cl.SendMessage(msg);
+
         //     ////print(turnData.commands);
         //     print(msg);
         // }

@@ -46,13 +46,13 @@ public class Server : MonoBehaviour
     public delegate void BothPlayersConnected();
     public static event BothPlayersConnected OnAllPlayersConnected;
     public delegate void ReceivedMessage(string s);
-    public static  ReceivedMessage OnMessageReceive;
+    public static event ReceivedMessage OnMessageReceive;
     NetworkingManager nm;
 
     void Start()
 
     {
-        OnMessageReceive+=ServiceLocator.GetService<NetworkingManager>().DecodeServerMessage;
+        OnMessageReceive += ServiceLocator.GetService<NetworkingManager>().DecodeServerMessage;
         _gameState = GameState.none;
         clients = new List<ServerClient>();
         HostServer();
@@ -70,17 +70,17 @@ public class Server : MonoBehaviour
         SendMessage(clients[1].tcp, "inc");
 
     }
-    public void SendMessageToClients( string s, string s1)
+    public void SendMessageToClients(string s, string s1)
     {
-        SendMessage(clients[0].tcp,s);
+        SendMessage(clients[0].tcp, s);
         SendMessage(clients[1].tcp, s1);
     }
     void HostServer()
     {
 
+        started = true;
         try
         {
-            started = true;
             tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 55555);
             tcpListener.Start();
             TcpClientAcceptThread = new Thread(new ThreadStart(StartListening));
@@ -219,8 +219,8 @@ public class Server : MonoBehaviour
                     Array.Copy(bytes, 0, incommingData, 0, length);
                     string clientMessage = Encoding.ASCII.GetString(incommingData);
                     string s = "server receives msg from client # " + i + ": " + clientMessage;
-                    OnMessageReceive(s);
                     log += s + Environment.NewLine;
+                    OnMessageReceive(clientMessage);
                 }
             }
         }

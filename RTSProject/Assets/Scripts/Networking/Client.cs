@@ -31,7 +31,7 @@ public class Client : MonoBehaviour
     public bool myDataConfirmed;
     NetworkingManager nm;
     public delegate void MessageReceived(string s);
-    public static MessageReceived OnMessageReceived;
+    public static event MessageReceived OnMessageReceived;
     string log;
     public enum TurnState
     {
