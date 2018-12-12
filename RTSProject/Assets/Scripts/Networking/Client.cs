@@ -158,11 +158,9 @@ public class Client : MonoBehaviour
                 int length;
                 while ((length = stream.Read(bytes, 0, bytes.Length)) != 0)
                 {
-                    var incommingData = new byte[length];
-                    Array.Copy(bytes, 0, incommingData, 0, length);
-                    string serverMessage = Encoding.ASCII.GetString(incommingData);
-                    log += "server message received as: " + serverMessage + Environment.NewLine;
-                    OnMessageReceived(serverMessage);
+                    string receivedMessage = RequestHelper.ReadString(stream);
+                    log += "server message received as: " + receivedMessage + Environment.NewLine;
+                    OnMessageReceived(receivedMessage);
                 }
             }
             catch (SocketException socketException)
