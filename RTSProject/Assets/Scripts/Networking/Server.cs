@@ -209,13 +209,18 @@ public class Server : MonoBehaviour
         {
             for (int i = 0; i < clients.Count; i++)
             {
-
+                int length = 0;
                 if (clients[i].tcp.Available > 0)
                 {
-                    string receivedMessage = RequestHelper.ReadString(clients[i].tcp.GetStream());
-                    string s = "server receives msg from client # " + i + ": " + receivedMessage;
+                    //?
+                    length = clients[i].tcp.GetStream().Read(bytes, 0, bytes.Length);
+
+                    var incommingData = new byte[length];
+                    Array.Copy(bytes, 0, incommingData, 0, length);
+                    string clientMessage = Encoding.ASCII.GetString(incommingData);
+                    string s = "server receives msg from client # " + i + ": " + clientMessage;
                     log += s + Environment.NewLine;
-                    OnMessageReceive(receivedMessage);
+                    OnMessageReceive(clientMessage);
                 }
             }
         }
