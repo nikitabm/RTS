@@ -124,12 +124,6 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         if (_cl != null)
         {
-            // if (s == "1go")
-            // {
-            //     // _cl.id = (int)char.GetNumericValue(s.ToCharArray()[0]);
-            //     _cl.id = 1;
-            //     print(_cl.id);
-            // }
             if (s == "inc")
             {
                 //TODO: important thing to make it more smart and not shit code in here
