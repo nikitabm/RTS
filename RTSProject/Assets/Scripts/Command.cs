@@ -17,11 +17,14 @@ public class Command
         _units = pUnits;
         _position = pPosition;
     }
-    // public static Command CreateCommand(List<int> pUnits, Vector3 pos)
-    // {
+    public Command()
+    {
 
-    //     // return new MoveCommand();
-    // }
+    }
+    public static T CreateCommand<T>(List<int> pUnits, Vector3 pPos) where T : Command
+    {
+        return new Command() as T;
+    }
 }
 // public class EmptyCommand : Command
 // {
@@ -44,15 +47,15 @@ public class Command
 
 //     }
 // }
-// public class AttackCommand : Command
-// {
-//     private List<int> _units;
-//     public AttackCommand(List<int> pUnits)
-//     {
+public class AttackCommand : Command
+{
+    private List<int> _units;
+    public AttackCommand(List<int> pUnits)
+    {
 
-//     }
-//     public override void ProcessCommand()
-//     {
+    }
+    // public override void ProcessCommand()
+    // {
 
-//     }
-// }
+    // }
+}

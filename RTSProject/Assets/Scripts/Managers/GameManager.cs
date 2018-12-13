@@ -19,10 +19,6 @@ public class GameManager : MonoBehaviour, Service
         InitializeServices();
 
     }
-    public void Start()
-    {
-    }
-
     public Player GetPlayer()
     {
         return _player;

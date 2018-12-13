@@ -1,31 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 public class CommandManager : MonoBehaviour, Service
 {
-
-
     public Queue<Command> _commandQueue = new Queue<Command>();
-    public List<Command> _commandList = new List<Command>();
     void Start()
     {
+        //responsible for queing commands and operating with them
         ServiceLocator.ProvideService(this);
-        //responsible for queuing commands and operating with them
-
-    }
-
-    void Update()
-    {
-
     }
     public void AddToQueue(Command c)
     {
         _commandQueue.Enqueue(c);
-        // _commandList.Add(c);
-        // print((c as MoveCommand)._position + " " + (c as MoveCommand)._units[0]);
-        // print(_commandQueue.Count);
-        // print(JsonUtility.ToJson(c));
     }
     public void SubsribeToEvent()
     {
@@ -33,14 +19,15 @@ public class CommandManager : MonoBehaviour, Service
     }
     public void ExecuteCommand(PlayerCommandsData commandData)
     {
-        for (int i = 0; i < commandData.commands.Count; i++)
-        {
-            if (ServiceLocator.GetService<GameManager>().getUnit(commandData.commands[i]._units[0]) != null)
-            {
-                NavMeshAgent agent = ServiceLocator.GetService<GameManager>().getUnit(commandData.commands[i]._units[0]).GetComponent<Unit>().GetComponent<NavMeshAgent>();
-                agent.destination = commandData.commands[i]._position;
-            }
-        }
+        //TODO:
+        // for (int i = 0; i < commandData.commands.Count; i++)
+        // {
+        //     if (ServiceLocator.GetService<GameManager>().getUnit(commandData.commands[i]._units[0]) != null)
+        //     {
+        //         NavMeshAgent agent = ServiceLocator.GetService<GameManager>().getUnit(commandData.commands[i]._units[0]).GetComponent<Unit>().GetComponent<NavMeshAgent>();
+        //         agent.destination = commandData.commands[i]._position;
+        //     }
+        // }
     }
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {
@@ -51,10 +38,7 @@ public class CommandManager : MonoBehaviour, Service
         while (_commandQueue.Count != 0)
         {
             playerData.AddCommand(_commandQueue.Dequeue());
-            // coms += JsonUtility.ToJson(_commandQueue.Dequeue()) + ",";
-            //playerData.AddCommand(_commandQueue.Dequeue());
         }
-        // print(coms);
         return playerData;
     }
 }

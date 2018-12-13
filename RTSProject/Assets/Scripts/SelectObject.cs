@@ -98,7 +98,7 @@ public class SelectObject : MonoBehaviour
         List<int> temp=new List<int>();
         temp.Add(i);
         //create
-        print("Creating command");
+        // print("Creating command");
         Command issuedCommand = new Command(_playerID,temp , pos);
         commandCreated(issuedCommand);
     }

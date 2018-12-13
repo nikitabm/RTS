@@ -12,21 +12,18 @@ public class NetworkingManager : MonoBehaviour, Service
 {
 
 
-    //public
     public Text serverText;
     public Text ClientText;
     public Text turnText;
     public int turn;
+    
+    //FIXME: change the way commands are processed
     public PlayerCommandsData playerOne;
     PlayerCommandsData playerTwo;
-
     public PlayerCommandsData newData;
     PlayerCommandsData turnData;
 
 
-
-
-    //private
     private Client _cl;
     private Server _sr;
     private bool host = false;
@@ -65,18 +62,6 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         return _cl;
     }
-    // private void ClientSend()
-    // {
-    //     //TODO:
-    //     // _cl.send
-    //     //client send data to server method
-    //     //make it generic
-    // }
-    // private void ServerSend()
-    // {
-    //     //TODO:
-    //     //same but for server
-    // }
     private void CreatePlayer()
     {
         _playerRef = ServiceLocator.GetService<GameManager>().CreatePlayer();
@@ -151,25 +136,14 @@ public class NetworkingManager : MonoBehaviour, Service
             }
             else
             {
-                //FIXME:
-                //_cl.id = (int)char.GetNumericValue(s.ToCharArray()[0]);
-                print(_cl.id);
+
             }
         }
     }
-    // public static 
 
     private void Update()
     {
         turnText.text = turn.ToString();
-        // if (Input.GetKeyDown(KeyCode.H))
-        // {
-        //     PlayerCommandsData turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
-        //     string msg = JsonUtility.ToJson(turnData);
-        //     newData = JsonUtility.FromJson<PlayerCommandsData>(msg);
-        //     _cl.SendMessage(msg);
-        //     print(msg);
-        // }
     }
 
 
