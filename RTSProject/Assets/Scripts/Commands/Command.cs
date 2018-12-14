@@ -8,16 +8,19 @@ using System;
 [System.Serializable]
 public abstract class Command
 {
-    public int playerID;
-    public Vector3 _position;
+    protected Vector3 position;
+    protected List<int> units;
 
-    public List<int> _units;
+    //TODO: maybe add data variable to indicate what building to build
+
     public static T CreateCommand<T>(List<int> pUnits, Vector3 pPos) where T : Command
     {
         return (T)Activator.CreateInstance(typeof(T), pUnits, pPos);
     }
-    public static T CreateCommand<T>(Vector3 pPos, int pAction) where T : Command
+    public static T CreateCommand<T>(int pAction, List<int> pUnits, Vector3 pPos) where T : Command
     {
-        return (T)Activator.CreateInstance(typeof(T), pPos, pAction);
+        return (T)Activator.CreateInstance(typeof(T), pAction, pPos, pAction);
     }
+    public virtual void Execute()
+    { }
 }

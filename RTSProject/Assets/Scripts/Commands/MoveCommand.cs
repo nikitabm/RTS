@@ -6,9 +6,13 @@ using UnityEngine;
 public class MoveCommand : Command
 {
 
-    public MoveCommand(int id, List<int> pUnits, Vector3 pPosition)
+    public MoveCommand(List<int> pUnits, Vector3 pPosition)
     {
-        _units = pUnits;
-        _position = pPosition;
+        units = pUnits;
+        position = pPosition;
+    }
+    public override void Execute()
+    { 
+        
     }
 }
