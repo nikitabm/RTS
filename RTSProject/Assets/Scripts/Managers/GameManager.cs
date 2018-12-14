@@ -23,12 +23,12 @@ public class GameManager : MonoBehaviour, Service
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            AttackCommand c = Command.CreateCommand<AttackCommand>(new List<int> { 1, 2, 3 }, new Vector3(1, 1, 1));
-            for (int i = 0; i < c._units.Count; i++)
-            {
-                print(c._units[i]);
-            }
-            print(c._position);
+            // AttackCommand c = Command.CreateCommand<AttackCommand>(new List<int> { 1, 2, 3 }, new Vector3(1, 1, 1));
+            // for (int i = 0; i < c._units.Count; i++)
+            // {
+            //     print(c._units[i]);
+            // }
+            // print(c._position);
         }
     }
     public Player GetPlayer()
