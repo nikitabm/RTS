@@ -12,7 +12,7 @@ public class MoveCommand : Command
         position = pPosition;
     }
     public override void Execute()
-    { 
-        
+    {
+        //TODO:
     }
 }

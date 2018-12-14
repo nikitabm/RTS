@@ -20,21 +20,17 @@ public class CommandManager : MonoBehaviour, Service
     public void ExecuteCommand(PlayerCommandsData commandData)
     {
         //TODO:
-        // for (int i = 0; i < commandData.commands.Count; i++)
-        // {
-        //     if (ServiceLocator.GetService<GameManager>().getUnit(commandData.commands[i]._units[0]) != null)
-        //     {
-        //         NavMeshAgent agent = ServiceLocator.GetService<GameManager>().getUnit(commandData.commands[i]._units[0]).GetComponent<Unit>().GetComponent<NavMeshAgent>();
-        //         agent.destination = commandData.commands[i]._position;
-        //     }
-        // }
+        for (int i = 0; i < commandData.commands.Count; i++)
+        {
+            commandData.commands[i].Execute();
+        }
     }
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {
         PlayerCommandsData playerData;
         playerData = new PlayerCommandsData(turn, playerID);
 
-        if (_commandQueue.Count == 0) playerData.AddCommand(new Command(playerID, new List<int> { -1 }, Vector3.zero));
+        if (_commandQueue.Count == 0) playerData.AddCommand(Command.CreateCommand<EmptyCommand>());
         while (_commandQueue.Count != 0)
         {
             playerData.AddCommand(_commandQueue.Dequeue());

@@ -95,11 +95,10 @@ public class SelectObject : MonoBehaviour
     public void CreateAndPassCommand(int i, Vector3 pos)
     {
         //TODO: change to ARRAY
-        List<int> temp=new List<int>();
+        List<int> temp = new List<int>();
         temp.Add(i);
-        //create
-        // print("Creating command");
-        Command issuedCommand = new Command(_playerID,temp , pos);
+        Command issuedCommand;
+        issuedCommand = Command.CreateCommand<MoveCommand>(temp, pos);
         commandCreated(issuedCommand);
     }
 }

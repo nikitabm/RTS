@@ -114,22 +114,20 @@ public class NetworkingManager : MonoBehaviour, Service
                 //TODO: important thing to make it more smart and not shit code in here
                 turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
                 print("client receives INC command and sends turn data");
-                // msg = turnData.commands.Count.ToString();
 
                 string msg = JsonUtility.ToJson(turnData);
 
                 print(msg);
 
 
+                //FIXME: should it be here?
                 _cl.SendMessage(msg);
-                //should it be here?
                 turn++;
             }
 
             else if (s.Length > 10)
             {
                 PlayerCommandsData playerData = JsonUtility.FromJson<PlayerCommandsData>(s);
-                print(s);
                 ServiceLocator.GetService<CommandManager>().ExecuteCommand(playerData);
                 ServiceLocator.GetService<CommandManager>().ExecuteCommand(turnData);
 
