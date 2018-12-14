@@ -5,11 +5,8 @@ using UnityEngine;
 public class SelectObject : MonoBehaviour
 {
 
-    private GameObject _selectedObject = null;
     private Vector3 _clickPoint = Vector3.zero;
     private List<int> units = new List<int>();
-    private Color _objectColor;
-    private Color _selectionColor;
     private bool _enabled;
     private int _playerID;
     public delegate void OnCommandCreated(Command m);
@@ -37,7 +34,6 @@ public class SelectObject : MonoBehaviour
     public StateOfPlayer playerState;
     void Start()
     {
-        _selectionColor = Color.blue;
         playerState = StateOfPlayer.Idle;
         ServiceLocator.GetService<CommandManager>().SubsribeToEvent();
     }
@@ -48,10 +44,6 @@ public class SelectObject : MonoBehaviour
     public void SetEnabled(bool value)
     {
         _enabled = value;
-    }
-    public GameObject GetSelectedObject()
-    {
-        return _selectedObject;
     }
     public Vector3 GetClickPoint()
     {

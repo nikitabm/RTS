@@ -44,7 +44,7 @@ public class LockStepManager : MonoBehaviour, Service
         while (_accumilatedTime > _frameLength)
         {
             NextTurn();
-            print("Turn: " + ServiceLocator.GetService<NetworkingManager>().turn);
+            print("turn: " + ServiceLocator.GetService<NetworkingManager>().turn);
             _accumilatedTime = _accumilatedTime - _frameLength;
         }
     }
