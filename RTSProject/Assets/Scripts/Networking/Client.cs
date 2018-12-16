@@ -82,10 +82,7 @@ public class Client : MonoBehaviour
     void Update()
     {
         nm.ClientText.text = log;
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            SendMessage("Hello from client!");
-        }
+        //TODO: remove this
         if (Input.GetKeyDown(KeyCode.J))
         {
             print(clientReceiveThread.IsAlive);

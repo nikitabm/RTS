@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class AttackCommand : Command
 {
     public AttackCommand(List<int> pUnits, Vector3 pPos)

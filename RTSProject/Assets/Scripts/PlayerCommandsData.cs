@@ -8,25 +8,10 @@ public class PlayerCommandsData
 
     public int playerID;
 
-    [SerializeField]
-    private int turn;
+    public int turn;
+
     public List<Command> commands = new List<Command>();
 
-
-    public PlayerCommandsData(int pCommand, int pTurn, int pPlayerID, List<int> pUnits, Vector3 pPos)
-    {
-        // command = pCommand;
-        // units = pUnits;
-        // pos = pPos;
-        // playerID = pPlayerID;
-
-    }
-    public PlayerCommandsData(int pTurn, int pPlayerID, Command c)
-    {
-        turn = pTurn;
-        playerID = pPlayerID;
-        commands.Add(c);
-    }
     public PlayerCommandsData(int pTurn, int pPlayerID)
     {
         turn = pTurn;

@@ -8,6 +8,8 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Newtonsoft.Json;
+
 public class NetworkingManager : MonoBehaviour, Service
 {
 
@@ -85,7 +87,8 @@ public class NetworkingManager : MonoBehaviour, Service
 
     public void DecodeServerMessage(string s)
     {
-        PlayerCommandsData playerData = JsonUtility.FromJson<PlayerCommandsData>(s);
+        print("decoding msg");
+        PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
 
         if (playerData.playerID == 0)
         {
@@ -99,7 +102,7 @@ public class NetworkingManager : MonoBehaviour, Service
         if (playerOne != null && playerTwo != null)
         {
             print("send data to players");
-            _sr.SendMessageToClients(JsonUtility.ToJson(playerTwo), JsonUtility.ToJson(playerOne));
+            _sr.SendMessageToClients(JsonConvert.SerializeObject(playerTwo), JsonConvert.SerializeObject(playerOne));
             playerOne = null;
             playerTwo = null;
 
@@ -109,33 +112,41 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         if (_cl != null)
         {
-            if (s == "inc")
+            print("Getting here 1");
+            if (s.Length > 10)
             {
-                //TODO: important thing to make it more smart and not shit code in here
-                turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
-                print("client receives INC command and sends turn data");
-
-                string msg = JsonUtility.ToJson(turnData);
-
-                print(msg);
-
-
-                //FIXME: should it be here?
-                _cl.SendMessage(msg);
-                turn++;
-            }
-
-            else if (s.Length > 10)
-            {
-                PlayerCommandsData playerData = JsonUtility.FromJson<PlayerCommandsData>(s);
-                ServiceLocator.GetService<CommandManager>().ExecuteCommand(playerData);
-                ServiceLocator.GetService<CommandManager>().ExecuteCommand(turnData);
+                print("received player data");
+                PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
+                print(playerData);
+                //TODO: 
+                // ServiceLocator.GetService<CommandManager>().ExecuteCommand(playerData);
+                // ServiceLocator.GetService<CommandManager>().ExecuteCommand(turnData);
 
             }
             else
             {
+                //TODO: important thing to make it more smart and not shit code in here
+                if (s == "inc")
+                {
+                    turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
+                    print("client receives INC command and sends turn data");
+                    string msg = JsonConvert.SerializeObject(turnData);
 
+                    print(msg);
+
+
+                    //FIXME: should it be here?
+                    //make event for it maybe
+                    _cl.SendMessage(msg);
+                    turn++;
+                }
+                else
+                {
+                    print("Getting here 2");
+                    print(s);
+                }
             }
+
         }
     }
 

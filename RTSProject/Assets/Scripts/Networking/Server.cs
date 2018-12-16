@@ -214,7 +214,7 @@ public class Server : MonoBehaviour
                 {
                     //?
                     length = clients[i].tcp.GetStream().Read(bytes, 0, bytes.Length);
-
+                    print("here");
                     var incommingData = new byte[length];
                     Array.Copy(bytes, 0, incommingData, 0, length);
                     string clientMessage = Encoding.ASCII.GetString(incommingData);

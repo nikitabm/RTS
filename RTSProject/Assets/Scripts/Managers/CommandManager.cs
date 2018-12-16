@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 public class CommandManager : MonoBehaviour, Service
 {
     public Queue<Command> _commandQueue = new Queue<Command>();
@@ -42,7 +43,7 @@ public class CommandManager : MonoBehaviour, Service
         {
             playerData.AddCommand(_commandQueue.Dequeue());
         }
-        print(JsonUtility.ToJson(playerData));
+        // print("Newtonsoft serialisation: " + JsonConvert.SerializeObject(playerData));
         return playerData;
     }
 }
