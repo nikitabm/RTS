@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class BuildCommand : Command
 {
     //FIXME: In all command classes change access  modifiers to protected or private(in base class to protected, in other classes to private)
