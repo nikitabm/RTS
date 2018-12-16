@@ -16,7 +16,7 @@ public class NetworkingManager : MonoBehaviour, Service
     public Text ClientText;
     public Text turnText;
     public int turn;
-    
+
     //FIXME: change the way commands are processed
     public PlayerCommandsData playerOne;
     PlayerCommandsData playerTwo;
@@ -144,8 +144,6 @@ public class NetworkingManager : MonoBehaviour, Service
         turnText.text = turn.ToString();
     }
 
-
-
     #region Methods Called From Buttons
     public void RunServer()
     {
@@ -176,6 +174,10 @@ public class NetworkingManager : MonoBehaviour, Service
             _cl = gameObject.AddComponent<Client>();
             _cl.id = 1;
             CreatePlayer();
+        }
+        else
+        {
+            gameObject.AddComponent<Client>();
         }
     }
     #endregion

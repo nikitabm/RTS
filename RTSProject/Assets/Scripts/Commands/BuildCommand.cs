@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class BuildCommand : Command
 {
-    int action;
+    //FIXME: In all command classes change access  modifiers to protected or private(in base class to protected, in other classes to private)
+    public int action;
     public BuildCommand(int t, List<int> pUnits, Vector3 pPosition)
     {
         action = t;

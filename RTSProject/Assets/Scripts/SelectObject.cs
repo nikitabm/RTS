@@ -7,6 +7,8 @@ public class SelectObject : MonoBehaviour
 
     private Vector3 _clickPoint = Vector3.zero;
     private List<int> units = new List<int>();
+
+    [SerializeField]
     private bool _enabled;
     private int _playerID;
     public delegate void OnCommandCreated(Command m);

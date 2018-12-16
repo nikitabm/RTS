@@ -8,8 +8,8 @@ using System;
 [System.Serializable]
 public abstract class Command
 {
-    protected Vector3 position;
-    protected List<int> units;
+    public Vector3 position;
+    public List<int> units;
 
     //TODO: maybe add data variable to indicate what building to build
 

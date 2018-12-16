@@ -12,6 +12,14 @@ public class CommandManager : MonoBehaviour, Service
     public void AddToQueue(Command c)
     {
         _commandQueue.Enqueue(c);
+        print("new Command: " + c.position + " ");
+        print("units count: " + c.units.Count + " unit[0]: " + c.units[0]);
+        DequequeCommand();
+    }
+    public void DequequeCommand()
+    {
+        print(_commandQueue.Dequeue().position);
+        print("dequeued units count: " + _commandQueue.Dequeue().units.Count + " unit[0]: " + _commandQueue.Dequeue().units[0]);
     }
     public void SubsribeToEvent()
     {
