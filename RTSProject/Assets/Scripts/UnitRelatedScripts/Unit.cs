@@ -32,10 +32,9 @@ public class Unit : MonoBehaviour, ISelectable
            gameObject.transform.position.y,
           Mathf.Round(gameObject.transform.position.z));
     }
-
-
-    void Update()
+    public void ExecuteCurrentCommand()
     {
-
+        if (CurrentCommand != null)
+            this.gameObject.transform.position = _currentCommand.position;
     }
 }

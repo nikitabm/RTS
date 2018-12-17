@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 public class CommandManager : MonoBehaviour, Service
 {
     public Queue<Command> _commandQueue = new Queue<Command>();
+    public List<Command> _localPlayerCommands = new List<Command>();
+    public List<Command> _OponentCommands = new List<Command>();
+
     void Start()
     {
         //responsible for queing commands and operating with them
@@ -13,6 +16,8 @@ public class CommandManager : MonoBehaviour, Service
     public void AddToQueue(Command c)
     {
         _commandQueue.Enqueue(c);
+        _localPlayerCommands.Add(c);
+
     }
     public void SubsribeToEvent()
     {
@@ -23,8 +28,9 @@ public class CommandManager : MonoBehaviour, Service
         //TODO:
         for (int i = 0; i < commandData.commands.Count; i++)
         {
-            commandData.commands[i].Execute();
+            commandData.commands[i].PassSelfToUnit();
         }
+
     }
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {

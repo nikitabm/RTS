@@ -11,9 +11,10 @@ public class MoveCommand : Command
         units = pUnits;
         position = pPosition;
     }
-    public override void Execute()
+    public override void PassSelfToUnit()
     {
         var gm = ServiceLocator.GetService<GameManager>();
         var _unit = gm.GetUnit(units[0]);
+        _unit.CurrentCommand = this;
     }
 }

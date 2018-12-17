@@ -10,7 +10,7 @@ public class EmptyCommand : Command
     {
 		
     }
-	public override void Execute()
+	public override void PassSelfToUnit()
 	{
 		//do nothing
 	}

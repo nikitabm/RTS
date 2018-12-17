@@ -13,7 +13,7 @@ public class BuildCommand : Command
         units = pUnits;
         position = pPosition;
     }
-    public override void Execute()
+    public override void PassSelfToUnit()
     {
         //TODO:
     }

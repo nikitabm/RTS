@@ -29,6 +29,6 @@ public class Command
         return (T)Activator.CreateInstance(typeof(T), pAction, pPos, pAction);
     }
 
-    public virtual void Execute()
+    public virtual void PassSelfToUnit()
     { }
 }

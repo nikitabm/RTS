@@ -10,7 +10,7 @@ public class AttackCommand : Command
         units = pUnits;
         position = pPos;
     }
-    public override void Execute()
+    public override void PassSelfToUnit()
     {
         //TODO:
     }    

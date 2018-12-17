@@ -98,11 +98,10 @@ public class NetworkingManager : MonoBehaviour, Service
         {
             if (s.Length > 10)
             {
-                print("received player data");
                 PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
-                print(playerData);
                 //TODO: 
-                //execute commands
+                //save commands
+                ServiceLocator.GetService<CommandManager>()._OponentCommands = playerData.commands;
 
             }
             else
@@ -113,10 +112,7 @@ public class NetworkingManager : MonoBehaviour, Service
                     turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
                     string msg = JsonConvert.SerializeObject(turnData);
 
-                    print(msg);
-
-
-                    //FIXME: should it be here?
+                    //FIXME: should it be here? should I be here..?
                     //make event for it maybe
                     _cl.SendMessage(msg);
                     turn++;
