@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour, Service
 {
-    //public
     public GameObject TeamOneController;
     public GameObject TeamTwoController;
 
-
-    //private
+    //unused
     private List<GameObject> _teamOneUnits = new List<GameObject>();
     private List<GameObject> _teamTwoUnits = new List<GameObject>();
     private Player _player;
@@ -23,7 +21,7 @@ public class GameManager : MonoBehaviour, Service
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            
+
         }
     }
     public Player GetPlayer()

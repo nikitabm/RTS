@@ -31,20 +31,6 @@ public class NetworkingManager : MonoBehaviour, Service
     private bool host = false;
     private Player _playerRef;
 
-
-    //TODO: 
-    //1. game opens;
-    //2. press host game+create client;
-    //   a) player is created in GameManager;
-    //-> player runs select objects script that sends objects that are created to command manager;
-    //->command manager starts sending commands to server when server tells player that game can start;
-    //   b) server runs and creates lockstepManager;
-    //   c) lockstepManager waits for both players to connect to start lockstepping;
-    //3. when second player connects, server send command to both players that game is ready;
-    //4. command manager starts listening for commands, network manager starts sending commands from queue;
-
-
-
     void Start()
     {
         turn = -2;
@@ -87,15 +73,7 @@ public class NetworkingManager : MonoBehaviour, Service
 
     public void DecodeServerMessage(string s)
     {
-        print("decoding msg");
         PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
-        print(playerData.PlayerID);
-        print(playerData.Turn);
-        print(playerData.commands[0].GetType());
-        print(playerData.commands[0].position);
-        if (playerData.commands[0].units != null)
-            print(playerData.commands[0].units[0]);
-
         if (playerData.PlayerID == 0)
         {
             playerOne = playerData;
@@ -124,8 +102,7 @@ public class NetworkingManager : MonoBehaviour, Service
                 PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
                 print(playerData);
                 //TODO: 
-                // ServiceLocator.GetService<CommandManager>().ExecuteCommand(playerData);
-                // ServiceLocator.GetService<CommandManager>().ExecuteCommand(turnData);
+                //execute commands
 
             }
             else
@@ -133,7 +110,6 @@ public class NetworkingManager : MonoBehaviour, Service
                 //TODO: important thing to make it more smart and not shit code in here
                 if (s == "inc")
                 {
-                    print("increase command received");
                     turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
                     string msg = JsonConvert.SerializeObject(turnData);
 
@@ -145,32 +121,13 @@ public class NetworkingManager : MonoBehaviour, Service
                     _cl.SendMessage(msg);
                     turn++;
                 }
-                else
-                {
-                    print("just string");
-                    print(s);
-                }
             }
-
         }
     }
 
     private void Update()
     {
         turnText.text = turn.ToString();
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
-            string msg = JsonConvert.SerializeObject(turnData);
-
-            print(msg);
-
-
-            //FIXME: should it be here?
-            //make event for it maybe
-            _cl.SendMessage(msg);
-            turn++;
-        }
     }
 
     #region Methods Called From Buttons

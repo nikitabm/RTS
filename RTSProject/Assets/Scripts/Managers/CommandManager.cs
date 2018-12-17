@@ -13,14 +13,6 @@ public class CommandManager : MonoBehaviour, Service
     public void AddToQueue(Command c)
     {
         _commandQueue.Enqueue(c);
-        print("new Command: " + c.position + " ");
-        print("units count: " + c.units.Count + " unit[0]: " + c.units[0]);
-    }
-    public void DequequeCommand()
-    {
-        print(_commandQueue.Peek().position);
-        print("dequeued units count: " + _commandQueue.Peek().units.Count + " unit[0]: " + _commandQueue.Peek().units[0]);
-        _commandQueue.Dequeue();
     }
     public void SubsribeToEvent()
     {
@@ -36,17 +28,12 @@ public class CommandManager : MonoBehaviour, Service
     }
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {
-        PlayerCommandsData playerData;
-        playerData = new PlayerCommandsData(turn, playerID);
+        PlayerCommandsData playerData = new PlayerCommandsData(turn, playerID);
         if (_commandQueue.Count == 0) playerData.AddCommand(Command.CreateCommand<EmptyCommand>());
         while (_commandQueue.Count != 0)
         {
             playerData.AddCommand(_commandQueue.Dequeue());
         }
-        // print("Newtonsoft serialisation: " + JsonConvert.SerializeObject(playerData));
-        string s = JsonConvert.SerializeObject(playerData);
-        var _data = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
-        print(_data.commands[0]);
         return playerData;
     }
 }

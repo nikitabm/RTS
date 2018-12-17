@@ -17,7 +17,7 @@ public class LockStepManager : MonoBehaviour, Service
     public static event OnNextTurn NextTurn;
     private bool _gameStarted;
     private float _accumilatedTime = 0f;
-    private float _frameLength = 5.0f; //FIXME: should be 50 ms
+    private float _frameLength = 0.50f; //FIXME: should be 50 ms
 
 
     private void Awake()
