@@ -21,7 +21,7 @@ public class Unit : MonoBehaviour, ISelectable
     void Start()
     {
         _gm = ServiceLocator.GetService<GameManager>();
-        _gm.AddToTeam(0, this.gameObject);
+        _gm.AddUnit(ID, this);
         RoundPos();
 
     }
@@ -32,7 +32,7 @@ public class Unit : MonoBehaviour, ISelectable
            gameObject.transform.position.y,
           Mathf.Round(gameObject.transform.position.z));
     }
-    
+
 
     void Update()
     {

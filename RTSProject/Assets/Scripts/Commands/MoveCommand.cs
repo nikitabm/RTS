@@ -13,6 +13,7 @@ public class MoveCommand : Command
     }
     public override void Execute()
     {
-        //TODO:
+        var gm = ServiceLocator.GetService<GameManager>();
+        var _unit = gm.GetUnit(units[0]);
     }
 }

@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour, Service
     //unused
     private List<GameObject> _teamOneUnits = new List<GameObject>();
     private List<GameObject> _teamTwoUnits = new List<GameObject>();
+    private Unit[] _units;
     private Player _player;
 
     private void Awake()
@@ -23,6 +24,14 @@ public class GameManager : MonoBehaviour, Service
         {
 
         }
+    }
+    public void AddUnit(int id, Unit pUnit)
+    {
+        _units[id] = pUnit;
+    }
+    public Unit GetUnit(int id)
+    {
+        return _units[id];
     }
     public Player GetPlayer()
     {
@@ -46,15 +55,15 @@ public class GameManager : MonoBehaviour, Service
         else _teamTwoUnits.Add(g);
 
     }
-    public GameObject getUnit(int index)
-    {
-        for (int i = 0; i < _teamOneUnits.Count; i++)
-        {
-            if (_teamOneUnits[i].GetComponent<Unit>().ID == index) return _teamOneUnits[i];
+    // public GameObject getUnit(int index)
+    // {
+    //     for (int i = 0; i < _teamOneUnits.Count; i++)
+    //     {
+    //         if (_teamOneUnits[i].GetComponent<Unit>().ID == index) return _teamOneUnits[i];
 
-        }
-        return null;
-    }
+    //     }
+    //     return null;
+    // }
     public List<GameObject> GetTeamOneUnits()
     {
         return _teamOneUnits;
