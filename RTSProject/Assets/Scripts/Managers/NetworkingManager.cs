@@ -101,7 +101,9 @@ public class NetworkingManager : MonoBehaviour, Service
                 PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
                 //TODO: 
                 //save commands
-                ServiceLocator.GetService<CommandManager>()._OponentCommands = playerData.commands;
+                playerData.commands.CopyTo(ServiceLocator.GetService<CommandManager>()._allCommands,
+                ServiceLocator.GetService<CommandManager>()._allCommands.Length);
+
 
             }
             else
