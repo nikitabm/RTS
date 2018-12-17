@@ -44,7 +44,7 @@ public class RequestHelper
 
         var incommingData = new byte[length];
         Array.Copy(bytes, 0, incommingData, 0, length);
-        string clientMessage = Encoding.ASCII.GetString(incommingData);
+        //string clientMessage = Encoding.ASCII.GetString(incommingData);
         return incommingData;
     }
     public static string ReadString(NetworkStream stream)

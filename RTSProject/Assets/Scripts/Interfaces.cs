@@ -4,12 +4,15 @@ using UnityEngine;
 
 public interface ISelectable
 {
-	void Select();
-	void Diselect();
+
 }
 
 public interface Service
 {
 
+}
+public interface IMovable
+{
+    void MoveTo(float x, float y);
 }
 
