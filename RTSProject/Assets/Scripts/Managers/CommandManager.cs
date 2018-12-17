@@ -44,6 +44,9 @@ public class CommandManager : MonoBehaviour, Service
             playerData.AddCommand(_commandQueue.Dequeue());
         }
         // print("Newtonsoft serialisation: " + JsonConvert.SerializeObject(playerData));
+        string s = JsonConvert.SerializeObject(playerData);
+        var _data = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
+        print(_data.commands[0]);
         return playerData;
     }
 }

@@ -6,16 +6,17 @@ using UnityEngine;
 public class PlayerCommandsData
 {
 
-    public int playerID;
+    public int PlayerID { get; set; }
 
-    public int turn;
+    public int Turn { get; set; }
 
-    public List<Command> commands = new List<Command>();
+    public List<Command> commands { get; set; }
 
     public PlayerCommandsData(int pTurn, int pPlayerID)
     {
-        turn = pTurn;
-        playerID = pPlayerID;
+        commands = new List<Command>();
+        Turn = pTurn;
+        PlayerID = pPlayerID;
 
     }
     public void AddCommand(Command c)

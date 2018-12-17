@@ -89,8 +89,14 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         print("decoding msg");
         PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
+        print(playerData.PlayerID);
+        print(playerData.Turn);
+        print(playerData.commands[0].GetType());
+        print(playerData.commands[0].position);
+        if (playerData.commands[0].units != null)
+            print(playerData.commands[0].units[0]);
 
-        if (playerData.playerID == 0)
+        if (playerData.PlayerID == 0)
         {
             playerOne = playerData;
         }
@@ -112,7 +118,6 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         if (_cl != null)
         {
-            print("Getting here 1");
             if (s.Length > 10)
             {
                 print("received player data");
@@ -128,8 +133,8 @@ public class NetworkingManager : MonoBehaviour, Service
                 //TODO: important thing to make it more smart and not shit code in here
                 if (s == "inc")
                 {
+                    print("increase command received");
                     turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
-                    print("client receives INC command and sends turn data");
                     string msg = JsonConvert.SerializeObject(turnData);
 
                     print(msg);
@@ -142,7 +147,7 @@ public class NetworkingManager : MonoBehaviour, Service
                 }
                 else
                 {
-                    print("Getting here 2");
+                    print("just string");
                     print(s);
                 }
             }
@@ -153,6 +158,19 @@ public class NetworkingManager : MonoBehaviour, Service
     private void Update()
     {
         turnText.text = turn.ToString();
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
+            string msg = JsonConvert.SerializeObject(turnData);
+
+            print(msg);
+
+
+            //FIXME: should it be here?
+            //make event for it maybe
+            _cl.SendMessage(msg);
+            turn++;
+        }
     }
 
     #region Methods Called From Buttons
