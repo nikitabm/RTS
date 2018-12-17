@@ -100,15 +100,11 @@ public class NetworkingManager : MonoBehaviour, Service
             if (s.Length > 10)
             {
                 PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
-                //TODO: 
-                //save commands
-                if (playerData != null)
+                if (playerData.commands.Count > 0)
                     for (int i = 0; i < playerData.commands.Count; i++)
                     {
                         ServiceLocator.GetService<CommandManager>()._allCommands.Add(playerData.commands[i]);
                     }
-
-
             }
             else
             {
