@@ -6,11 +6,17 @@ public class CommandManager : MonoBehaviour, Service
 {
     public Queue<Command> _commandQueue = new Queue<Command>();
     public List<Command> _allCommands;
+    private GameManager _gm;
     // public Queue<Command> _allCommands = new Queue<Command>();
-
-    void Start()
+    private void Awake()
     {
         ServiceLocator.ProvideService(this);
+    }
+    private void Start()
+    {
+        _gm = ServiceLocator.GetService<GameManager>();
+        NetworkingManager.proccessCommands += PassCommandsToUnits;
+
     }
     public void AddToQueue(Command c)
     {
@@ -24,7 +30,8 @@ public class CommandManager : MonoBehaviour, Service
     {
         for (int i = 0; i < _allCommands.Count; i++)
         {
-
+            if (_allCommands[i].units != null)
+                _gm.GetUnit(_allCommands[i].units[0]).CurrentCommand = _allCommands[i];
         }
     }
     public PlayerCommandsData CreateTurnData(int turn, int playerID)

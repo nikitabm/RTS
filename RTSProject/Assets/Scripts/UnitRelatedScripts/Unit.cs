@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour, ISelectable
 {
-
+    [SerializeField]
     private Command _currentCommand;
     private Queue<Command> _commandQueue = new Queue<Command>();
     public Command CurrentCommand
