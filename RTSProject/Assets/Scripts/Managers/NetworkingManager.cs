@@ -77,11 +77,12 @@ public class NetworkingManager : MonoBehaviour, Service
         if (playerData.PlayerID == 0)
         {
             playerOne = playerData;
+            print("playerOneData");
         }
-        else
+        if (playerData.PlayerID == 1)
         {
             playerTwo = playerData;
-
+            print("playerTwoData");
         }
         if (playerOne != null && playerTwo != null)
         {
@@ -101,8 +102,11 @@ public class NetworkingManager : MonoBehaviour, Service
                 PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
                 //TODO: 
                 //save commands
-                playerData.commands.CopyTo(ServiceLocator.GetService<CommandManager>()._allCommands,
-                ServiceLocator.GetService<CommandManager>()._allCommands.Length);
+                if (playerData != null)
+                    for (int i = 0; i < playerData.commands.Count; i++)
+                    {
+                        ServiceLocator.GetService<CommandManager>()._allCommands.Add(playerData.commands[i]);
+                    }
 
 
             }

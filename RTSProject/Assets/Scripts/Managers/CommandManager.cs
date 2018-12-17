@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 public class CommandManager : MonoBehaviour, Service
 {
     public Queue<Command> _commandQueue = new Queue<Command>();
-    public Command[] _allCommands;
+    public List<Command> _allCommands;
     // public Queue<Command> _allCommands = new Queue<Command>();
 
     void Start()
@@ -22,7 +22,7 @@ public class CommandManager : MonoBehaviour, Service
     }
     public void PassCommandsToUnits()
     {
-        for (int i = 0; i < _allCommands.Length; i++)
+        for (int i = 0; i < _allCommands.Count; i++)
         {
 
         }
@@ -33,9 +33,10 @@ public class CommandManager : MonoBehaviour, Service
         if (_commandQueue.Count == 0) playerData.AddCommand(Command.CreateCommand<EmptyCommand>());
         while (_commandQueue.Count != 0)
         {
+            _allCommands.Add(_commandQueue.Peek());
             playerData.AddCommand(_commandQueue.Dequeue());
         }
-        playerData.commands.CopyTo(_allCommands);
+
         return playerData;
     }
 }
