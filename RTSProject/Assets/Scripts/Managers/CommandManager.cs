@@ -7,6 +7,8 @@ public class CommandManager : MonoBehaviour, Service
     public Queue<Command> _commandQueue = new Queue<Command>();
     public List<Command> _allCommands;
     private GameManager _gm;
+    public delegate void ExecuteCommand();
+    public static ExecuteCommand OnCommandExecute;
     // public Queue<Command> _allCommands = new Queue<Command>();
     private void Awake()
     {
@@ -33,6 +35,7 @@ public class CommandManager : MonoBehaviour, Service
             if (_allCommands[i].units != null)
                 _gm.GetUnit(_allCommands[i].units[0]).CurrentCommand = _allCommands[i];
         }
+        OnCommandExecute();
     }
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {
