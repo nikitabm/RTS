@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Unit : MonoBehaviour, ISelectable
 {
     [SerializeField]
-    private Command _currentCommand;
+    private Command _currentCommand = null;
     private Queue<Command> _commandQueue = new Queue<Command>();
     private IEnumerator coroutine;
+    private NavMeshAgent _agent;
     public Command CurrentCommand
     {
         get
@@ -22,9 +24,9 @@ public class Unit : MonoBehaviour, ISelectable
 
     void Start()
     {
+        _agent = GetComponent<NavMeshAgent>();
         _gm = ServiceLocator.GetService<GameManager>();
         _gm.AddUnit(ID, this);
-        RoundPos();
         CommandManager.OnCommandExecute += ExecuteCurrentCommand;
 
     }
@@ -35,21 +37,16 @@ public class Unit : MonoBehaviour, ISelectable
            gameObject.transform.position.y,
           Mathf.Round(gameObject.transform.position.z));
     }
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            ExecuteCurrentCommand();
-        }
-    }
+
     public void ExecuteCurrentCommand()
     {
-        if (_currentCommand != null)
+        if (_currentCommand.position.x!=0&& _currentCommand.position.y != 0)
         {
-            StartCoroutine(AllignOnX(new Vector3(
-                Mathf.Round(_currentCommand.position.x),
-                0.5f,
-                Mathf.Round(_currentCommand.position.z))));
+            _agent.SetDestination(_currentCommand.position);
+            //StartCoroutine(AllignOnX(new Vector3(
+            //    Mathf.Round(_currentCommand.position.x),
+            //    0.5f,
+            //    Mathf.Round(_currentCommand.position.z))));
         }
     }
     private IEnumerator AllignOnX(Vector3 movePoint)
@@ -62,7 +59,7 @@ public class Unit : MonoBehaviour, ISelectable
 
         for (int i = 0; i < Mathf.Abs(numberOfSteps); i++)
         {
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(_gm.unitSpeed);
             gameObject.transform.position += new Vector3(step, 0, 0);
         }
         yield return StartCoroutine(AllignOnZ((int)movePoint.z));
@@ -77,7 +74,7 @@ public class Unit : MonoBehaviour, ISelectable
 
         for (int i = 0; i < Mathf.Abs(numberOfSteps); i++)
         {
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(_gm.unitSpeed);
             gameObject.transform.position += new Vector3(0, 0, step);
         }
     }

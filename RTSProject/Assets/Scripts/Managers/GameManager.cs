@@ -6,8 +6,8 @@ public class GameManager : MonoBehaviour, Service
 {
     public GameObject TeamOneController;
     public GameObject TeamTwoController;
-    public bool MovementWithoutNetwork;
-
+    public bool movementWithoutNetwork;
+    public float unitSpeed;
 
     //unused
     private List<GameObject> _teamOneUnits = new List<GameObject>();
@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour, Service
     }
     private void Update()
     {
-        if (MovementWithoutNetwork && _player == null)
+        if (movementWithoutNetwork && _player == null)
         {
             CreatePlayer();
         }
