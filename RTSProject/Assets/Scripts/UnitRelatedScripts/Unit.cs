@@ -40,14 +40,12 @@ public class Unit : MonoBehaviour, ISelectable
 
     public void ExecuteCurrentCommand()
     {
-        if (_currentCommand.position.x!=0&& _currentCommand.position.y != 0)
-        {
+        if (_currentCommand.position != Vector3.zero)
             _agent.SetDestination(_currentCommand.position);
-            //StartCoroutine(AllignOnX(new Vector3(
-            //    Mathf.Round(_currentCommand.position.x),
-            //    0.5f,
-            //    Mathf.Round(_currentCommand.position.z))));
-        }
+        //StartCoroutine(AllignOnX(new Vector3(
+        //    Mathf.Round(_currentCommand.position.x),
+        //    0.5f,
+        //    Mathf.Round(_currentCommand.position.z))));
     }
     private IEnumerator AllignOnX(Vector3 movePoint)
     {
@@ -59,7 +57,7 @@ public class Unit : MonoBehaviour, ISelectable
 
         for (int i = 0; i < Mathf.Abs(numberOfSteps); i++)
         {
-            yield return new WaitForSeconds(_gm.unitSpeed);
+            yield return new WaitForSeconds(1);
             gameObject.transform.position += new Vector3(step, 0, 0);
         }
         yield return StartCoroutine(AllignOnZ((int)movePoint.z));
@@ -74,7 +72,7 @@ public class Unit : MonoBehaviour, ISelectable
 
         for (int i = 0; i < Mathf.Abs(numberOfSteps); i++)
         {
-            yield return new WaitForSeconds(_gm.unitSpeed);
+            yield return new WaitForSeconds(1);
             gameObject.transform.position += new Vector3(0, 0, step);
         }
     }

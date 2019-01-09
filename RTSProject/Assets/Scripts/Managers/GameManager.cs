@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour, Service
     public GameObject TeamOneController;
     public GameObject TeamTwoController;
     public bool movementWithoutNetwork;
-    public float unitSpeed;
 
     //unused
     private List<GameObject> _teamOneUnits = new List<GameObject>();
