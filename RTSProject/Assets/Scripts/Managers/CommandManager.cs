@@ -23,6 +23,7 @@ public class CommandManager : MonoBehaviour, Service
     public void AddToQueue(Command c)
     {
         _commandQueue.Enqueue(c);
+        _allCommands.Add(c);
     }
     public void SubsribeToEvent()
     {

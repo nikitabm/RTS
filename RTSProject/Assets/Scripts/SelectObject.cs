@@ -94,5 +94,10 @@ public class SelectObject : MonoBehaviour
         Command issuedCommand;
         issuedCommand = Command.CreateCommand<MoveCommand>(temp, pos);
         commandCreated(issuedCommand);
+        if (ServiceLocator.GetService<GameManager>().MovementWithoutNetwork)
+        {
+            ServiceLocator.GetService<CommandManager>().PassCommandsToUnits();
+           // ServiceLocator.GetService<CommandManager>()._allCommands.Clear();
+        }
     }
 }
