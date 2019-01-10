@@ -12,12 +12,11 @@ using UnityEngine.UI;
 public class LockStepManager : MonoBehaviour, Service
 {
     public PlayerCommandsData commandToSend;
-    public AllPlayersCommandsData playersmoveData;
     public delegate void OnNextTurn();
     public static event OnNextTurn NextTurn;
     private bool _gameStarted;
     private float _accumilatedTime = 0f;
-    private float _frameLength = 2.0f; //FIXME: should be 50 ms
+    private float _frameLength; //FIXME: should be 50 ms
 
 
     private void Awake()
@@ -26,8 +25,8 @@ public class LockStepManager : MonoBehaviour, Service
     }
     void Start()
     {
-        playersmoveData = new AllPlayersCommandsData();
         ServiceLocator.ProvideService(this);
+        _frameLength = ServiceLocator.GetService<NetworkingManager>().turnTime;
     }
 
     public void StartGame()

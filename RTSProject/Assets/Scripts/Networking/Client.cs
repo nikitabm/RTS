@@ -19,13 +19,10 @@ public class Client : MonoBehaviour
     private Thread clientReceiveThread;
     private Thread clientSendThread;
     private NetworkStream stream;
-    private StreamWriter writer;
-    private StreamReader reader;
     private bool isTrue;
     public bool connected;
     public bool host;
     private int port = 55555;
-    private bool once;
     public bool otherPlayerDataReceived;
     public bool readyToTurnWheel;
     public bool myDataConfirmed;
@@ -71,7 +68,6 @@ public class Client : MonoBehaviour
         myDataConfirmed = false;
         readyToTurnWheel = false;
         otherPlayerDataReceived = false;
-        once = false;
         _turnState = TurnState.none;
         _clientState = ClientState.none;
         nm = ServiceLocator.GetService<NetworkingManager>();
@@ -121,8 +117,7 @@ public class Client : MonoBehaviour
         {
             socketConnection = new TcpClient("127.0.0.1", port);
             stream = socketConnection.GetStream();
-            writer = new StreamWriter(stream);
-            reader = new StreamReader(stream);
+
             _clientState = ClientState.Connected;
             string line = "Connected to: " + IP + ":" + port.ToString();
             Debug.Log(line);
@@ -147,7 +142,7 @@ public class Client : MonoBehaviour
 
 
         Byte[] bytes = new Byte[1024];
-        while (true)
+        while (isTrue)
         {
             try
             {

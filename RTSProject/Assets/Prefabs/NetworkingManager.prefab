@@ -53,3 +53,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverText: {fileID: 0}
   ClientText: {fileID: 0}
+  turnText: {fileID: 0}
+  turn: 0
+  turnTime: 0

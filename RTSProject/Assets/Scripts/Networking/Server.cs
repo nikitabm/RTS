@@ -29,17 +29,8 @@ public class Server : MonoBehaviour
     private bool started;
     private bool AllPlayersConnected;
     string log;
-    private enum GameState
-    {
-        none,
-        WaitingForPlayers,
-        GameStart,
-        GamePause
-    }
+
     private bool _playersConnected;
-    private GameState _gameState;
-    public delegate void ServerSendAction();
-    public static event ServerSendAction OnSend;
     public delegate void ServerAcceptClient(TcpClient t, string s);
     public static event ServerAcceptClient OnAccept;
 
@@ -53,7 +44,6 @@ public class Server : MonoBehaviour
 
     {
         OnMessageReceive += ServiceLocator.GetService<NetworkingManager>().DecodeServerMessage;
-        _gameState = GameState.none;
         clients = new List<ServerClient>();
         HostServer();
         OnAccept += SendMessage;
@@ -81,7 +71,7 @@ public class Server : MonoBehaviour
         started = true;
         try
         {
-            tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 55555);
+            tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), port);
             tcpListener.Start();
             TcpClientAcceptThread = new Thread(new ThreadStart(StartListening));
             TcpClientAcceptThread.IsBackground = true;

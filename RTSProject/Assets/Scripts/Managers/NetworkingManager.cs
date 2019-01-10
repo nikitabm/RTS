@@ -18,6 +18,7 @@ public class NetworkingManager : MonoBehaviour, Service
     public Text ClientText;
     public Text turnText;
     public int turn;
+    public float turnTime;
 
     //FIXME: change the way commands are processed
     public PlayerCommandsData playerOne;
@@ -111,14 +112,11 @@ public class NetworkingManager : MonoBehaviour, Service
             }
             else
             {
-                //TODO: important thing to make it more smart and not shit code in here
+                //TODO: change message checks
                 if (s == "inc")
                 {
                     turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
                     string msg = JsonConvert.SerializeObject(turnData);
-
-                    //FIXME: should it be here? should I be here..?
-                    //make event for it maybe
                     _cl.SendMessage(msg);
                     turn++;
                 }
