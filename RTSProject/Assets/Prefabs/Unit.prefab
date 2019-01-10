@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 54055461926669114}
   - component: {fileID: 195510382514540722}
   - component: {fileID: 114174912120117434}
+  - component: {fileID: 114458422601413714}
   m_Layer: 0
   m_Name: Unit
   m_TagString: team1Unit
@@ -203,6 +204,19 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
     units: 
   ID: 0
+--- !u!114 &114458422601413714
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1178897262442480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0175dfcf21d1e64eab93f5cb5d62bb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unselectedMaterial: {fileID: 2100000, guid: b93786186f7b8f24fb2764fb67623355, type: 2}
+  selectedMaterial: {fileID: 2100000, guid: 34a39f89dccf7ee45a5af44a2769f0bf, type: 2}
 --- !u!136 &136016662988858058
 CapsuleCollider:
   m_ObjectHideFlags: 1

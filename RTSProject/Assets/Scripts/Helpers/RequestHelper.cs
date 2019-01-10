@@ -11,11 +11,11 @@ using System.Threading;
 
 public class RequestHelper
 {
-    public enum Requests
+    public enum Request
     {
         StartGame,
+        PauseGame,
         NextTurn,
-
     }
     public RequestHelper()
     {

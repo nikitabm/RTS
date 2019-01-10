@@ -178,18 +178,6 @@ public class Server : MonoBehaviour
         }
 
     }
-    private bool inClientList(TcpClient connectedTcpClient)
-    {
-        for (int i = 0; i < clients.Count - 1; i++)
-        {
-            if (connectedTcpClient == clients[i].tcp)
-            {
-
-            }
-            else return false;
-        }
-        return true;
-    }
     private void ListenForIncommingRequests()
     {
 
