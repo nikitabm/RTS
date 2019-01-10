@@ -13,6 +13,5 @@ public interface Service
 }
 public interface IMovable
 {
-    void MoveTo(float x, float y);
 }
 

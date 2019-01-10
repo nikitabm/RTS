@@ -6,13 +6,17 @@ public class SelectObject : MonoBehaviour
 {
 
     private Vector3 _clickPoint = Vector3.zero;
-    private List<int> units = new List<int>();
+    private List<Unit> _units = new List<Unit>();
 
     [SerializeField]
     private bool _enabled;
     private int _playerID;
     public delegate void OnCommandCreated(Command m);
     public static event OnCommandCreated commandCreated;
+    public delegate void UnitSelected();
+    public static UnitSelected onSelected;
+    public delegate void UnitDeselected();
+    public static UnitDeselected onDeselected;
     public int PlayerID
     {
         get
@@ -65,16 +69,20 @@ public class SelectObject : MonoBehaviour
                     GameObject obj = hit.transform.gameObject;
                     if (obj.GetComponent(typeof(ISelectable)) != null)
                     {
-                        units.Clear();
-                        units.Add(obj.transform.gameObject.GetComponent<Unit>().ID);
+                        _units.Clear();
+                        var unit = obj.transform.gameObject.GetComponent<Unit>();
+                        _units.Add(unit);
                         playerState = StateOfPlayer.SelectUnit;
+                        onSelected();
+
                     }
                 }
                 else if (playerState == StateOfPlayer.SelectUnit)
                 {
                     _clickPoint = hit.point;
                     playerState = StateOfPlayer.SelectedLocation;
-                    CreateAndPassCommand(units[0], _clickPoint);
+                    //FIXME: shouldnt be zero
+                    CreateAndPassCommand(0, _clickPoint);
                     playerState = StateOfPlayer.Idle;
 
                 }
@@ -82,7 +90,7 @@ public class SelectObject : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(1))
         {
-            units.Clear();
+            _units.Clear();
             playerState = StateOfPlayer.Idle;
         }
     }
@@ -97,7 +105,7 @@ public class SelectObject : MonoBehaviour
         if (ServiceLocator.GetService<GameManager>().movementWithoutNetwork)
         {
             ServiceLocator.GetService<CommandManager>().PassCommandsToUnits();
-           // ServiceLocator.GetService<CommandManager>()._allCommands.Clear();
+            // ServiceLocator.GetService<CommandManager>()._allCommands.Clear();
         }
     }
 }

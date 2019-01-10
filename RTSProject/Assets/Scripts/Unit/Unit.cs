@@ -9,7 +9,17 @@ public class Unit : MonoBehaviour, ISelectable
     private Command _currentCommand = null;
     private Queue<Command> _commandQueue = new Queue<Command>();
     private IEnumerator coroutine;
+    private  bool _selected;
     private NavMeshAgent _agent;
+    private GameManager _gm;
+    private Vector3 movePoint;
+
+    public Material SelectMaterial;
+    public Material DeselectMaterial;
+    public int ID = 0;
+
+
+
     public Command CurrentCommand
     {
         get
@@ -17,10 +27,11 @@ public class Unit : MonoBehaviour, ISelectable
         set
         { _currentCommand = value; }
     }
-    public int ID = 0;
-    private GameManager _gm;
-    Vector3 movePoint;
-
+    public bool Selected
+    {
+        get { return _selected; }
+        set { _selected = value; }
+    }
 
     void Start()
     {
@@ -28,7 +39,15 @@ public class Unit : MonoBehaviour, ISelectable
         _gm = ServiceLocator.GetService<GameManager>();
         _gm.AddUnit(ID, this);
         CommandManager.OnCommandExecute += ExecuteCurrentCommand;
-
+       
+    }
+    public void Select()
+    {
+        GetComponent<Renderer>().material = SelectMaterial;
+    }
+    public void Deselect()
+    {
+        GetComponent<Renderer>().material = DeselectMaterial;
     }
     public void RoundPos()
     {
