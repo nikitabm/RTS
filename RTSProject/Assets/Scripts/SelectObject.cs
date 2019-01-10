@@ -6,18 +6,16 @@ using UnityEngine;
 public class SelectObject : MonoBehaviour
 {
     private Vector3 _clickPoint = Vector3.zero;
+    [SerializeField]
     private List<Unit> _units = new List<Unit>();
     private Vector3 _mousePosition;
     private bool _dragging;
     [SerializeField]
     private bool _enabled;
     private int _playerID;
+    private GameManager _gm;
     public delegate void OnCommandCreated(Command m);
     public static event OnCommandCreated commandCreated;
-    public delegate void UnitSelected();
-    public static UnitSelected onSelected;
-    public delegate void UnitDeselected();
-    public static UnitDeselected onDeselected;
     public int PlayerID
     {
         get
@@ -43,6 +41,7 @@ public class SelectObject : MonoBehaviour
     {
         playerState = StateOfPlayer.Idle;
         ServiceLocator.GetService<CommandManager>().SubsribeToEvent();
+        _gm = ServiceLocator.GetService<GameManager>();
     }
     private void Update()
     {
@@ -53,7 +52,8 @@ public class SelectObject : MonoBehaviour
         if (_dragging)
         {
             var rect = ScreenHelper.GetScreenRect(_mousePosition, Input.mousePosition);
-            ScreenHelper.DrawScreenRect(rect, Color.green);
+            //ScreenHelper.DrawScreenRect(rect, Color.green);
+            ScreenHelper.DrawScreenRectBorder(rect, 1.0f, Color.green);
         }
     }
     public void SetEnabled(bool value)
@@ -74,34 +74,37 @@ public class SelectObject : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000f))
             {
-                if (playerState == StateOfPlayer.Idle)
-                {
-                    GameObject obj = hit.transform.gameObject;
-                    if (obj.GetComponent(typeof(ISelectable)) != null)
-                    {
-                        _units.Clear();
-                        var unit = obj.transform.gameObject.GetComponent<Unit>();
-                        _units.Add(unit);
-                        playerState = StateOfPlayer.UnitSelected;
-                        onSelected();
 
-                    }
-                    else
-                    {
-                        _dragging = true;
-                    }
+                GameObject obj = hit.transform.gameObject;
+                if (obj.GetComponent(typeof(ISelectable)) != null)
+                {
+                    _units.Clear();
+                    var unit = obj.transform.gameObject.GetComponent<Unit>();
+                    _units.Add(unit);
+                    playerState = StateOfPlayer.UnitSelected;
                 }
-                else if (playerState == StateOfPlayer.UnitSelected)
+                else
                 {
                     _units.Clear();
                     playerState = StateOfPlayer.Idle;
-                    //_clickPoint = hit.point;
-                    //playerState = StateOfPlayer.SelectedLocation;
-                    //CreateAndPassCommand(_units[0].ID, _clickPoint);
-                    //playerState = StateOfPlayer.Idle;
-
+                    _dragging = true;
                 }
             }
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            foreach (var unit in _gm.Units)
+            {
+                if (IsInSelection(unit.Value.transform))
+                {
+                    _units.Add(unit.Value);
+                }
+            }
+            if (_units.Count > 0)
+                playerState = StateOfPlayer.UnitSelected;
+            else
+                playerState = StateOfPlayer.Idle;
+            _dragging = false;
         }
         if (Input.GetMouseButtonUp(1))
         {
@@ -113,17 +116,28 @@ public class SelectObject : MonoBehaviour
                 {
                     _clickPoint = hit.point;
                     playerState = StateOfPlayer.SelectedLocation;
-                    CreateAndPassCommand(_units[0].ID, _clickPoint);
+                    CreateAndPassCommand(_units, _clickPoint);
                     playerState = StateOfPlayer.Idle;
                 }
             }
         }
     }
-    public void CreateAndPassCommand(int i, Vector3 pos)
+    private bool IsInSelection(Transform t)
+    {
+        if (!_dragging) return false;
+        var camera = Camera.main;
+        var viewportBounds = ScreenHelper.GetViewportBounds(camera, _mousePosition, Input.mousePosition);
+        return viewportBounds.Contains(camera.WorldToViewportPoint(t.position));
+    }
+    public void CreateAndPassCommand(List<Unit> pUnits, Vector3 pos)
     {
         //TODO: change to ARRAY
         List<int> temp = new List<int>();
-        temp.Add(i);
+        foreach (var unit in pUnits)
+        {
+            temp.Add(unit.ID);
+            print(unit.ID);
+        }
         Command issuedCommand;
         issuedCommand = Command.CreateCommand<MoveCommand>(temp, pos);
         commandCreated(issuedCommand);

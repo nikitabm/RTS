@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour, Service
     private List<GameObject> _teamOneUnits = new List<GameObject>();
     private List<GameObject> _teamTwoUnits = new List<GameObject>();
     private Dictionary<int, Unit> _units = new Dictionary<int, Unit>();
+    public Dictionary<int, Unit> Units
+    {
+        get { return _units; }
+    }
     private Player _player;
 
     private void Awake()
