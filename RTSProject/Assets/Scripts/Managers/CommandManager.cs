@@ -34,7 +34,10 @@ public class CommandManager : MonoBehaviour, Service
         for (int i = 0; i < _allCommands.Count; i++)
         {
             if (_allCommands[i].units != null)
-                _gm.GetUnit(_allCommands[i].units[0]).CurrentCommand = _allCommands[i];
+                for (int j = 0; j < _allCommands[i].units.Count; j++)
+                {
+                    _gm.GetUnit(_allCommands[i].units[j]).CurrentCommand = _allCommands[i];
+                }
         }
         OnCommandExecute();
     }
