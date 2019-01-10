@@ -81,8 +81,7 @@ public class SelectObject : MonoBehaviour
                 {
                     _clickPoint = hit.point;
                     playerState = StateOfPlayer.SelectedLocation;
-                    //FIXME: shouldnt be zero
-                    CreateAndPassCommand(0, _clickPoint);
+                    CreateAndPassCommand(_units[0].ID, _clickPoint);
                     playerState = StateOfPlayer.Idle;
 
                 }
