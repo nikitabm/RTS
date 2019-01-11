@@ -45,7 +45,7 @@ public class Server : MonoBehaviour
     {
         OnMessageReceive += ServiceLocator.GetService<NetworkingManager>().DecodeServerMessage;
         clients = new List<ServerClient>();
-        HostServer();
+        RunServer();
         OnAccept += SendMessage;
         _lockStepManager = gameObject.AddComponent<LockStepManager>();
         OnAllPlayersConnected += SendTestMsg;
@@ -65,7 +65,7 @@ public class Server : MonoBehaviour
         SendMessage(clients[0].tcp, s);
         SendMessage(clients[1].tcp, s1);
     }
-    void HostServer()
+    public void RunServer()
     {
 
         started = true;
@@ -92,6 +92,34 @@ public class Server : MonoBehaviour
             Debug.Log(e.Message);
         }
     }
+
+    public void StopServer()
+    {
+        try
+        {
+            tcpListener.Stop();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+        try
+        {
+            _playersConnected = false;
+            started = false;
+            TcpClientAcceptThread.IsBackground = false;
+            TcpClientAcceptThread.Abort();
+            TcpListenerThread.IsBackground = false;
+            TcpListenerThread.Abort();
+            TcpSendThread.IsBackground = false;
+            TcpSendThread.Abort();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+    }
+
     public void Update()
     {
         nm.serverText.text = log;
@@ -136,31 +164,9 @@ public class Server : MonoBehaviour
         }
     }
 
-    void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
-        try
-        {
-            tcpListener.Stop();
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
-        try
-        {
-            _playersConnected = false;
-            started = false;
-            TcpClientAcceptThread.IsBackground = false;
-            TcpClientAcceptThread.Abort();
-            TcpListenerThread.IsBackground = false;
-            TcpListenerThread.Abort();
-            TcpSendThread.IsBackground = false;
-            TcpSendThread.Abort();
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
+        StopServer();
     }
 
     private bool isConnected(TcpClient c)

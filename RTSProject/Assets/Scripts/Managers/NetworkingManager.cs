@@ -40,7 +40,6 @@ public class NetworkingManager : MonoBehaviour, Service
         turnText.text = "Turn: " + turn.ToString();
         ServiceLocator.ProvideService(this);
     }
-
     public bool HasAuthority()
     {
         return host;
@@ -131,6 +130,7 @@ public class NetworkingManager : MonoBehaviour, Service
     }
 
     #region Methods Called From Buttons
+
     public void RunServer()
     {
         if (_sr == null)
@@ -138,7 +138,13 @@ public class NetworkingManager : MonoBehaviour, Service
             host = true;
             _sr = gameObject.AddComponent<Server>();
         }
+        else
+        {
+            host = true;
+            _sr.RunServer();
+        }
     }
+
     public void HostGame()
     {
         if (_sr == null && _cl == null)
@@ -150,8 +156,12 @@ public class NetworkingManager : MonoBehaviour, Service
             _cl.id = 0;
             CreatePlayer();
         }
-
+        else
+        {
+            _sr.RunServer();
+        }
     }
+
     public void ConnectToGame()
     {
         if (_cl == null)
@@ -166,5 +176,16 @@ public class NetworkingManager : MonoBehaviour, Service
             gameObject.AddComponent<Client>();
         }
     }
+
+    public void DisconnectClient()
+    {
+        _cl.DisconnectFromServer();
+    }
+
+    public void DisconnectServer()
+    {
+        _sr.StopServer();
+    }
+
     #endregion
 }

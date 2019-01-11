@@ -63,7 +63,7 @@ public class Client : MonoBehaviour
     public ClientState _clientState;
 
 
-    void Start()
+    private void Start()
     {
         myDataConfirmed = false;
         readyToTurnWheel = false;
@@ -75,7 +75,7 @@ public class Client : MonoBehaviour
         OnMessageReceived += nm.DecodeMessage;
     }
 
-    void Update()
+    private void Update()
     {
         nm.ClientText.text = log;
         //TODO: remove this
@@ -84,30 +84,9 @@ public class Client : MonoBehaviour
             print(clientReceiveThread.IsAlive);
         }
     }
-    void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
-        try
-        {
-            socketConnection.Close();
-
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
-
-        try
-        {
-            isTrue = false;
-            clientReceiveThread.IsBackground = false;
-            clientReceiveThread.Abort();
-            clientSendThread.IsBackground = false;
-            clientSendThread.Abort();
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
+        DisconnectFromServer();
     }
 
     public void ConnectToTcpServer()
@@ -126,6 +105,31 @@ public class Client : MonoBehaviour
             clientReceiveThread.IsBackground = true;
             clientReceiveThread.Start();
 
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+    }
+    public void DisconnectFromServer()
+    {
+        try
+        {
+            socketConnection.Close();
+
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+
+        try
+        {
+            isTrue = false;
+            clientReceiveThread.IsBackground = false;
+            clientReceiveThread.Abort();
+            clientSendThread.IsBackground = false;
+            clientSendThread.Abort();
         }
         catch (Exception e)
         {
