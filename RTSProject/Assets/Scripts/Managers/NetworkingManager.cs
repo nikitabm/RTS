@@ -37,7 +37,7 @@ public class NetworkingManager : MonoBehaviour, Service
     void Start()
     {
         turn = -2;
-        turnText.text = turn.ToString();
+        turnText.text = "Turn: " + turn.ToString();
         ServiceLocator.ProvideService(this);
     }
 
@@ -126,7 +126,8 @@ public class NetworkingManager : MonoBehaviour, Service
 
     private void Update()
     {
-        turnText.text = turn.ToString();
+        turnText.text = "Turn: " + turn.ToString();
+
     }
 
     #region Methods Called From Buttons

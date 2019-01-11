@@ -16,7 +16,7 @@ public class LockStepManager : MonoBehaviour, Service
     public static event OnNextTurn NextTurn;
     private bool _gameStarted;
     private float _accumilatedTime = 0f;
-    private float _frameLength; //FIXME: should be 50 ms
+    private float _frameLength = 0.50f; //FIXME: should be 50 ms
 
 
     private void Awake()
@@ -26,7 +26,7 @@ public class LockStepManager : MonoBehaviour, Service
     void Start()
     {
         ServiceLocator.ProvideService(this);
-        _frameLength = ServiceLocator.GetService<NetworkingManager>().turnTime;
+        //_frameLength = ServiceLocator.GetService<NetworkingManager>().turnTime;
     }
 
     public void StartGame()
