@@ -31,7 +31,7 @@ public class SelectObject : MonoBehaviour
     {
         Idle,
         SelectBuilding,
-        UnitSelected,
+        UnitsSelected,
         SelectedLocation,
         MoveCommandComplete
     }
@@ -81,7 +81,7 @@ public class SelectObject : MonoBehaviour
                     _units.Clear();
                     var unit = obj.transform.gameObject.GetComponent<Unit>();
                     _units.Add(unit);
-                    playerState = StateOfPlayer.UnitSelected;
+                    playerState = StateOfPlayer.UnitsSelected;
                 }
                 else
                 {
@@ -101,7 +101,7 @@ public class SelectObject : MonoBehaviour
                 }
             }
             if (_units.Count > 0)
-                playerState = StateOfPlayer.UnitSelected;
+                playerState = StateOfPlayer.UnitsSelected;
             else
                 playerState = StateOfPlayer.Idle;
             _dragging = false;
@@ -112,7 +112,7 @@ public class SelectObject : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000f))
             {
-                if (playerState == StateOfPlayer.UnitSelected)
+                if (playerState == StateOfPlayer.UnitsSelected)
                 {
                     _clickPoint = hit.point;
                     playerState = StateOfPlayer.SelectedLocation;
