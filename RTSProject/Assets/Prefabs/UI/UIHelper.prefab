@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4329968022416544}
   - component: {fileID: 114400443851378292}
   m_Layer: 0
-  m_Name: Helper
+  m_Name: UIHelper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,3 +52,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Log: {fileID: 0}
+  NetworkMenu: {fileID: 0}

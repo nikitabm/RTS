@@ -113,6 +113,7 @@ public class Server : MonoBehaviour
             TcpListenerThread.Abort();
             TcpSendThread.IsBackground = false;
             TcpSendThread.Abort();
+            clients.Clear();
         }
         catch (Exception e)
         {

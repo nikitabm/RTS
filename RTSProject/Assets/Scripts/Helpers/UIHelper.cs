@@ -6,6 +6,8 @@ public class UIHelper : MonoBehaviour
 {
     [SerializeField]
     private GameObject Log;
+    [SerializeField]
+    private GameObject NetworkMenu;
     void Start()
     {
 
@@ -18,5 +20,9 @@ public class UIHelper : MonoBehaviour
     public void ToggleLogs()
     {
         Log.SetActive(!Log.activeSelf);
+    }
+    public void ToggleNetworkMenu()
+    {
+        NetworkMenu.SetActive(!NetworkMenu.activeSelf);
     }
 }

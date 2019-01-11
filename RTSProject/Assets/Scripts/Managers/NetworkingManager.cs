@@ -131,21 +131,16 @@ public class NetworkingManager : MonoBehaviour, Service
 
     #region Methods Called From Buttons
 
-    public void RunServer()
+    public void HostServer()
     {
         if (_sr == null)
         {
             host = true;
             _sr = gameObject.AddComponent<Server>();
         }
-        else
-        {
-            host = true;
-            _sr.RunServer();
-        }
     }
 
-    public void HostGame()
+    public void HostServerAndClient()
     {
         if (_sr == null && _cl == null)
         {
@@ -156,13 +151,9 @@ public class NetworkingManager : MonoBehaviour, Service
             _cl.id = 0;
             CreatePlayer();
         }
-        else
-        {
-            _sr.RunServer();
-        }
     }
 
-    public void ConnectToGame()
+    public void CreateClientAndPlayer()
     {
         if (_cl == null)
         {
@@ -176,15 +167,28 @@ public class NetworkingManager : MonoBehaviour, Service
             gameObject.AddComponent<Client>();
         }
     }
-
+    public void ReconnectToServer()
+    {
+        _cl.ConnectToTcpServer();
+    }
+    public void ReHostServer()
+    {
+        _sr.RunServer();
+    }
     public void DisconnectClient()
     {
-        _cl.DisconnectFromServer();
+        foreach (Client c in GetComponents<Client>())
+        {
+            c.DisconnectFromServer();
+            Destroy(c);
+        }
     }
 
     public void DisconnectServer()
     {
         _sr.StopServer();
+        DisconnectClient();
+        Destroy(_sr);
     }
 
     #endregion
