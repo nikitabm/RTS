@@ -45,7 +45,7 @@ public class SelectObject : MonoBehaviour
     }
     private void Update()
     {
-        //ClickOnObjects();
+        ClickOnObjects();
     }
     private void OnGUI()
     {
