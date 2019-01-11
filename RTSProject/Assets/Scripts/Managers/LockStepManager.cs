@@ -26,7 +26,6 @@ public class LockStepManager : MonoBehaviour, Service
     void Start()
     {
         ServiceLocator.ProvideService(this);
-        //_frameLength = ServiceLocator.GetService<NetworkingManager>().turnTime;
     }
 
     public void StartGame()

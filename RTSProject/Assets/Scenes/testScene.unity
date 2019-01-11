@@ -530,7 +530,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1192579847582824, guid: 0d1563a4b6c66ad42a49df438cce9aa5, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d1563a4b6c66ad42a49df438cce9aa5, type: 2}
@@ -600,7 +600,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4944975857718670, guid: 5e9c461f55ac3f74bbdbc01e1ea15cee, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.2737368e-13
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4944975857718670, guid: 5e9c461f55ac3f74bbdbc01e1ea15cee, type: 2}
       propertyPath: m_LocalPosition.z
@@ -720,7 +720,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4944975857718670, guid: 5e9c461f55ac3f74bbdbc01e1ea15cee, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4944975857718670, guid: 5e9c461f55ac3f74bbdbc01e1ea15cee, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1142,7 +1142,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4944975857718670, guid: 5e9c461f55ac3f74bbdbc01e1ea15cee, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4944975857718670, guid: 5e9c461f55ac3f74bbdbc01e1ea15cee, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1574,8 +1574,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20048c13a5d194941bac6cd566a5e468, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
-  camera: {fileID: 0}
   targetsTag: Unit
 --- !u!81 &2043636303
 AudioListener:

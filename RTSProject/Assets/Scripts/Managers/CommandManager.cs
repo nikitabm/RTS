@@ -44,9 +44,9 @@ public class CommandManager : MonoBehaviour, Service
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {
         PlayerCommandsData playerData = new PlayerCommandsData(turn, playerID);
-        if (_commandQueue.Count == 0) playerData.AddCommand(Command.CreateCommand<EmptyCommand>());
+        playerData.AddCommand(new MoveCommand(null, Vector3.zero));
         while (_commandQueue.Count != 0)
-        {
+        {   
             _allCommands.Add(_commandQueue.Peek());
             playerData.AddCommand(_commandQueue.Dequeue());
         }

@@ -146,7 +146,7 @@ public class Client : MonoBehaviour
 
 
         Byte[] bytes = new Byte[1024];
-        while (isTrue)
+        while (true)
         {
             try
             {
