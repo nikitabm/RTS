@@ -27,7 +27,7 @@ public class CommandManager : MonoBehaviour, Service
     }
     public void SubsribeToEvent()
     {
-        SelectObject.commandCreated += AddToQueue;
+        SelectObject.СommandCreated += AddToQueue;
     }
     public void PassCommandsToUnits()
     {

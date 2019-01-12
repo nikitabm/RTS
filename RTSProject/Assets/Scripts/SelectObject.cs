@@ -5,28 +5,18 @@ using UnityEngine;
 
 public class SelectObject : MonoBehaviour
 {
-    private Vector3 _clickPoint = Vector3.zero;
     [SerializeField]
     private List<Unit> _units = new List<Unit>();
-    private Vector3 _mousePosition;
+
+    private Vector3 _clickPoint = Vector3.zero;
+    private Vector3 _mousePos;
     private bool _dragging;
-    [SerializeField]
     private bool _enabled;
-    private int _playerID;
     private GameManager _gm;
+
     public delegate void OnCommandCreated(Command m);
-    public static event OnCommandCreated commandCreated;
-    public int PlayerID
-    {
-        get
-        {
-            return _playerID;
-        }
-        set
-        {
-            _playerID = value;
-        }
-    }
+    public static event OnCommandCreated СommandCreated;
+
     public enum StateOfPlayer
     {
         Idle,
@@ -51,8 +41,7 @@ public class SelectObject : MonoBehaviour
     {
         if (_dragging)
         {
-            var rect = ScreenHelper.GetScreenRect(_mousePosition, Input.mousePosition);
-            //ScreenHelper.DrawScreenRect(rect, Color.green);
+            var rect = ScreenHelper.GetScreenRect(_mousePos, Input.mousePosition);
             ScreenHelper.DrawScreenRectBorder(rect, 1.0f, Color.green);
         }
     }
@@ -69,18 +58,26 @@ public class SelectObject : MonoBehaviour
         if (!_enabled) return;
         if (Input.GetMouseButtonDown(0))
         {
-            _mousePosition = Input.mousePosition;
+            _mousePos = Input.mousePosition;
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000f))
             {
-
                 GameObject obj = hit.transform.gameObject;
                 if (obj.GetComponent(typeof(ISelectable)) != null)
                 {
+                    foreach (Unit u in _units)
+                    {
+                        u.Deselect();
+                    }
                     _units.Clear();
                     var unit = obj.transform.gameObject.GetComponent<Unit>();
                     _units.Add(unit);
+
+                    foreach (Unit u in _units)
+                    {
+                        u.Select();
+                    }
                     playerState = StateOfPlayer.UnitsSelected;
                 }
                 else
@@ -91,6 +88,7 @@ public class SelectObject : MonoBehaviour
                 }
             }
         }
+
         if (Input.GetMouseButtonUp(0))
         {
             foreach (var unit in _gm.Units)
@@ -98,14 +96,22 @@ public class SelectObject : MonoBehaviour
                 if (IsInSelection(unit.Value.transform))
                 {
                     _units.Add(unit.Value);
+                    unit.Value.Select();
                 }
+                else
+                    unit.Value.Deselect();
             }
             if (_units.Count > 0)
+            {
                 playerState = StateOfPlayer.UnitsSelected;
+            }
             else
+            {
                 playerState = StateOfPlayer.Idle;
+            }
             _dragging = false;
         }
+
         if (Input.GetMouseButtonUp(1))
         {
             RaycastHit hit;
@@ -115,32 +121,33 @@ public class SelectObject : MonoBehaviour
                 if (playerState == StateOfPlayer.UnitsSelected)
                 {
                     _clickPoint = hit.point;
-                    playerState = StateOfPlayer.SelectedLocation;
                     CreateAndPassCommand(_units, _clickPoint);
                     playerState = StateOfPlayer.Idle;
                 }
             }
         }
     }
+
     private bool IsInSelection(Transform t)
     {
         if (!_dragging) return false;
         var camera = Camera.main;
-        var viewportBounds = ScreenHelper.GetViewportBounds(camera, _mousePosition, Input.mousePosition);
+        var viewportBounds = ScreenHelper.GetViewportBounds(camera, _mousePos, Input.mousePosition);
         return viewportBounds.Contains(camera.WorldToViewportPoint(t.position));
     }
+
     public void CreateAndPassCommand(List<Unit> pUnits, Vector3 pos)
     {
-        //TODO: change to ARRAY
         List<int> temp = new List<int>();
         foreach (var unit in pUnits)
         {
             temp.Add(unit.ID);
             print(unit.ID);
         }
+
         Command issuedCommand;
         issuedCommand = Command.CreateCommand<MoveCommand>(temp, pos);
-        commandCreated(issuedCommand);
+        СommandCreated(issuedCommand);
         if (ServiceLocator.GetService<GameManager>().movementWithoutNetwork)
         {
             ServiceLocator.GetService<CommandManager>().PassCommandsToUnits();
