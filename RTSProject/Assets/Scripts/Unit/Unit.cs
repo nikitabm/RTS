@@ -9,10 +9,14 @@ public class Unit : MonoBehaviour, ISelectable
     private Command _currentCommand = null;
     private Queue<Command> _commandQueue = new Queue<Command>();
     private IEnumerator coroutine;
-    private  bool _selected;
+    private bool _selected;
+    private Vector3 _targetPos;
     private NavMeshAgent _agent;
     private GameManager _gm;
     private Vector3 movePoint;
+    private Rigidbody _rb;
+    [SerializeField]
+    private float _maxVelocity;
 
     public Material SelectMaterial;
     public Material DeselectMaterial;
@@ -33,13 +37,23 @@ public class Unit : MonoBehaviour, ISelectable
         set { _selected = value; }
     }
 
-    void Start()
+    private void Start()
     {
+        _rb = gameObject.GetComponent<Rigidbody>();
         _agent = GetComponent<NavMeshAgent>();
         _gm = ServiceLocator.GetService<GameManager>();
         _gm.AddUnit(ID, this);
         CommandManager.OnCommandExecute += ExecuteCurrentCommand;
-       
+    }
+
+    private void Update()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit, 1000f))
+        {
+            Steering(hit.point);
+        }
     }
     public void Select()
     {
@@ -61,11 +75,8 @@ public class Unit : MonoBehaviour, ISelectable
     {
         if (_currentCommand.position != Vector3.zero)
             _agent.SetDestination(_currentCommand.position);
-        //StartCoroutine(AllignOnX(new Vector3(
-        //    Mathf.Round(_currentCommand.position.x),
-        //    0.5f,
-        //    Mathf.Round(_currentCommand.position.z))));
     }
+
     private IEnumerator AllignOnX(Vector3 movePoint)
     {
         int step;
@@ -81,6 +92,7 @@ public class Unit : MonoBehaviour, ISelectable
         }
         yield return StartCoroutine(AllignOnZ((int)movePoint.z));
     }
+
     private IEnumerator AllignOnZ(int pZ)
     {
 
@@ -94,5 +106,14 @@ public class Unit : MonoBehaviour, ISelectable
             yield return new WaitForSeconds(1);
             gameObject.transform.position += new Vector3(0, 0, step);
         }
+    }
+    private void Steering(Vector3 target)
+    {
+        //_rb.velocity = Vector3.Normalize(gameObject.transform.forward) * _maxVelocity;
+        var desiredVelocity = Vector3.Normalize(target-gameObject.transform.position) * _maxVelocity;
+        var steering = desiredVelocity - _rb.velocity;
+        steering = steering / _rb.mass;
+        _rb.velocity = _rb.velocity + steering;
+
     }
 }
