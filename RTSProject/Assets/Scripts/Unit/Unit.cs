@@ -16,11 +16,21 @@ public class Unit : MonoBehaviour, ISelectable
     private Vector3 movePoint;
     private Rigidbody _rb;
     [SerializeField]
+    private List<Unit> _units = new List<Unit>();
+    [SerializeField]
     private float _maxVelocity;
+    [SerializeField]
+    private float _desiredSeparation;
+    [SerializeField]
+    private float scalar;
 
     public Material SelectMaterial;
     public Material DeselectMaterial;
     public int ID = 0;
+
+
+
+
 
 
 
@@ -52,8 +62,18 @@ public class Unit : MonoBehaviour, ISelectable
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit, 1000f))
         {
-            Steering(hit.point);
+            Steering(hit.point, _units);
         }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.GetComponent<Unit>() != null)
+            _units.Add(other.GetComponent<Unit>());
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (_units.Contains(other.GetComponent<Unit>()))
+            _units.Remove(other.GetComponent<Unit>());
     }
     public void Select()
     {
@@ -107,13 +127,35 @@ public class Unit : MonoBehaviour, ISelectable
             gameObject.transform.position += new Vector3(0, 0, step);
         }
     }
-    private void Steering(Vector3 target)
+
+    private void Steering(Vector3 target, List<Unit> units)
     {
-        //_rb.velocity = Vector3.Normalize(gameObject.transform.forward) * _maxVelocity;
-        var desiredVelocity = Vector3.Normalize(target-gameObject.transform.position) * _maxVelocity;
-        var steering = desiredVelocity - _rb.velocity;
-        steering = steering / _rb.mass;
-        _rb.velocity = _rb.velocity + steering;
+
+        var steer = Vector3.zero;
+
+        foreach (Unit u in units)
+        {
+            var distance = Vector3.Distance(transform.position, u.transform.position);
+            if (distance < _desiredSeparation)
+            {
+                var difference = transform.position - u.transform.position;
+                difference = Vector3.Normalize(difference);
+                difference = scalar * difference;
+                difference = difference / distance;
+                steer += difference;
+            }
+        }
+        if(units.Count>0)
+        {
+            steer = steer / units.Count;
+        }
+
+        //var desiredVelocity = Vector3.Normalize(target - gameObject.transform.position) * _maxVelocity;
+        //var steering = desiredVelocity - _rb.velocity;
+        //steering = steering / _rb.mass;
+
+        //_rb.velocity = _rb.velocity + steering;
+        _rb.velocity = _rb.velocity + steer;
 
     }
 }

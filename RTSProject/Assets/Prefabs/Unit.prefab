@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 54055461926669114}
   - component: {fileID: 195510382514540722}
   - component: {fileID: 114174912120117434}
+  - component: {fileID: 135616016925201756}
   m_Layer: 0
   m_Name: Unit
   m_TagString: team1Unit
@@ -70,7 +71,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1178897262442480}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 245.09, y: 1, z: 278.12558}
+  m_LocalPosition: {x: 251.83, y: 1, z: 284.19}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_Children:
   - {fileID: 4882807641742980}
@@ -174,7 +175,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 16
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!65 &65698713392277894
 BoxCollider:
@@ -202,10 +203,25 @@ MonoBehaviour:
   _currentCommand:
     position: {x: 0, y: 0, z: 0}
     units: 
+  _units: []
   _maxVelocity: 4
+  _desiredSeparation: 2
+  scalar: 2
   SelectMaterial: {fileID: 2100000, guid: 34a39f89dccf7ee45a5af44a2769f0bf, type: 2}
   DeselectMaterial: {fileID: 2100000, guid: b93786186f7b8f24fb2764fb67623355, type: 2}
-  ID: 0
+  ID: 4
+--- !u!135 &135616016925201756
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1178897262442480}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 3
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &136016662988858058
 CapsuleCollider:
   m_ObjectHideFlags: 1
