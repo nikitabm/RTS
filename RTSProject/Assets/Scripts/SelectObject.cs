@@ -98,7 +98,7 @@ public class SelectObject : MonoBehaviour
                     _units.Add(unit.Value);
                     unit.Value.Select();
                 }
-                else
+                if (!_units.Contains(unit.Value))
                     unit.Value.Deselect();
             }
             if (_units.Count > 0)
@@ -122,7 +122,7 @@ public class SelectObject : MonoBehaviour
                 {
                     _clickPoint = hit.point;
                     CreateAndPassCommand(_units, _clickPoint);
-                    playerState = StateOfPlayer.Idle;
+                    //playerState = StateOfPlayer.Idle;
                 }
             }
         }

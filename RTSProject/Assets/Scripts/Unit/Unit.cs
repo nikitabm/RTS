@@ -23,7 +23,12 @@ public class Unit : MonoBehaviour, ISelectable
     private float _desiredSeparation;
     [SerializeField]
     private float _scalar;
-    private Vector3 _force;
+    private Vector3 _velocity = Vector3.zero;
+    private Vector3 _acceleration;
+    [SerializeField]
+    private Vector3 _offset;
+    [SerializeField]
+    private float _mass;
 
     public Material SelectMaterial;
     public Material DeselectMaterial;
@@ -67,7 +72,7 @@ public class Unit : MonoBehaviour, ISelectable
         if (_currentCommand.GetType() != typeof(EmptyCommand))
         {
             MoveToLocation(_currentCommand.position);
-            Flocking(_currentCommand.units);
+            //Flocking(_currentCommand.units);
         }
 
     }
@@ -122,13 +127,17 @@ public class Unit : MonoBehaviour, ISelectable
             gameObject.transform.position += new Vector3(0, 0, step);
         }
     }
+
     private void MoveToLocation(Vector3 target)
     {
-        var desiredVelocity = Vector3.Normalize(target - gameObject.transform.position) * _maxVelocity;
+        var desiredVelocity = Vector3.Normalize(target - transform.position + _offset) * _maxVelocity;
         var steering = desiredVelocity;
-        steering = steering / _rb.mass;
-
-        transform.position += steering;
+        steering /= _mass;
+        _velocity = steering;
+        if (Vector3.Distance(transform.position, target + _offset) < 0.1)
+            _currentCommand = new EmptyCommand();
+        if (_velocity != null)
+            transform.position = transform.position + _velocity;
     }
     private void Flocking(List<int> units)
     {
@@ -150,6 +159,6 @@ public class Unit : MonoBehaviour, ISelectable
         {
             steer = steer / units.Count;
         }
-        //transform.position += steer;
+        _velocity += steer;
     }
 }
