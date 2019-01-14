@@ -142,7 +142,6 @@ public class SelectObject : MonoBehaviour
         foreach (var unit in pUnits)
         {
             temp.Add(unit.ID);
-            print(unit.ID);
         }
 
         Command issuedCommand;

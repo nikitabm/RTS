@@ -22,7 +22,8 @@ public class Unit : MonoBehaviour, ISelectable
     [SerializeField]
     private float _desiredSeparation;
     [SerializeField]
-    private float scalar;
+    private float _scalar;
+    private Vector3 _force;
 
     public Material SelectMaterial;
     public Material DeselectMaterial;
@@ -46,7 +47,10 @@ public class Unit : MonoBehaviour, ISelectable
         get { return _selected; }
         set { _selected = value; }
     }
-
+    private void Awake()
+    {
+        _currentCommand = new EmptyCommand();
+    }
     private void Start()
     {
         _rb = gameObject.GetComponent<Rigidbody>();
@@ -58,22 +62,14 @@ public class Unit : MonoBehaviour, ISelectable
 
     private void Update()
     {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, 1000f))
+
+
+        if (_currentCommand.GetType() != typeof(EmptyCommand))
         {
-            Steering(hit.point, _units);
+            MoveToLocation(_currentCommand.position);
+            Flocking(_currentCommand.units);
         }
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.GetComponent<Unit>() != null)
-            _units.Add(other.GetComponent<Unit>());
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (_units.Contains(other.GetComponent<Unit>()))
-            _units.Remove(other.GetComponent<Unit>());
+
     }
     public void Select()
     {
@@ -93,8 +89,7 @@ public class Unit : MonoBehaviour, ISelectable
 
     public void ExecuteCurrentCommand()
     {
-        if (_currentCommand.position != Vector3.zero)
-            _agent.SetDestination(_currentCommand.position);
+        //?
     }
 
     private IEnumerator AllignOnX(Vector3 movePoint)
@@ -127,35 +122,34 @@ public class Unit : MonoBehaviour, ISelectable
             gameObject.transform.position += new Vector3(0, 0, step);
         }
     }
-
-    private void Steering(Vector3 target, List<Unit> units)
+    private void MoveToLocation(Vector3 target)
     {
+        var desiredVelocity = Vector3.Normalize(target - gameObject.transform.position) * _maxVelocity;
+        var steering = desiredVelocity;
+        steering = steering / _rb.mass;
 
+        transform.position += steering;
+    }
+    private void Flocking(List<int> units)
+    {
         var steer = Vector3.zero;
-
-        foreach (Unit u in units)
+        foreach (int unitID in units)
         {
+            Unit u = _gm.GetUnit(unitID);
             var distance = Vector3.Distance(transform.position, u.transform.position);
             if (distance < _desiredSeparation)
             {
                 var difference = transform.position - u.transform.position;
                 difference = Vector3.Normalize(difference);
-                difference = scalar * difference;
+                difference = _scalar * difference;
                 difference = difference / distance;
                 steer += difference;
             }
         }
-        if(units.Count>0)
+        if (units.Count > 0)
         {
             steer = steer / units.Count;
         }
-
-        //var desiredVelocity = Vector3.Normalize(target - gameObject.transform.position) * _maxVelocity;
-        //var steering = desiredVelocity - _rb.velocity;
-        //steering = steering / _rb.mass;
-
-        //_rb.velocity = _rb.velocity + steering;
-        _rb.velocity = _rb.velocity + steer;
-
+        //transform.position += steer;
     }
 }
