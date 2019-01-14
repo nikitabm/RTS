@@ -47,15 +47,18 @@ public class Unit : MonoBehaviour, ISelectable
         set
         { _currentCommand = value; }
     }
+
     public bool Selected
     {
         get { return _selected; }
         set { _selected = value; }
     }
+
     private void Awake()
     {
         _currentCommand = new EmptyCommand();
     }
+
     private void Start()
     {
         _rb = gameObject.GetComponent<Rigidbody>();
@@ -67,23 +70,20 @@ public class Unit : MonoBehaviour, ISelectable
 
     private void Update()
     {
-
-
-        if (_currentCommand.position != Vector3.zero && _currentCommand.GetType() != typeof(EmptyCommand))
-        {
-            MoveToLocation(_currentCommand.position);
-            //Flocking(_currentCommand.units);
-        }
-
+        MoveToLocation(_currentCommand.position);
+        Flocking(_currentCommand.units);
     }
+
     public void Select()
     {
         GetComponent<Renderer>().material = SelectMaterial;
     }
+
     public void Deselect()
     {
         GetComponent<Renderer>().material = DeselectMaterial;
     }
+
     public void RoundPos()
     {
         gameObject.transform.position = new Vector3(
@@ -130,39 +130,43 @@ public class Unit : MonoBehaviour, ISelectable
 
     private void MoveToLocation(Vector3 target)
     {
-        var desiredVelocity = Vector3.Normalize(target - transform.position + _offset) * _maxVelocity;
+        if (target == Vector3.zero) return;
+        var desiredVelocity = Vector3.Normalize(target + _offset - transform.position) * _maxVelocity;
         var steering = desiredVelocity;
-        steering /= _mass;
+        steering /= (_mass > 0) ? _mass : 1;
         _velocity = steering;
-
         transform.position = transform.position + _velocity;
-        print(Vector3.Distance(target + _offset, transform.position));
-        if (Vector3.Distance(target + _offset, transform.position) < 1.0f)
+
+        if (Vector3.Distance(target + _offset, transform.position) < 0.1f)
         {
-            _currentCommand = new EmptyCommand();
+            //_currentCommand = new EmptyCommand();
             _currentCommand.position = Vector3.zero;
         }
     }
+
     private void Flocking(List<int> units)
     {
         var steer = Vector3.zero;
-        foreach (int unitID in units)
+        if (units != null)
         {
-            Unit u = _gm.GetUnit(unitID);
-            var distance = Vector3.Distance(transform.position, u.transform.position);
-            if (distance < _desiredSeparation)
+            foreach (int unitID in units)
             {
-                var difference = transform.position - u.transform.position;
-                difference = Vector3.Normalize(difference);
-                difference = _scalar * difference;
-                difference = difference / distance;
-                steer += difference;
+                Unit u = _gm.GetUnit(unitID);
+                var distance = Vector3.Distance(transform.position, u.transform.position);
+                if (distance < _desiredSeparation)
+                {
+                    var difference = transform.position - u.transform.position;
+                    difference = Vector3.Normalize(difference);
+                    difference = _scalar * difference;
+                    difference = difference / distance;
+                    steer += difference;
+                }
             }
+            if (units.Count > 0)
+            {
+                steer = steer / units.Count;
+            }
+            _velocity += steer;
         }
-        if (units.Count > 0)
-        {
-            steer = steer / units.Count;
-        }
-        _velocity += steer;
     }
 }

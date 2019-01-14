@@ -150,6 +150,7 @@ public class SelectObject : MonoBehaviour
         if (ServiceLocator.GetService<GameManager>().movementWithoutNetwork)
         {
             ServiceLocator.GetService<CommandManager>().PassCommandsToUnits();
+            ServiceLocator.GetService<CommandManager>()._allCommands.Clear();
         }
     }
 }
