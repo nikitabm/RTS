@@ -69,7 +69,7 @@ public class Unit : MonoBehaviour, ISelectable
     {
 
 
-        if (_currentCommand.position != Vector3.zero)
+        if (_currentCommand.position != Vector3.zero && _currentCommand.GetType() != typeof(EmptyCommand))
         {
             MoveToLocation(_currentCommand.position);
             //Flocking(_currentCommand.units);
@@ -134,10 +134,14 @@ public class Unit : MonoBehaviour, ISelectable
         var steering = desiredVelocity;
         steering /= _mass;
         _velocity = steering;
-        if (Vector3.Distance(transform.position + _offset, target) < 0.1)
+
+        transform.position = transform.position + _velocity;
+        print(Vector3.Distance(target + _offset, transform.position));
+        if (Vector3.Distance(target + _offset, transform.position) < 1.0f)
+        {
             _currentCommand = new EmptyCommand();
-        if (_velocity != null)
-            transform.position = transform.position + _velocity;
+            _currentCommand.position = Vector3.zero;
+        }
     }
     private void Flocking(List<int> units)
     {
