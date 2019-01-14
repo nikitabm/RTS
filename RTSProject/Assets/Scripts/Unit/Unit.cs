@@ -69,7 +69,7 @@ public class Unit : MonoBehaviour, ISelectable
     {
 
 
-        if (_currentCommand.GetType() != typeof(EmptyCommand))
+        if (_currentCommand.position != Vector3.zero)
         {
             MoveToLocation(_currentCommand.position);
             //Flocking(_currentCommand.units);
@@ -134,7 +134,7 @@ public class Unit : MonoBehaviour, ISelectable
         var steering = desiredVelocity;
         steering /= _mass;
         _velocity = steering;
-        if (Vector3.Distance(transform.position, target + _offset) < 0.1)
+        if (Vector3.Distance(transform.position + _offset, target) < 0.1)
             _currentCommand = new EmptyCommand();
         if (_velocity != null)
             transform.position = transform.position + _velocity;
