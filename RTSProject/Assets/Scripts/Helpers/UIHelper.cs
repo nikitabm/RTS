@@ -32,11 +32,17 @@ public class UIHelper : MonoBehaviour
     {
         if (File.Exists(fileName))
         {
-            Debug.Log(fileName + " already exists.");
+            StreamWriter writer = new StreamWriter(fileName, true);
+            writer.WriteLine(s);
+            writer.Close();
             return;
         }
-        var sr = File.CreateText(fileName);
-        sr.WriteLine(s);
-        sr.Close();
+        else
+        {
+            print("Created Log file");
+            var sr = File.CreateText(fileName);
+            sr.WriteLine(s);
+            sr.Close();
+        }
     }
 }

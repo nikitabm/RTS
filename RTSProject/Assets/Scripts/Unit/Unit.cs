@@ -154,8 +154,7 @@ public class Unit : MonoBehaviour, ISelectable
             if (points.Count == 0)
             {
                 _currentCommand.position = Vector3.zero;
-                string s = this.transform.position.ToString() + " || " + gameObject.name;
-                UIHelper.WriteDataToFile(s);
+
             }
             else
             {
