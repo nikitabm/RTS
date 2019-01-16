@@ -36,7 +36,7 @@ public class CommandManager : MonoBehaviour, Service
             if (_allCommands[i].units != null)
                 for (int j = 0; j < _allCommands[i].units.Count; j++)
                 {
-                    _gm.GetUnit(_allCommands[i].units[j]).CurrentCommand = _allCommands[i];
+                    _gm.GetUnit(_allCommands[i].units[j]).SetCommand(_allCommands[i]);
                 }
         }
         OnCommandExecute();
@@ -46,7 +46,7 @@ public class CommandManager : MonoBehaviour, Service
         PlayerCommandsData playerData = new PlayerCommandsData(turn, playerID);
         playerData.AddCommand(new MoveCommand(null, Vector3.zero));
         while (_commandQueue.Count != 0)
-        {   
+        {
             _allCommands.Add(_commandQueue.Peek());
             playerData.AddCommand(_commandQueue.Dequeue());
         }

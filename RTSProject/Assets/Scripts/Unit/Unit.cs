@@ -84,6 +84,11 @@ public class Unit : MonoBehaviour, ISelectable
         GetComponent<Renderer>().material = DeselectMaterial;
     }
 
+    public void SetCommand(Command pCommand)
+    {
+        _currentCommand.position = pCommand.position;
+        _currentCommand.units = pCommand.units;
+    }
     public void RoundPos()
     {
         gameObject.transform.position = new Vector3(
@@ -152,21 +157,23 @@ public class Unit : MonoBehaviour, ISelectable
             foreach (int unitID in units)
             {
                 Unit u = _gm.GetUnit(unitID);
-                var distance = Vector3.Distance(transform.position, u.transform.position);
-                if (distance < _desiredSeparation)
+                if (u != null)
                 {
-                    var difference = transform.position - u.transform.position;
-                    difference = Vector3.Normalize(difference);
-                    difference = _scalar * difference;
-                    difference = difference / distance;
-                    steer += difference;
+                    var distance = Vector3.Distance(transform.position, u.transform.position);
+                    if (distance < _desiredSeparation)
+                    {
+                        var difference = transform.position - u.transform.position;
+                        difference = Vector3.Normalize(difference);
+                        if (distance > 0)
+                            steer += difference / distance;
+                    }
                 }
             }
             if (units.Count > 0)
             {
                 steer = steer / units.Count;
             }
-            _velocity += steer;
+            transform.position = transform.position + steer;
         }
     }
 }
