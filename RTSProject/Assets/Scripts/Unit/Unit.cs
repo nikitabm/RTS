@@ -32,12 +32,8 @@ public class Unit : MonoBehaviour, ISelectable
 
     public Material SelectMaterial;
     public Material DeselectMaterial;
+    private List<GameObject> points = new List<GameObject>();
     public int ID = 0;
-
-
-
-
-
 
 
     public Command CurrentCommand
@@ -66,6 +62,15 @@ public class Unit : MonoBehaviour, ISelectable
         _gm = ServiceLocator.GetService<GameManager>();
         _gm.AddUnit(ID, this);
         CommandManager.OnCommandExecute += ExecuteCurrentCommand;
+        foreach (GameObject o in GameObject.FindGameObjectsWithTag("team1Unit"))
+        {
+            _units.Add(o.GetComponent<Unit>());
+        }
+        foreach (GameObject o in GameObject.FindGameObjectsWithTag("point"))
+        {
+            points.Add(o);
+        }
+        _currentCommand.position = points[0].transform.position;
     }
 
     private void Update()
@@ -145,7 +150,17 @@ public class Unit : MonoBehaviour, ISelectable
         if (Vector3.Distance(target + _offset, transform.position) < 0.1f)
         {
             //_currentCommand = new EmptyCommand();
-            _currentCommand.position = Vector3.zero;
+            points.RemoveAt(0);
+            if (points.Count == 0)
+            {
+                _currentCommand.position = Vector3.zero;
+                string s = this.transform.position.ToString() + " || " + gameObject.name;
+                UIHelper.WriteDataToFile(s);
+            }
+            else
+            {
+                _currentCommand.position = points[0].transform.position;
+            }
         }
     }
 

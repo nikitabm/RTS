@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour, Service
     private void Awake()
     {
         InitializeServices();
-
     }
     private void Update()
     {

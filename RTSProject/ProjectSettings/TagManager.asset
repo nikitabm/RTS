@@ -6,6 +6,7 @@ TagManager:
   tags:
   - team1Unit
   - Team2Unit
+  - point
   layers:
   - Default
   - TransparentFX
