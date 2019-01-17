@@ -13,10 +13,10 @@ public class SelectObject : MonoBehaviour
     private bool _dragging;
     private bool _enabled;
     private GameManager _gm;
-    private int _colLength;
+    private int _colLength = 5;
     private int _col;
     private int _row;
-    private int _seperation;
+    private int _seperation = 5;
 
     public delegate void OnCommandCreated(Command m);
     public static event OnCommandCreated СommandCreated;
@@ -60,6 +60,7 @@ public class SelectObject : MonoBehaviour
     public void GetLocationInFormation(List<GameObject> units)
     {
         var selectedLoc = Vector3.zero;
+
         foreach (GameObject o in units)
         {
             var pos = selectedLoc + new Vector3(_col * _seperation, 0, _row * _seperation);
@@ -72,6 +73,25 @@ public class SelectObject : MonoBehaviour
         }
 
     }
+    public void GetLocationInFormation(Vector3 point, int unitNumber)
+    {
+        var selectedLoc = point - new Vector3(_seperation * _colLength / 2, 0, _seperation * unitNumber / _colLength / 2);
+        for (int i = 0; i < unitNumber; i++)
+        {
+            var pos = selectedLoc + new Vector3(_col * _seperation, 0, _row * _seperation);
+            _col += 1;
+            if (_col == _colLength)
+            {
+                _col = 0;
+                _row += 1;
+            }
+            var g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            g.transform.position = pos;
+        }
+        _col = 0;
+        _row = 0;
+
+    }
     public void ClickOnObjects()
     {
         if (!_enabled) return;
@@ -82,6 +102,7 @@ public class SelectObject : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000f))
             {
+                GetLocationInFormation(hit.point, 10);
                 GameObject obj = hit.transform.gameObject;
                 if (obj.GetComponent(typeof(ISelectable)) != null)
                 {
