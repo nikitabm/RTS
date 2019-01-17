@@ -6,7 +6,7 @@ using UnityEngine;
 public class SelectObject : MonoBehaviour
 {
     [SerializeField]
-    private List<Unit> _units = new List<Unit>();
+    private List<UnitScript> _units = new List<UnitScript>();
 
     private Vector3 _clickPoint = Vector3.zero;
     private Vector3 _mousePos;
@@ -66,15 +66,15 @@ public class SelectObject : MonoBehaviour
                 GameObject obj = hit.transform.gameObject;
                 if (obj.GetComponent(typeof(ISelectable)) != null)
                 {
-                    foreach (Unit u in _units)
+                    foreach (UnitScript u in _units)
                     {
                         u.Deselect();
                     }
                     _units.Clear();
-                    var unit = obj.transform.gameObject.GetComponent<Unit>();
+                    var unit = obj.transform.gameObject.GetComponent<UnitScript>();
                     _units.Add(unit);
 
-                    foreach (Unit u in _units)
+                    foreach (UnitScript u in _units)
                     {
                         u.Select();
                     }
@@ -136,7 +136,7 @@ public class SelectObject : MonoBehaviour
         return viewportBounds.Contains(camera.WorldToViewportPoint(t.position));
     }
 
-    public void CreateAndPassCommand(List<Unit> pUnits, Vector3 pos)
+    public void CreateAndPassCommand(List<UnitScript> pUnits, Vector3 pos)
     {
         List<int> temp = new List<int>();
         foreach (var unit in pUnits)

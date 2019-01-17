@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour, Service
     //unused
     private List<GameObject> _teamOneUnits = new List<GameObject>();
     private List<GameObject> _teamTwoUnits = new List<GameObject>();
-    private Dictionary<int, Unit> _units = new Dictionary<int, Unit>();
-    public Dictionary<int, Unit> Units
+    private Dictionary<int, UnitScript> _units = new Dictionary<int, UnitScript>();
+    public Dictionary<int, UnitScript> Units
     {
         get { return _units; }
     }
@@ -30,11 +30,11 @@ public class GameManager : MonoBehaviour, Service
         }
     }
 
-    public void AddUnit(int id, Unit pUnit)
+    public void AddUnit(int id, UnitScript pUnit)
     {
         _units[id] = pUnit;
     }
-    public Unit GetUnit(int id)
+    public UnitScript GetUnit(int id)
     {
         return _units[id];
     }

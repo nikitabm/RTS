@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Unit : MonoBehaviour, ISelectable
+public class UnitScript : MonoBehaviour, ISelectable
 {
     [SerializeField]
     private Command _currentCommand = null;
@@ -16,7 +16,7 @@ public class Unit : MonoBehaviour, ISelectable
     private Vector3 movePoint;
     private Rigidbody _rb;
     [SerializeField]
-    private List<Unit> _units = new List<Unit>();
+    private List<UnitScript> _units = new List<UnitScript>();
     [SerializeField]
     private float _maxVelocity;
     [SerializeField]
@@ -64,7 +64,7 @@ public class Unit : MonoBehaviour, ISelectable
         CommandManager.OnCommandExecute += ExecuteCurrentCommand;
         foreach (GameObject o in GameObject.FindGameObjectsWithTag("team1Unit"))
         {
-            _units.Add(o.GetComponent<Unit>());
+            _units.Add(o.GetComponent<UnitScript>());
         }
         foreach (GameObject o in GameObject.FindGameObjectsWithTag("point"))
         {
@@ -170,7 +170,7 @@ public class Unit : MonoBehaviour, ISelectable
         {
             foreach (int unitID in units)
             {
-                Unit u = _gm.GetUnit(unitID);
+                UnitScript u = _gm.GetUnit(unitID);
                 if (u != null)
                 {
                     var distance = Vector3.Distance(transform.position, u.transform.position);
