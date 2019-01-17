@@ -62,15 +62,6 @@ public class UnitScript : MonoBehaviour, ISelectable
         _gm = ServiceLocator.GetService<GameManager>();
         _gm.AddUnit(ID, this);
         CommandManager.OnCommandExecute += ExecuteCurrentCommand;
-        foreach (GameObject o in GameObject.FindGameObjectsWithTag("team1Unit"))
-        {
-            _units.Add(o.GetComponent<UnitScript>());
-        }
-        foreach (GameObject o in GameObject.FindGameObjectsWithTag("point"))
-        {
-            points.Add(o);
-        }
-        _currentCommand.position = points[0].transform.position;
     }
 
     private void Update()
@@ -150,16 +141,7 @@ public class UnitScript : MonoBehaviour, ISelectable
         if (Vector3.Distance(target + _offset, transform.position) < 0.1f)
         {
             //_currentCommand = new EmptyCommand();
-            points.RemoveAt(0);
-            if (points.Count == 0)
-            {
-                _currentCommand.position = Vector3.zero;
-
-            }
-            else
-            {
-                _currentCommand.position = points[0].transform.position;
-            }
+            _currentCommand.position = Vector3.zero;
         }
     }
 
