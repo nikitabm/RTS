@@ -13,6 +13,10 @@ public class SelectObject : MonoBehaviour
     private bool _dragging;
     private bool _enabled;
     private GameManager _gm;
+    private int _colLength;
+    private int _col;
+    private int _row;
+    private int _seperation;
 
     public delegate void OnCommandCreated(Command m);
     public static event OnCommandCreated СommandCreated;
@@ -52,6 +56,21 @@ public class SelectObject : MonoBehaviour
     public Vector3 GetClickPoint()
     {
         return _clickPoint;
+    }
+    public void GetLocationInFormation(List<GameObject> units)
+    {
+        var selectedLoc = Vector3.zero;
+        foreach (GameObject o in units)
+        {
+            var pos = selectedLoc + new Vector3(_col * _seperation, 0, _row * _seperation);
+            _col += 1;
+            if (_col == _colLength)
+            {
+                _col = 0;
+                _row += 1;
+            }
+        }
+
     }
     public void ClickOnObjects()
     {
