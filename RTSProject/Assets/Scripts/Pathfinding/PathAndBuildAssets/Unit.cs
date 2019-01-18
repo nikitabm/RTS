@@ -128,6 +128,9 @@ public class Unit : MonoBehaviour
                 targetIndex++;
                 if (targetIndex >= path.Length)
                 {
+                    //TODO: make it walkable again
+                    Node myNode = grid.NodeFromWorldPoint(transform.position);
+                    myNode.walkable = false;
                     yield break;
                 }
                 else if (stopMoving == true)
