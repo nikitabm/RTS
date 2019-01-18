@@ -75,7 +75,9 @@ public class SelectObject : MonoBehaviour
     }
     public void GetLocationInFormation(Vector3 point, int unitNumber)
     {
-        var selectedLoc = point - new Vector3(_seperation * _colLength / 2, 0, _seperation * unitNumber / _colLength / 2);
+        var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        go.transform.position = point;
+        var selectedLoc = point - new Vector3((_colLength / 2) * _seperation, 0, ((unitNumber / _colLength) * _seperation) / 2);
         for (int i = 0; i < unitNumber; i++)
         {
             var pos = selectedLoc + new Vector3(_col * _seperation, 0, _row * _seperation);
