@@ -57,11 +57,11 @@ public class SelectObject : MonoBehaviour
     {
         return _clickPoint;
     }
-    public void GetLocationInFormation(List<GameObject> units)
-    {
-        var selectedLoc = Vector3.zero;
 
-        foreach (GameObject o in units)
+    public void CalculateLocationInFormation(Vector3 point, List<GameObject> units)
+    {
+        var selectedLoc = point - new Vector3((_colLength / 2) * _seperation, 0, ((units.Count / _colLength) * _seperation) / 2);
+        for (int i = 0; i < units.Count; i++)
         {
             var pos = selectedLoc + new Vector3(_col * _seperation, 0, _row * _seperation);
             _col += 1;
@@ -71,9 +71,29 @@ public class SelectObject : MonoBehaviour
                 _row += 1;
             }
         }
-
+        _col = 0;
+        _row = 0;
     }
-    public void GetLocationInFormation(Vector3 point, int unitNumber)
+
+    public void CalculateLocationInFormation(Vector3 point, List<UnitScript> units)
+    {
+        var selectedLoc = point - new Vector3((_colLength / 2) * _seperation, 0, ((units.Count / _colLength) * _seperation) / 2);
+        for (int i = 0; i < units.Count; i++)
+        {
+            var pos = selectedLoc + new Vector3(_col * _seperation, 0, _row * _seperation);
+            _col += 1;
+            if (_col == _colLength)
+            {
+                _col = 0;
+                _row += 1;
+            }
+            units[i].gameObject.GetComponent<Unit>().RequestPath(pos);
+        }
+        _col = 0;
+        _row = 0;
+    }
+
+    public void CalculateLocationInFormation(Vector3 point, int unitNumber)
     {
         var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         go.transform.position = point;
@@ -87,13 +107,13 @@ public class SelectObject : MonoBehaviour
                 _col = 0;
                 _row += 1;
             }
-            var g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            g.transform.position = pos;
+
         }
         _col = 0;
         _row = 0;
 
     }
+
     public void ClickOnObjects()
     {
         if (!_enabled) return;
@@ -104,7 +124,6 @@ public class SelectObject : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 1000f))
             {
-                GetLocationInFormation(hit.point, 10);
                 GameObject obj = hit.transform.gameObject;
                 if (obj.GetComponent(typeof(ISelectable)) != null)
                 {
@@ -163,7 +182,8 @@ public class SelectObject : MonoBehaviour
                 if (playerState == StateOfPlayer.UnitsSelected)
                 {
                     _clickPoint = hit.point;
-                    CreateAndPassCommand(_units, _clickPoint);
+                    //CreateAndPassCommand(_units, _clickPoint);
+                    CalculateLocationInFormation(_clickPoint, _units);
                     //playerState = StateOfPlayer.Idle;
                 }
             }

@@ -2,16 +2,17 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
-public class Unit : MonoBehaviour {
+public class Unit : MonoBehaviour
+{
 
 
-	public Vector3 target;
-	float speed = 5f;
-	public Vector3[] path;
-	int targetIndex;
+    public Vector3 target;
+    float speed = 5f;
+    public Vector3[] path;
+    int targetIndex;
 
-    public bool stopMoving; 
-    private Grid grid; 
+    public bool stopMoving;
+    private Grid grid;
 
     public enum MoveFSM
     {
@@ -22,19 +23,19 @@ public class Unit : MonoBehaviour {
         interact
     }
 
-    public MoveFSM moveFSM; 
+    public MoveFSM moveFSM;
 
-	void Start()
+    void Start()
     {
         grid = GameObject.FindGameObjectWithTag("A*").GetComponent<Grid>();
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
-        {
-            GetInteraction();
-        }
+        //if (Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
+        //{
+        //    GetInteraction();
+        //}
         MoveStates();
     }
 
@@ -78,17 +79,17 @@ public class Unit : MonoBehaviour {
 
     public void OnPathFound(Vector3[] newPath, bool pathSuccessful)
     {
-		if (pathSuccessful)
+        if (pathSuccessful)
         {
-			path = newPath;
-			targetIndex = 0;
+            path = newPath;
+            targetIndex = 0;
             RemoveUnitFromUnitManagerMovingUnitsList();
             UnitManager.instance.movingUnits.Add(this.gameObject);
             StopCoroutine("FollowPath");
-			StartCoroutine("FollowPath");
-            moveFSM = MoveFSM.move; 
-		}
-	}
+            StartCoroutine("FollowPath");
+            moveFSM = MoveFSM.move;
+        }
+    }
 
     private void FindClosestWalkableNode(Node originalNode)
     {
@@ -117,30 +118,36 @@ public class Unit : MonoBehaviour {
     }
 
 
-	IEnumerator FollowPath()
+    IEnumerator FollowPath()
     {
-		Vector3 currentWaypoint = path[0];
-		while (true)
+        Vector3 currentWaypoint = path[0];
+        while (true)
         {
-			if (transform.position == currentWaypoint)
+            if (transform.position == currentWaypoint)
             {
-				targetIndex ++;
-				if (targetIndex >= path.Length)
+                targetIndex++;
+                if (targetIndex >= path.Length)
                 {
-					yield break;
-				}
+                    yield break;
+                }
                 else if (stopMoving == true)
                 {
                     yield break;
                 }
                 currentWaypoint = path[targetIndex];
-			}
+            }
 
-			transform.position = Vector3.MoveTowards(transform.position,currentWaypoint,speed * Time.deltaTime);
-			yield return null;
+            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed * Time.deltaTime);
+            yield return null;
 
-		}
-	}
+        }
+    }
+    public void RequestPath(Vector3 point)
+    {
+        target = point;
+        RemoveUnitFromUnitManagerMovingUnitsList();
+        PathRequestManager.RequestPath(transform.position, target, OnPathFound);
+    }
 
     private void GetInteraction()
     {
@@ -173,18 +180,22 @@ public class Unit : MonoBehaviour {
 
     public void OnDrawGizmos()
     {
-		if (path != null) {
-			for (int i = targetIndex; i < path.Length; i ++) {
-				Gizmos.color = Color.black;
-				Gizmos.DrawCube(path[i], Vector3.one);
+        if (path != null)
+        {
+            for (int i = targetIndex; i < path.Length; i++)
+            {
+                Gizmos.color = Color.black;
+                Gizmos.DrawCube(path[i], Vector3.one);
 
-				if (i == targetIndex) {
-					Gizmos.DrawLine(transform.position, path[i]);
-				}
-				else {
-					Gizmos.DrawLine(path[i-1],path[i]);
-				}
-			}
-		}
-	}
+                if (i == targetIndex)
+                {
+                    Gizmos.DrawLine(transform.position, path[i]);
+                }
+                else
+                {
+                    Gizmos.DrawLine(path[i - 1], path[i]);
+                }
+            }
+        }
+    }
 }
