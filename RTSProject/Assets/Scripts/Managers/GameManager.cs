@@ -20,6 +20,17 @@ public class GameManager : MonoBehaviour, Service
 
     private void Awake()
     {
+        //TODO: delete this after testing
+        List<GameObject> l = new List<GameObject>();
+        foreach (GameObject o in GameObject.FindGameObjectsWithTag("team1Unit"))
+        {
+            l.Add(o);
+        }
+        for (int i = 0; i < l.Count; i++)
+        {
+            l[i].GetComponent<UnitScript>().ID = i;
+        }
+
         InitializeServices();
     }
     private void Update()

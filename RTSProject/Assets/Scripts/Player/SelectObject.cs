@@ -100,7 +100,7 @@ public class SelectObject : MonoBehaviour
         var selectedLoc = point - new Vector3((_colLength / 2) * _seperation, 0, ((unitNumber / _colLength) * _seperation) / 2);
         for (int i = 0; i < unitNumber; i++)
         {
-            var pos = selectedLoc + new Vector3(_col * _seperation, 0, _row * _seperation);
+            var pos = selectedLoc - new Vector3(_col * _seperation, 0, _row * _seperation);
             _col += 1;
             if (_col == _colLength)
             {

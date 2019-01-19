@@ -33,7 +33,8 @@ public class UnitScript : MonoBehaviour, ISelectable
     public Material SelectMaterial;
     public Material DeselectMaterial;
     private List<GameObject> points = new List<GameObject>();
-    public int ID = 0;
+    [SerializeField]
+    public int ID;
 
 
     public Command CurrentCommand

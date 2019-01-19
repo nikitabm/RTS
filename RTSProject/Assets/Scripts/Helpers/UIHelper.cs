@@ -13,6 +13,7 @@ public class UIHelper : MonoBehaviour
     private static string fileName = "log.txt";
     void Start()
     {
+        
 
     }
 

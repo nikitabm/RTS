@@ -21,11 +21,11 @@ GameObject:
   - component: {fileID: 4944975857718670}
   - component: {fileID: 33531079628678406}
   - component: {fileID: 23088965632286346}
+  - component: {fileID: 114174912120117434}
   - component: {fileID: 65698713392277894}
   - component: {fileID: 54055461926669114}
-  - component: {fileID: 114174912120117434}
   - component: {fileID: 114056126139939386}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Unit
   m_TagString: team1Unit
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 33421169725853788}
   - component: {fileID: 23453301794678350}
   - component: {fileID: 136016662988858058}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
