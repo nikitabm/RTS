@@ -87,7 +87,9 @@ public class SelectObject : MonoBehaviour
                 _col = 0;
                 _row += 1;
             }
-            units[i].gameObject.GetComponent<Unit>().RequestPath(pos);
+            var unit = units[i].gameObject.GetComponent<Unit>();
+            unit.SetWalkabilityOfCurrentNode(true);
+            unit.RequestPath(pos);
         }
         _col = 0;
         _row = 0;

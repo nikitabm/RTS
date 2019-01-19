@@ -117,7 +117,11 @@ public class Unit : MonoBehaviour
 
     }
 
-
+    public void SetWalkabilityOfCurrentNode(bool value)
+    {
+        Node myNode = grid.NodeFromWorldPoint(transform.position);
+        myNode.walkable = value;
+    }
     IEnumerator FollowPath()
     {
         Vector3 currentWaypoint = path[0];
@@ -129,8 +133,7 @@ public class Unit : MonoBehaviour
                 if (targetIndex >= path.Length)
                 {
                     //TODO: make it walkable again
-                    Node myNode = grid.NodeFromWorldPoint(transform.position);
-                    myNode.walkable = false;
+                    SetWalkabilityOfCurrentNode(false);
                     yield break;
                 }
                 else if (stopMoving == true)
