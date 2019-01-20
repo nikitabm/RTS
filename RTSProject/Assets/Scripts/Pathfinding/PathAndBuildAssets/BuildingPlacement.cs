@@ -56,16 +56,16 @@ public class BuildingPlacement : MonoBehaviour
                         Debug.Log("Number of units in unit manager: " + UnitManager.instance.movingUnits.Count);
                         for (int i = 0; i < UnitManager.instance.movingUnits.Count; i++)
                         {
-                            for (int y = 0; y < UnitManager.instance.movingUnits[i].GetComponent<Unit>().path.Length; y++)
+                            for (int y = 0; y < UnitManager.instance.movingUnits[i].GetComponent<UnitMovement>().path.Length; y++)
                             {
                                 for (int z = 0; z < currentBuilding.GetComponent<DynamicObstacle>().occupiedNodes.Count; z++)
                                 {
-                                    if (UnitManager.instance.movingUnits[i].GetComponent<Unit>().path[y] ==
+                                    if (UnitManager.instance.movingUnits[i].GetComponent<UnitMovement>().path[y] ==
                                         currentBuilding.GetComponent<DynamicObstacle>().occupiedNodes[z].nodeWorldPosition)
                                     {
                                         Debug.Log("Found a match");
-                                        UnitManager.instance.movingUnits[i].GetComponent<Unit>().stopMoving = true;
-                                        UnitManager.instance.movingUnits[i].GetComponent<Unit>().moveFSM = Unit.MoveFSM.recalculatePath;
+                                        UnitManager.instance.movingUnits[i].GetComponent<UnitMovement>().stopMoving = true;
+                                        UnitManager.instance.movingUnits[i].GetComponent<UnitMovement>().moveFSM = UnitMovement.MoveFSM.recalculatePath;
                                         break;
                                     }
                                 }

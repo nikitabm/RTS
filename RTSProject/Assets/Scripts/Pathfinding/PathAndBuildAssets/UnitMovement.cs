@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
-public class Unit : MonoBehaviour
+public class UnitMovement : MonoBehaviour
 {
 
 

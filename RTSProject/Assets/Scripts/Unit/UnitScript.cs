@@ -67,8 +67,8 @@ public class UnitScript : MonoBehaviour, ISelectable
 
     private void Update()
     {
-        MoveToLocation(_currentCommand.position);
-        Flocking(_currentCommand.units);
+        //MoveToLocation(_currentCommand.position);
+        //Flocking(_currentCommand.units);
     }
 
     public void Select()
