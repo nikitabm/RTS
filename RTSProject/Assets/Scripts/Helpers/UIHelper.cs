@@ -11,24 +11,38 @@ public class UIHelper : MonoBehaviour
     [SerializeField]
     private GameObject NetworkMenu;
     private static string fileName = "log.txt";
-    void Start()
+    private void Start()
     {
-        
+
 
     }
 
-    void Update()
+    private void Update()
     {
 
     }
+
     public void ToggleLogs()
     {
         Log.SetActive(!Log.activeSelf);
     }
+    public void CreateBuilding()
+    {
+        var buildingPlacement=GameObject.FindGameObjectWithTag("Overseer").GetComponent<BuildingPlacement>();
+        for (int i = 0; i < buildingPlacement.buildings.Count; i++)
+        {
+            if (gameObject.name == buildingPlacement.buildings[i].name)
+            {
+                buildingPlacement.currentBuilding = Instantiate(buildingPlacement.buildings[i]);
+            }
+        }
+    }
+
     public void ToggleNetworkMenu()
     {
         NetworkMenu.SetActive(!NetworkMenu.activeSelf);
     }
+
     public static void WriteDataToFile(string s)
     {
         if (File.Exists(fileName))

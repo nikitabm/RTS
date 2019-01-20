@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4789876542014948}
   - component: {fileID: 33934114733720392}
   - component: {fileID: 23084759547094502}
-  - component: {fileID: 65543834518131468}
   m_Layer: 0
   m_Name: roof
   m_TagString: Untagged
@@ -40,6 +39,9 @@ GameObject:
   - component: {fileID: 33773999321201028}
   - component: {fileID: 23134967986273186}
   - component: {fileID: 65892505278999554}
+  - component: {fileID: 114942856177627040}
+  - component: {fileID: 114412497515327448}
+  - component: {fileID: 54549071540985708}
   m_Layer: 0
   m_Name: House
   m_TagString: Untagged
@@ -57,7 +59,6 @@ GameObject:
   - component: {fileID: 4230342828533778}
   - component: {fileID: 33508234566209840}
   - component: {fileID: 23092596838175868}
-  - component: {fileID: 65790360187291432}
   m_Layer: 0
   m_Name: roof (1)
   m_TagString: Untagged
@@ -85,7 +86,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1212603641136840}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 37, y: 2, z: 49.097683}
+  m_LocalPosition: {x: 21.882263, y: 3.4, z: 58.53665}
   m_LocalScale: {x: 5, y: 4, z: 5}
   m_Children:
   - {fileID: 4789876542014948}
@@ -232,30 +233,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1032427534501760}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &65543834518131468
-BoxCollider:
+--- !u!54 &54549071540985708
+Rigidbody:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1032427534501760}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
+  m_GameObject: {fileID: 1212603641136840}
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &65790360187291432
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1916629229521714}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!65 &65892505278999554
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -268,3 +260,26 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114412497515327448
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1212603641136840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7956361c670b3dc4dba405c11f19ac68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114942856177627040
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1212603641136840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fa4e1f7006ce74da9956e8dd592c3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingTransforms: []

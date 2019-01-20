@@ -41,15 +41,15 @@ public class BuildingPlacement : MonoBehaviour
                 }
                 if (Input.GetMouseButtonUp(0) && hitBuilding == false && !EventSystem.current.IsPointerOverGameObject())
                 {
-                    Destroy(currentBuilding.GetComponent<Rigidbody>());
-                    currentBuilding.GetComponent<Collider>().isTrigger = true;
+                    //Destroy(currentBuilding.GetComponent<Rigidbody>());
+                    //currentBuilding.GetComponent<Collider>().isTrigger = true;
                     for (int i = 0; i < currentBuilding.GetComponent<DynamicObstacle>().buildingTransforms.Count; i++)
                     {
                         Vector3 posToScan = currentBuilding.GetComponent<DynamicObstacle>().buildingTransforms[i].position;
                         Node nodeToScan = grid.NodeFromWorldPoint(posToScan);
                         nodeToScan.walkable = false;
                         currentBuilding.GetComponent<DynamicObstacle>().occupiedNodes.Add(nodeToScan);
-                        Destroy(currentBuilding.GetComponent<DynamicObstacle>().buildingTransforms[i].gameObject);
+                        //Destroy(currentBuilding.GetComponent<DynamicObstacle>().buildingTransforms[i].gameObject);
                     }
                     if (UnitManager.instance.movingUnits.Count > 0)
                     {
