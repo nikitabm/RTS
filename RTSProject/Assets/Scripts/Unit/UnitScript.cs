@@ -35,6 +35,7 @@ public class UnitScript : MonoBehaviour, ISelectable
     private List<GameObject> points = new List<GameObject>();
     [SerializeField]
     public int ID;
+    private UnitMovement _unitMovement;
 
 
     public Command CurrentCommand
@@ -58,8 +59,8 @@ public class UnitScript : MonoBehaviour, ISelectable
 
     private void Start()
     {
+        _unitMovement = GetComponent<UnitMovement>();
         _rb = gameObject.GetComponent<Rigidbody>();
-        _agent = GetComponent<NavMeshAgent>();
         _gm = ServiceLocator.GetService<GameManager>();
         _gm.AddUnit(ID, this);
         CommandManager.OnCommandExecute += ExecuteCurrentCommand;
@@ -67,8 +68,7 @@ public class UnitScript : MonoBehaviour, ISelectable
 
     private void Update()
     {
-        //MoveToLocation(_currentCommand.position);
-        //Flocking(_currentCommand.units);
+
     }
 
     public void Select()

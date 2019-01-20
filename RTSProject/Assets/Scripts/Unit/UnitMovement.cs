@@ -32,10 +32,6 @@ public class UnitMovement : MonoBehaviour
 
     void Update()
     {
-        //if (Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
-        //{
-        //    GetInteraction();
-        //}
         MoveStates();
     }
 
