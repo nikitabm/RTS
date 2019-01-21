@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-    private SelectObject _objectSelector;
+    private PlayerController _objectSelector;
     public int id;
     public Player()
     {
@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
-        _objectSelector = gameObject.AddComponent<SelectObject>();
+        _objectSelector = gameObject.AddComponent<PlayerController>();
         _objectSelector.SetEnabled(true);
     }
 

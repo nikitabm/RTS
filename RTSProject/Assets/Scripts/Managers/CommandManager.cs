@@ -27,7 +27,7 @@ public class CommandManager : MonoBehaviour, Service
     }
     public void SubsribeToEvent()
     {
-        SelectObject.СommandCreated += AddToQueue;
+        PlayerController.СommandCreated += AddToQueue;
     }
     public void PassCommandsToUnits()
     {
