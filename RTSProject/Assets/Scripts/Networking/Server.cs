@@ -45,52 +45,47 @@ public class Server : MonoBehaviour
     {
         OnMessageReceive += ServiceLocator.GetService<NetworkingManager>().DecodeServerMessage;
         clients = new List<ServerClient>();
-        RunServer();
         OnAccept += SendMessage;
         _lockStepManager = gameObject.AddComponent<LockStepManager>();
         OnAllPlayersConnected += SendTestMsg;
         OnAllPlayersConnected += _lockStepManager.StartGame;
         LockStepManager.NextTurn += incTurns;
+        RunServer();
 
     }
     public void incTurns()
     {
-        print("INCREASING TURNS");
         SendMessage(clients[0].tcp, "inc");
         SendMessage(clients[1].tcp, "inc");
-
     }
+
     public void SendMessageToClients(string s, string s1)
     {
         SendMessage(clients[0].tcp, s);
         SendMessage(clients[1].tcp, s1);
     }
+
     public void RunServer()
     {
 
         started = true;
-        try
-        {
-            tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), port);
-            tcpListener.Start();
-            TcpClientAcceptThread = new Thread(new ThreadStart(StartListening));
-            TcpClientAcceptThread.IsBackground = true;
-            TcpClientAcceptThread.Start();
 
-            TcpListenerThread = new Thread(new ThreadStart(ListenForIncommingRequests));
-            TcpListenerThread.IsBackground = true;
-            TcpListenerThread.Start();
-            log += "Server initialized" + Environment.NewLine;
-            nm = ServiceLocator.GetService<NetworkingManager>();
+        tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), port);
+        tcpListener.Start();
+        TcpClientAcceptThread = new Thread(new ThreadStart(StartListening));
+        TcpClientAcceptThread.IsBackground = true;
+        TcpClientAcceptThread.Start();
 
-            TcpSendThread = new Thread(new ThreadStart(SendData));
-            TcpSendThread.IsBackground = true;
-            TcpSendThread.Start();
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
+        TcpListenerThread = new Thread(new ThreadStart(ListenForIncommingRequests));
+        TcpListenerThread.IsBackground = true;
+        TcpListenerThread.Start();
+        log += "Server initialized" + Environment.NewLine;
+        nm = ServiceLocator.GetService<NetworkingManager>();
+
+        TcpSendThread = new Thread(new ThreadStart(SendData));
+        TcpSendThread.IsBackground = true;
+        TcpSendThread.Start();
+
     }
 
     public void StopServer()
@@ -124,20 +119,6 @@ public class Server : MonoBehaviour
     public void Update()
     {
         nm.serverText.text = log;
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            print(TcpListenerThread.IsAlive);
-            print(TcpClientAcceptThread.IsAlive);
-
-
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            foreach (ServerClient c in clients)
-            {
-                SendMessage(c.tcp, "Hello from server to " + clients.IndexOf(c).ToString());
-            }
-        }
     }
     private void SendData()
     {

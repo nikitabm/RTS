@@ -78,12 +78,8 @@ public class Client : MonoBehaviour
     private void Update()
     {
         nm.ClientText.text = log;
-        //TODO: remove this
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            print(clientReceiveThread.IsAlive);
-        }
     }
+
     private void OnApplicationQuit()
     {
         DisconnectFromServer();
@@ -91,26 +87,18 @@ public class Client : MonoBehaviour
 
     public void ConnectToTcpServer()
     {
-
-        try
-        {
-            socketConnection = new TcpClient("127.0.0.1", port);
-            stream = socketConnection.GetStream();
-
-            _clientState = ClientState.Connected;
-            string line = "Connected to: " + IP + ":" + port.ToString();
-            Debug.Log(line);
-            log += line + Environment.NewLine;
-            clientReceiveThread = new Thread(new ThreadStart(ListenForData));
-            clientReceiveThread.IsBackground = true;
-            clientReceiveThread.Start();
-
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
+        isTrue = true;
+        socketConnection = new TcpClient("127.0.0.1", port);
+        stream = socketConnection.GetStream();
+        _clientState = ClientState.Connected;
+        string line = "Connected to: " + IP + ":" + port.ToString();
+        Debug.Log(line);
+        log += line + Environment.NewLine;
+        clientReceiveThread = new Thread(new ThreadStart(ListenForData));
+        clientReceiveThread.IsBackground = true;
+        clientReceiveThread.Start();
     }
+
     public void DisconnectFromServer()
     {
         try
@@ -143,10 +131,8 @@ public class Client : MonoBehaviour
     }
     private void ListenForData()
     {
-
-
         Byte[] bytes = new Byte[1024];
-        while (true)
+        while (isTrue)
         {
             try
             {
@@ -166,7 +152,6 @@ public class Client : MonoBehaviour
                 Debug.Log("Socket exception: " + socketException);
             }
         }
-
     }
 
     public new void SendMessage(string s)
@@ -185,6 +170,10 @@ public class Client : MonoBehaviour
 
                 byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(s);
                 stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
+            }
+            else
+            {
+                log += "stream cannot write" + Environment.NewLine;
             }
         }
         catch (SocketException socketException)

@@ -40,22 +40,27 @@ public class NetworkingManager : MonoBehaviour, Service
         turnText.text = "Turn: " + turn.ToString();
         ServiceLocator.ProvideService(this);
     }
+
     public bool HasAuthority()
     {
         return host;
     }
+
     public void GoToScene(string scene)
     {
         SceneManager.LoadScene(scene);
     }
+
     public Client GetOwningTCPClient()
     {
         return _cl;
     }
+
     private void CreatePlayer()
     {
         _playerRef = ServiceLocator.GetService<GameManager>().CreatePlayer();
     }
+
     public static void SendMessage(NetworkStream stream, string s)
     {
         try
@@ -115,6 +120,11 @@ public class NetworkingManager : MonoBehaviour, Service
                 if (s == "inc")
                 {
                     turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
+                    if (turnData == null)
+                    {
+                        turnData = new PlayerCommandsData(turn + 2, _cl.id);
+                        turnData.AddCommand(new MoveCommand(new List<int> { 0, 1 }, Vector3.zero));
+                    }
                     string msg = JsonConvert.SerializeObject(turnData);
                     _cl.SendMessage(msg);
                     turn++;
@@ -126,7 +136,6 @@ public class NetworkingManager : MonoBehaviour, Service
     private void Update()
     {
         turnText.text = "Turn: " + turn.ToString();
-
     }
 
     #region Methods Called From Buttons

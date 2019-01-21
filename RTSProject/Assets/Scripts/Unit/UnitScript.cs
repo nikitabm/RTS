@@ -63,7 +63,7 @@ public class UnitScript : MonoBehaviour, ISelectable
         _rb = gameObject.GetComponent<Rigidbody>();
         _gm = ServiceLocator.GetService<GameManager>();
         _gm.AddUnit(ID, this);
-        CommandManager.OnCommandExecute += ExecuteCurrentCommand;
+        //CommandManager.OnCommandExecute += ExecuteCurrentCommand;
     }
 
     private void Update()

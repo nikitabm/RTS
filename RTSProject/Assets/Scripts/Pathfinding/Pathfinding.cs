@@ -103,9 +103,10 @@ public class Pathfinding : MonoBehaviour
             waypoints.Add(path[i].nodeWorldPosition);
 
             //uncomment and comment line above to calculate path once
-            //Vector2 directionNew = new Vector2(path[i-1].gridX - path[i].gridX,path[i-1].gridY - path[i].gridY);
-            //if (directionNew != directionOld) {
-            //waypoints.Add(path[i].nodeWorldPosition);
+            //Vector2 directionNew = new Vector2(path[i - 1].gridX - path[i].gridX, path[i - 1].gridY - path[i].gridY);
+            //if (directionNew != directionOld)
+            //{
+            //    waypoints.Add(path[i].nodeWorldPosition);
             //}
             //directionOld = directionNew;
         }

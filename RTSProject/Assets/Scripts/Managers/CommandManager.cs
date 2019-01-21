@@ -23,7 +23,7 @@ public class CommandManager : MonoBehaviour, Service
     public void AddToQueue(Command c)
     {
         _commandQueue.Enqueue(c);
-        _allCommands.Add(c);
+        // _allCommands.Add(c);
     }
     public void SubsribeToEvent()
     {
@@ -33,18 +33,21 @@ public class CommandManager : MonoBehaviour, Service
     {
         for (int i = 0; i < _allCommands.Count; i++)
         {
-            if (_allCommands[i].units != null)
+            if (_allCommands[i].units != null && _allCommands[i].position != Vector3.zero)
+            {
                 for (int j = 0; j < _allCommands[i].units.Count; j++)
                 {
                     _gm.GetUnit(_allCommands[i].units[j]).SetCommand(_allCommands[i]);
                 }
+            }
         }
-        OnCommandExecute();
+        _allCommands.Clear();
+        //OnCommandExecute();
     }
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {
         PlayerCommandsData playerData = new PlayerCommandsData(turn, playerID);
-        playerData.AddCommand(new MoveCommand(null, Vector3.zero));
+        playerData.AddCommand(new MoveCommand(new List<int> { }, Vector3.zero));
         while (_commandQueue.Count != 0)
         {
             _allCommands.Add(_commandQueue.Peek());
