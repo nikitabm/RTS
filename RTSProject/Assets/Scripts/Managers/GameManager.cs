@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour, Service
     public GameObject TeamOneController;
     public GameObject TeamTwoController;
     public bool movementWithoutNetwork;
+    public int formationSeparation;
+    public int rowLength;
 
     //unused
     private List<GameObject> _teamOneUnits = new List<GameObject>();

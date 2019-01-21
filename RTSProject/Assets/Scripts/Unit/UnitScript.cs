@@ -83,8 +83,21 @@ public class UnitScript : MonoBehaviour, ISelectable
 
     public void SetCommand(Command pCommand)
     {
-        _currentCommand.position = pCommand.position;
-        _currentCommand.units = pCommand.units;
+        //float posX = (pCommand.units.IndexOf(this.ID) + 1) * _gm.formationSeparation;
+
+        float posX = (pCommand.units.IndexOf(this.ID) % _gm.rowLength) * _gm.formationSeparation;
+        float posZ = (pCommand.units.IndexOf(this.ID) / _gm.rowLength) * _gm.formationSeparation;
+
+        Vector3 pos = pCommand.position - new Vector3(posX, 0, posZ) +
+            new Vector3(((_gm.rowLength * _gm.formationSeparation) / 2), 0,
+            ((pCommand.units.Count / _gm.rowLength) * _gm.formationSeparation) / 2);
+
+        //_currentCommand.position = pos;
+        //_currentCommand.units = pCommand.units;
+
+        _unitMovement.SetWalkabilityOfCurrentNode(true);
+        _unitMovement.RequestPath(pos);
+
     }
     public void RoundPos()
     {

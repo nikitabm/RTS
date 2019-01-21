@@ -13,7 +13,7 @@ public class SelectObject : MonoBehaviour
     private bool _dragging;
     private bool _enabled;
     private GameManager _gm;
-    private int _colLength = 5;
+    private int _rowLength = 5;
     private int _col;
     private int _row;
     private int _seperation = 5;
@@ -60,12 +60,12 @@ public class SelectObject : MonoBehaviour
 
     public void CalculateLocationInFormation(Vector3 point, List<GameObject> units)
     {
-        var selectedLoc = point - new Vector3((_colLength / 2) * _seperation, 0, ((units.Count / _colLength) * _seperation) / 2);
+        var selectedLoc = point - new Vector3((_rowLength / 2) * _seperation, 0, ((units.Count / _rowLength) * _seperation) / 2);
         for (int i = 0; i < units.Count; i++)
         {
             var pos = selectedLoc + new Vector3(_col * _seperation, 0, _row * _seperation);
             _col += 1;
-            if (_col == _colLength)
+            if (_col == _rowLength)
             {
                 _col = 0;
                 _row += 1;
@@ -77,12 +77,12 @@ public class SelectObject : MonoBehaviour
 
     public void CalculateLocationInFormation(Vector3 point, List<UnitScript> units)
     {
-        var selectedLoc = point - new Vector3((_colLength / 2) * _seperation, 0, ((units.Count / _colLength) * _seperation) / 2);
+        var selectedLoc = point - new Vector3((_rowLength / 2) * _seperation, 0, ((units.Count / _rowLength) * _seperation) / 2);
         for (int i = 0; i < units.Count; i++)
         {
             var pos = selectedLoc + new Vector3(_col * _seperation, 0, _row * _seperation);
             _col += 1;
-            if (_col == _colLength)
+            if (_col == _rowLength)
             {
                 _col = 0;
                 _row += 1;
@@ -99,12 +99,12 @@ public class SelectObject : MonoBehaviour
     {
         var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         go.transform.position = point;
-        var selectedLoc = point - new Vector3((_colLength / 2) * _seperation, 0, ((unitNumber / _colLength) * _seperation) / 2);
+        var selectedLoc = point - new Vector3((_rowLength / 2) * _seperation, 0, ((unitNumber / _rowLength) * _seperation) / 2);
         for (int i = 0; i < unitNumber; i++)
         {
             var pos = selectedLoc - new Vector3(_col * _seperation, 0, _row * _seperation);
             _col += 1;
-            if (_col == _colLength)
+            if (_col == _rowLength)
             {
                 _col = 0;
                 _row += 1;
@@ -184,8 +184,8 @@ public class SelectObject : MonoBehaviour
                 if (playerState == StateOfPlayer.UnitsSelected)
                 {
                     _clickPoint = hit.point;
-                    //CreateAndPassCommand(_units, _clickPoint);
-                    CalculateLocationInFormation(_clickPoint, _units);
+                    CreateAndPassCommand(_units, _clickPoint);
+                    //CalculateLocationInFormation(_clickPoint, _units);
                     //playerState = StateOfPlayer.Idle;
                 }
             }

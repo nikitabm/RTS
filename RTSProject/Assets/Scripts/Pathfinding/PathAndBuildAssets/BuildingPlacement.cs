@@ -21,10 +21,10 @@ public class BuildingPlacement : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.G))
-        {
-            currentBuilding = Instantiate(buildings[0]);
-        }
+        //if (Input.GetKeyUp(KeyCode.G))
+        //{
+        //    currentBuilding = Instantiate(buildings[0]);
+        //}
         Ray interactionRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit interactionInfo;
         if (Physics.Raycast(interactionRay, out interactionInfo, Mathf.Infinity))
