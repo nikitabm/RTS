@@ -10,25 +10,29 @@ public class CommandManager : MonoBehaviour, Service
     public delegate void ExecuteCommand();
     public static ExecuteCommand OnCommandExecute;
     // public Queue<Command> _allCommands = new Queue<Command>();
+
     private void Awake()
     {
         ServiceLocator.ProvideService(this);
     }
+
     private void Start()
     {
         _gm = ServiceLocator.GetService<GameManager>();
         NetworkingManager.proccessCommands += PassCommandsToUnits;
-
     }
+
     public void AddToQueue(Command c)
     {
         _commandQueue.Enqueue(c);
-        // _allCommands.Add(c);
+        if (_gm.movementWithoutNetwork) _allCommands.Add(c);
     }
+
     public void SubsribeToEvent()
     {
         PlayerController.СommandCreated += AddToQueue;
     }
+
     public void PassCommandsToUnits()
     {
         for (int i = 0; i < _allCommands.Count; i++)
@@ -42,8 +46,9 @@ public class CommandManager : MonoBehaviour, Service
             }
         }
         _allCommands.Clear();
-        //OnCommandExecute();
+        OnCommandExecute();
     }
+
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {
         PlayerCommandsData playerData = new PlayerCommandsData(turn, playerID);

@@ -224,6 +224,10 @@ public class Server : MonoBehaviour
             Debug.Log("Socket exception: " + socketException);
         }
     }
+    private void SendMessage(TcpClient c, NetworkHelper.ServerCommand command)
+    {
+
+    }
 }
 public class ServerClient
 {

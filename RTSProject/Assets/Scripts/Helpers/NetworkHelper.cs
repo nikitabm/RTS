@@ -31,4 +31,31 @@ public class NetworkHelper
     {
 
     }
+
+    public static void ServerSendCommand()
+    {
+
+    }
+
+    public static void ClientSendCommand()
+    {
+
+    }
+
+    public static void SendMessage(NetworkStream stream, string s)
+    {
+        try
+        {
+            if (stream.CanWrite)
+            {
+                string serverMessage = s;
+                byte[] serverMessageAsByteArray = Encoding.ASCII.GetBytes(serverMessage);
+                stream.Write(serverMessageAsByteArray, 0, serverMessageAsByteArray.Length);
+            }
+        }
+        catch (SocketException socketException)
+        {
+            Debug.Log("Socket exception: " + socketException);
+        }
+    }
 }

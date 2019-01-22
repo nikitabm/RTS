@@ -32,7 +32,6 @@ public class GameManager : MonoBehaviour, Service
         {
             l[i].GetComponent<UnitScript>().ID = i;
         }
-
         InitializeServices();
     }
     private void Update()

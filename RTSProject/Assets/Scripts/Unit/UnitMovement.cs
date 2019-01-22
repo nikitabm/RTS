@@ -77,13 +77,17 @@ public class UnitMovement : MonoBehaviour
     {
         if (pathSuccessful)
         {
+        //todo: i added this path length check if sth is breaking maybe its better to delete it
+            if (newPath.Length == 0) return;
             path = newPath;
             targetIndex = 0;
             RemoveUnitFromUnitManagerMovingUnitsList();
             UnitManager.instance.movingUnits.Add(this.gameObject);
+
             StopCoroutine("FollowPath");
             StartCoroutine("FollowPath");
             moveFSM = MoveFSM.move;
+
         }
     }
 
