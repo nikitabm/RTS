@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     private int _seperation = 5;
 
     public delegate void OnCommandCreated(Command m);
-    public static event OnCommandCreated СommandCreated;
+    public static event OnCommandCreated CommandCreated;
 
     public enum StateOfPlayer
     {
@@ -40,6 +40,10 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         ClickOnObjects();
+        if (Input.GetButtonDown("Escape"))
+        {
+            CreateAndPassCommand(new EmptyCommand());
+        }
     }
     private void OnGUI()
     {
@@ -210,11 +214,15 @@ public class PlayerController : MonoBehaviour
 
         Command issuedCommand;
         issuedCommand = Command.CreateCommand<MoveCommand>(temp, pos);
-        СommandCreated(issuedCommand);
+        CommandCreated(issuedCommand);
         if (ServiceLocator.GetService<GameManager>().movementWithoutNetwork)
         {
             ServiceLocator.GetService<CommandManager>().PassCommandsToUnits();
             ServiceLocator.GetService<CommandManager>()._allCommands.Clear();
         }
+    }
+    public void CreateAndPassCommand(Command c)
+    {
+        CommandCreated(c);
     }
 }

@@ -30,7 +30,7 @@ public class CommandManager : MonoBehaviour, Service
 
     public void SubsribeToEvent()
     {
-        PlayerController.СommandCreated += AddToQueue;
+        PlayerController.CommandCreated += AddToQueue;
     }
 
     public void PassCommandsToUnits()
@@ -70,4 +70,33 @@ public class CommandManager : MonoBehaviour, Service
 
         return playerData;
     }
+    #region Commands Actions
+    public void CommandExecute(Command c)
+    {
+        Debug.Log("Command execute is called for base class");
+    }
+
+    public void CommandExecute(MoveCommand c)
+    {
+        c.AssignCommand();
+        //Debug.Log(c.ToString());
+    }
+
+    public void CommandExecute(EmptyCommand c)
+    {
+        Debug.Log(c.ToString());
+    }
+
+    public void CommandExecute(BuildCommand c)
+    {
+        Debug.Log(c.ToString());
+    }
+
+    public void CommandExecute(AttackCommand c)
+    {
+        Debug.Log(c.ToString());
+    }
+
+    #endregion
+
 }

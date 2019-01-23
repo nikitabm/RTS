@@ -13,6 +13,7 @@ public class EmptyCommand : Command
 
     public override void Execute()
     {
-        Command.CommandExecute(this);
+        ServiceLocator.GetService<CommandManager>().CommandExecute(this);
+
     }
 }

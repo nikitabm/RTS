@@ -26,34 +26,6 @@ public abstract class Command
         return (T)Activator.CreateInstance(typeof(T), pAction, pPos, pAction);
     }
 
-
-    public static void CommandExecute(Command c)
-    {
-        Debug.Log("Command execute is called for base class");
-    }
-
-    public static void CommandExecute(MoveCommand c)
-    {
-        c.AssignCommand();
-        //Debug.Log(c.ToString());
-    }
-
-    public static void CommandExecute(BuildCommand c)
-    {
-        Debug.Log(c.ToString());
-    }
-
-    public static void CommandExecute(AttackCommand c)
-    {
-        Debug.Log(c.ToString());
-
-    }
-
-    public static void CommandExecute(EmptyCommand c)
-    {
-        Debug.Log(c.ToString());
-    }
-
     public virtual void Execute()
     {
     }
