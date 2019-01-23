@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour, Service
         }
         InitializeServices();
     }
+
     private void Update()
     {
         if (movementWithoutNetwork && _player == null)

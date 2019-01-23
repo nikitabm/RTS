@@ -32,12 +32,7 @@ public class NetworkHelper
 
     }
 
-    public static void ServerSendCommand()
-    {
-
-    }
-
-    public static void ClientSendCommand()
+    public static void SendCommand()
     {
 
     }

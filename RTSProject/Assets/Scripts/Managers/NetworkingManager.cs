@@ -104,6 +104,12 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         if (_cl != null)
         {
+            NetworkHelper.ServerCommand ServerCommand = (NetworkHelper.ServerCommand)Convert.ToInt32(s[0]);
+            switch (ServerCommand)
+            {
+                case (NetworkHelper.ServerCommand.NextTurn):
+                    break;
+            }
             if (s.Length > 10)
             {
                 PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
@@ -120,11 +126,6 @@ public class NetworkingManager : MonoBehaviour, Service
                 if (s == "inc")
                 {
                     turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
-                    if (turnData == null)
-                    {
-                        turnData = new PlayerCommandsData(turn + 2, _cl.id);
-                        turnData.AddCommand(new MoveCommand(new List<int> { 0, 1 }, Vector3.zero));
-                    }
                     string msg = JsonConvert.SerializeObject(turnData);
                     _cl.SendMessage(msg);
                     turn++;
@@ -176,14 +177,17 @@ public class NetworkingManager : MonoBehaviour, Service
             gameObject.AddComponent<Client>();
         }
     }
+
     public void ReconnectToServer()
     {
         _cl.ConnectToTcpServer();
     }
+
     public void ReHostServer()
     {
         _sr.RunServer();
     }
+
     public void DisconnectClient()
     {
         foreach (Client c in GetComponents<Client>())

@@ -5,6 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class AttackCommand : Command
 {
+    public Vector3 position;
+    public List<int> units;
+
     public AttackCommand(List<int> pUnits, Vector3 pPos)
     {
         units = pUnits;
@@ -13,6 +16,6 @@ public class AttackCommand : Command
     public override void PassSelfToUnit()
     {
         //TODO:
-    }    
+    }
 
 }

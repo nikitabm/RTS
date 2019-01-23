@@ -37,17 +37,24 @@ public class CommandManager : MonoBehaviour, Service
     {
         for (int i = 0; i < _allCommands.Count; i++)
         {
-            if (_allCommands[i].units != null && _allCommands[i].position != Vector3.zero)
+            if (_allCommands[i].GetType() == typeof(MoveCommand))
             {
-                for (int j = 0; j < _allCommands[i].units.Count; j++)
+                if ((_allCommands[i] as MoveCommand).units != null && (_allCommands[i] as MoveCommand).position != Vector3.zero)
                 {
-                    _gm.GetUnit(_allCommands[i].units[j]).SetCommand(_allCommands[i]);
+                    for (int j = 0; j < (_allCommands[i] as MoveCommand).units.Count; j++)
+                    {
+                        _gm.GetUnit((_allCommands[i] as MoveCommand).units[j]).SetCommand(_allCommands[i]);
+                    }
                 }
             }
         }
         _allCommands.Clear();
         OnCommandExecute();
     }
+    //public void SendCommand<T>(T pCommand) where T:Command
+    //{
+
+    //}
 
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {

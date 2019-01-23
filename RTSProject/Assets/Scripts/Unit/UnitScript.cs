@@ -85,12 +85,12 @@ public class UnitScript : MonoBehaviour, ISelectable
     {
         //float posX = (pCommand.units.IndexOf(this.ID) + 1) * _gm.formationSeparation;
 
-        float posX = (pCommand.units.IndexOf(this.ID) % _gm.rowLength) * _gm.formationSeparation;
-        float posZ = (pCommand.units.IndexOf(this.ID) / _gm.rowLength) * _gm.formationSeparation;
+        float posX = ((pCommand as MoveCommand).units.IndexOf(this.ID) % _gm.rowLength) * _gm.formationSeparation;
+        float posZ = ((pCommand as MoveCommand).units.IndexOf(this.ID) / _gm.rowLength) * _gm.formationSeparation;
 
-        Vector3 pos = pCommand.position - new Vector3(posX, 0, posZ) +
+        Vector3 pos = (pCommand as MoveCommand).position - new Vector3(posX, 0, posZ) +
             new Vector3(((_gm.rowLength * _gm.formationSeparation) / 2), 0,
-            ((pCommand.units.Count / _gm.rowLength) * _gm.formationSeparation) / 2);
+            (((pCommand as MoveCommand).units.Count / _gm.rowLength) * _gm.formationSeparation) / 2);
 
         //_currentCommand.position = pos;
         //_currentCommand.units = pCommand.units;
@@ -155,7 +155,7 @@ public class UnitScript : MonoBehaviour, ISelectable
         if (Vector3.Distance(target + _offset, transform.position) < 0.1f)
         {
             //_currentCommand = new EmptyCommand();
-            _currentCommand.position = Vector3.zero;
+            (_currentCommand as MoveCommand).position = Vector3.zero;
         }
     }
 

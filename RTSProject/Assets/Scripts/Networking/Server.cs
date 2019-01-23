@@ -51,8 +51,8 @@ public class Server : MonoBehaviour
         OnAllPlayersConnected += _lockStepManager.StartGame;
         LockStepManager.NextTurn += incTurns;
         RunServer();
-
     }
+
     public void incTurns()
     {
         SendMessage(clients[0].tcp, "inc");
@@ -119,6 +119,10 @@ public class Server : MonoBehaviour
     public void Update()
     {
         nm.serverText.text = log;
+        if (Input.GetKey(KeyCode.B))
+        {
+            //NetworkHelper.ServerSendCommand(clients[0].tcp.GetStream(), NetworkHelper.ServerCommand.PauseGame);
+        }
     }
     private void SendData()
     {

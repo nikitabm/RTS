@@ -8,11 +8,7 @@ using System;
 [System.Serializable]
 public class Command
 {
-    [SerializeField]
 
-    public Vector3 position;
-    [SerializeField]
-    public List<int> units;
 
     //TODO: maybe add data variable to indicate what building to build
 
