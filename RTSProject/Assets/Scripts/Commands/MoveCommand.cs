@@ -13,4 +13,8 @@ public class MoveCommand : Command
         units = pUnits;
         position = pPosition;
     }
+    public override void Execute()
+    {
+        Command.ActualExecute(this);
+    }
 }

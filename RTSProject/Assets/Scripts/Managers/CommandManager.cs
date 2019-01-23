@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 public class CommandManager : MonoBehaviour, Service
 {
     public Queue<Command> _commandQueue = new Queue<Command>();
-    public List<Command> _allCommands;
+    public List<Command> _allCommands = new List<Command>();
     private GameManager _gm;
     public delegate void ExecuteCommand();
     public static ExecuteCommand OnCommandExecute;
@@ -35,18 +35,20 @@ public class CommandManager : MonoBehaviour, Service
 
     public void PassCommandsToUnits()
     {
+
         for (int i = 0; i < _allCommands.Count; i++)
         {
-            if (_allCommands[i].GetType() == typeof(MoveCommand))
-            {
-                if ((_allCommands[i] as MoveCommand).units != null && (_allCommands[i] as MoveCommand).position != Vector3.zero)
-                {
-                    for (int j = 0; j < (_allCommands[i] as MoveCommand).units.Count; j++)
-                    {
-                        _gm.GetUnit((_allCommands[i] as MoveCommand).units[j]).SetCommand(_allCommands[i]);
-                    }
-                }
-            }
+            _allCommands[i].Execute();
+            //if (_allCommands[i].GetType() == typeof(MoveCommand))
+            //{
+            //    if ((_allCommands[i] as MoveCommand).units != null && (_allCommands[i] as MoveCommand).position != Vector3.zero)
+            //    {
+            //        for (int j = 0; j < (_allCommands[i] as MoveCommand).units.Count; j++)
+            //        {
+            //            _gm.GetUnit((_allCommands[i] as MoveCommand).units[j]).SetCommand(_allCommands[i]);
+            //        }
+            //    }
+            //}
         }
         _allCommands.Clear();
         OnCommandExecute();

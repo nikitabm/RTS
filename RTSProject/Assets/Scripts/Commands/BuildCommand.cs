@@ -16,8 +16,12 @@ public class BuildCommand : Command
         units = pUnits;
         position = pPosition;
     }
-    public override void PassSelfToUnit()
+    //public override void PassSelfToUnit()
+    //{
+    //    //TODO:
+    //}
+    public override void Execute()
     {
-        //TODO:
+        Command.ActualExecute(this);
     }
 }

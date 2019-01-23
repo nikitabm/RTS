@@ -13,9 +13,13 @@ public class AttackCommand : Command
         units = pUnits;
         position = pPos;
     }
-    public override void PassSelfToUnit()
-    {
-        //TODO:
-    }
+    //public override void PassSelfToUnit()
+    //{
+    //    //TODO:
+    //}
 
+    public override void Execute()
+    {
+        Command.ActualExecute(this);
+    }
 }
