@@ -41,9 +41,10 @@ public class GameManager : MonoBehaviour, Service
         }
         InitializeServices();
     }
+
     private void Start()
     {
-        ServiceLocator.GetService<CommandManager>();
+        
     }
 
     private void Update()
