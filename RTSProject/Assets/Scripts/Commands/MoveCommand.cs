@@ -15,6 +15,13 @@ public class MoveCommand : Command
     }
     public override void Execute()
     {
-        Command.ActualExecute(this);
+        Command.CommandExecute(this);
+    }
+    public void AssignCommand()
+    {
+        for (int i = 0; i < units.Count; i++)
+        {
+            ServiceLocator.GetService<GameManager>().GetUnit(units[i]).SetCommand(this);
+        }
     }
 }

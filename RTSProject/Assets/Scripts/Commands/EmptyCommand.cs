@@ -10,16 +10,9 @@ public class EmptyCommand : Command
     {
 
     }
-    //public override void PassSelfToUnit()
-    //{
-    //	//do nothing
-    //}
-    public void ActualDraw()
-    {
 
-    }
     public override void Execute()
     {
-        Command.ActualExecute(this);
+        Command.CommandExecute(this);
     }
 }

@@ -26,36 +26,35 @@ public abstract class Command
         return (T)Activator.CreateInstance(typeof(T), pAction, pPos, pAction);
     }
 
-    public virtual void PassSelfToUnit(Command c)
-    {
 
+    public static void CommandExecute(Command c)
+    {
+        Debug.Log("Command execute is called for base class");
     }
 
-    public static void ActualExecute(Command c)
+    public static void CommandExecute(MoveCommand c)
     {
-        Debug.Log("Should not happen");
+        c.AssignCommand();
+        //Debug.Log(c.ToString());
     }
-    public static void ActualExecute(MoveCommand c)
+
+    public static void CommandExecute(BuildCommand c)
     {
         Debug.Log(c.ToString());
     }
-    public static void ActualExecute(BuildCommand c)
+
+    public static void CommandExecute(AttackCommand c)
     {
         Debug.Log(c.ToString());
 
     }
-    public static void ActualExecute(AttackCommand c)
-    {
-        Debug.Log(c.ToString());
 
-    }
-    public static void ActualExecute(EmptyCommand c)
+    public static void CommandExecute(EmptyCommand c)
     {
         Debug.Log(c.ToString());
     }
 
     public virtual void Execute()
     {
-        throw new NotImplementedException();
     }
 }

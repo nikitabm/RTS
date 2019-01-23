@@ -83,7 +83,6 @@ public class UnitScript : MonoBehaviour, ISelectable
 
     public void SetCommand(Command pCommand)
     {
-        //float posX = (pCommand.units.IndexOf(this.ID) + 1) * _gm.formationSeparation;
 
         float posX = ((pCommand as MoveCommand).units.IndexOf(this.ID) % _gm.rowLength) * _gm.formationSeparation;
         float posZ = ((pCommand as MoveCommand).units.IndexOf(this.ID) / _gm.rowLength) * _gm.formationSeparation;
