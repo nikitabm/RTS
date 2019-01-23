@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HireCommand : MonoBehaviour {
+[System.Serializable]
+public class HireCommand : Command
+{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public HireCommand()
+    {
+
+    }
+
+    public override void Execute()
+    {
+        ServiceLocator.GetService<CommandManager>().CommandExecute(this);
+
+    }
 }

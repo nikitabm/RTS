@@ -9,6 +9,13 @@ public class GameManager : MonoBehaviour, Service
     public bool movementWithoutNetwork;
     public int formationSeparation;
     public int rowLength;
+    private bool _paused = false;
+    public bool GamePaused
+    {
+        get { return _paused; }
+        set { _paused = value; }
+    }
+
 
     //unused
     private List<GameObject> _teamOneUnits = new List<GameObject>();
@@ -33,6 +40,10 @@ public class GameManager : MonoBehaviour, Service
             l[i].GetComponent<UnitScript>().ID = i;
         }
         InitializeServices();
+    }
+    private void Start()
+    {
+        ServiceLocator.GetService<CommandManager>();
     }
 
     private void Update()

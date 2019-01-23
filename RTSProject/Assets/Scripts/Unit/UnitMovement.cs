@@ -7,9 +7,10 @@ public class UnitMovement : MonoBehaviour
 
 
     public Vector3 target;
-    float speed = 5f;
+    private float _currentSpeed;
+    private float _speedValue = 5.0f;
     public Vector3[] path;
-    int targetIndex;
+    private int targetIndex;
 
     public bool stopMoving;
     private Grid grid;
@@ -27,9 +28,15 @@ public class UnitMovement : MonoBehaviour
 
     void Start()
     {
+        _currentSpeed = _speedValue;
         grid = GameObject.FindGameObjectWithTag("A*").GetComponent<Grid>();
+        CommandManager.GamePause += ToggleSpeed;
     }
-
+    void ToggleSpeed()
+    {
+        if (ServiceLocator.GetService<GameManager>().GamePaused) _currentSpeed = 0;
+        else _currentSpeed = _speedValue;
+    }
     void Update()
     {
         MoveStates();
@@ -77,7 +84,7 @@ public class UnitMovement : MonoBehaviour
     {
         if (pathSuccessful)
         {
-        //todo: i added this path length check if sth is breaking maybe its better to delete it
+            //todo: i added this path length check if sth is breaking maybe its better to delete it
             if (newPath.Length == 0) return;
             path = newPath;
             targetIndex = 0;
@@ -143,7 +150,7 @@ public class UnitMovement : MonoBehaviour
                 currentWaypoint = path[targetIndex];
             }
 
-            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, _currentSpeed * Time.deltaTime);
             yield return null;
 
         }

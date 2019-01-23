@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PauseCommand : MonoBehaviour {
+[System.Serializable]
+public class PauseCommand : Command
+{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public PauseCommand()
+    {
+
+    }
+
+    public override void Execute()
+    {
+        ServiceLocator.GetService<CommandManager>().CommandExecute(this);
+
+    }
 }

@@ -9,6 +9,8 @@ public class CommandManager : MonoBehaviour, Service
     private GameManager _gm;
     public delegate void ExecuteCommand();
     public static ExecuteCommand OnCommandExecute;
+    public delegate void OnPause();
+    public static OnPause GamePause;
     // public Queue<Command> _allCommands = new Queue<Command>();
 
     private void Awake()
@@ -39,24 +41,11 @@ public class CommandManager : MonoBehaviour, Service
         for (int i = 0; i < _allCommands.Count; i++)
         {
             _allCommands[i].Execute();
-            //if (_allCommands[i].GetType() == typeof(MoveCommand))
-            //{
-            //    if ((_allCommands[i] as MoveCommand).units != null && (_allCommands[i] as MoveCommand).position != Vector3.zero)
-            //    {
-            //        for (int j = 0; j < (_allCommands[i] as MoveCommand).units.Count; j++)
-            //        {
-            //            _gm.GetUnit((_allCommands[i] as MoveCommand).units[j]).SetCommand(_allCommands[i]);
-            //        }
-            //    }
-            //}
+
         }
         _allCommands.Clear();
         OnCommandExecute();
     }
-    //public void SendCommand<T>(T pCommand) where T:Command
-    //{
-
-    //}
 
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {
@@ -93,6 +82,17 @@ public class CommandManager : MonoBehaviour, Service
     }
 
     public void CommandExecute(AttackCommand c)
+    {
+        Debug.Log(c.ToString());
+    }
+
+    public void CommandExecute(PauseCommand c)
+    {
+        _gm.GamePaused = !_gm.GamePaused;
+        GamePause();
+    }
+
+    public void CommandExecute(HireCommand c)
     {
         Debug.Log(c.ToString());
     }

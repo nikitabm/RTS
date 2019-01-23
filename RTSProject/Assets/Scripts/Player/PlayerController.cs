@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
         ClickOnObjects();
         if (Input.GetButtonDown("Escape"))
         {
-            CreateAndPassCommand(new EmptyCommand());
+            CreateAndPassCommand(new PauseCommand());
         }
     }
     private void OnGUI()
