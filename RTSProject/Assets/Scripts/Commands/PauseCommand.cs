@@ -14,6 +14,5 @@ public class PauseCommand : Command
     public override void Execute()
     {
         ServiceLocator.GetService<CommandManager>().CommandExecute(this);
-
     }
 }

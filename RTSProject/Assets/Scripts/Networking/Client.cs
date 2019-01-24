@@ -9,7 +9,6 @@ using System.Security;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Newtonsoft.Json;
 
 public class Client : MonoBehaviour
 {
@@ -80,13 +79,6 @@ public class Client : MonoBehaviour
     private void Update()
     {
         nm.ClientText.text = log;
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-
-            var turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(2, 0);
-            string msg = JsonConvert.SerializeObject(turnData);
-            SendMessage(msg);
-        }
     }
 
     private void OnApplicationQuit()

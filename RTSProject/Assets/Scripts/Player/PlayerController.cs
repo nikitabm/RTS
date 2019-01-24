@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public class PlayerController : MonoBehaviour
 {
@@ -84,7 +85,35 @@ public class PlayerController : MonoBehaviour
 
     public void ClickOnObjects()
     {
+
         if (!_enabled) return;
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Command c = new BuildCommand(5, new List<int> { 1, 2, 3, 4, 5 }, new Vector3(6, 6, 6));
+        //    var s = "0" + JsonConvert.SerializeObject(c);
+
+        //    print(s);
+
+        //    int type = int.Parse(s[0].ToString());
+        //    print(type);
+        //    switch (type)
+        //    {
+        //        case 0:
+        //            s = s.Remove(0, 1);
+        //            print(s);
+        //            BuildCommand bc = JsonConvert.DeserializeObject<BuildCommand>(s);
+        //            print(bc.action);
+        //            print(bc.position);
+        //            print(bc.units);
+        //            break;
+        //    }
+
+        //    var t = JsonConvert.DeserializeObject<BuildCommand>(s);
+        //    print(t.action);
+        //    print(t.position);
+        //    print(t.units);
+        //}
+
         if (Input.GetMouseButtonDown(0))
         {
             _mousePos = Input.mousePosition;
