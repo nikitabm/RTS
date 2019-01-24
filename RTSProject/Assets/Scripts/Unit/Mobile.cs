@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 
-public class UnitMovement : MonoBehaviour
+public class Mobile : MonoBehaviour
 {
 
 
@@ -160,21 +160,6 @@ public class UnitMovement : MonoBehaviour
         target = point;
         RemoveUnitFromUnitManagerMovingUnitsList();
         PathRequestManager.RequestPath(transform.position, target, OnPathFound);
-    }
-
-    private void GetInteraction()
-    {
-        Ray interactionRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, 1000f))
-        {
-            target = hit.point;
-            RemoveUnitFromUnitManagerMovingUnitsList();
-            PathRequestManager.RequestPath(transform.position, target, OnPathFound);
-
-            //animator.SetFloat(speedId, 3f);
-        }
     }
 
     private void RemoveUnitFromUnitManagerMovingUnitsList()

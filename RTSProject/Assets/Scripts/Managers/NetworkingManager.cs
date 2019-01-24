@@ -84,16 +84,14 @@ public class NetworkingManager : MonoBehaviour, Service
         if (playerData.PlayerID == 0)
         {
             playerOne = playerData;
-            print("playerOneData");
         }
         if (playerData.PlayerID == 1)
         {
             playerTwo = playerData;
-            print("playerTwoData");
         }
         if (playerOne != null && playerTwo != null)
         {
-            print("send data to players");
+            _sr.log += "send data to players" + Environment.NewLine;
             _sr.SendMessageToClients(JsonConvert.SerializeObject(playerTwo), JsonConvert.SerializeObject(playerOne));
             playerOne = null;
             playerTwo = null;
@@ -104,31 +102,40 @@ public class NetworkingManager : MonoBehaviour, Service
     {
         if (_cl != null)
         {
-            NetworkHelper.ServerCommand ServerCommand = (NetworkHelper.ServerCommand)Convert.ToInt32(s[0]);
-            switch (ServerCommand)
-            {
-                case (NetworkHelper.ServerCommand.NextTurn):
-                    break;
-            }
+
             if (s.Length > 10)
             {
                 PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
-                if (playerData.commands.Count > 0)
+                if (playerData.commands != null && playerData.commands.Count > 0)
+                {
                     for (int i = 0; i < playerData.commands.Count; i++)
                     {
                         ServiceLocator.GetService<CommandManager>()._allCommands.Add(playerData.commands[i]);
                     }
-                proccessCommands();
+                    proccessCommands();
+                }
             }
             else
             {
                 //TODO: change message checks
                 if (s == "inc")
                 {
-                    turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _cl.id);
+                    turnData = ServiceLocator.GetService<CommandManager>().CreateTurnData(turn + 2, _playerRef.id);
                     string msg = JsonConvert.SerializeObject(turnData);
                     _cl.SendMessage(msg);
                     turn++;
+                }
+                else if (s == "0")
+                {
+                    _playerRef.id = 0;
+                }
+                else if (s == "1")
+                {
+                    _playerRef.id = 1;
+                }
+                else
+                {
+
                 }
             }
         }
@@ -158,7 +165,6 @@ public class NetworkingManager : MonoBehaviour, Service
             host = true;
             _sr = gameObject.AddComponent<Server>();
             _cl = gameObject.AddComponent<Client>();
-            _cl.id = 0;
             CreatePlayer();
         }
     }
@@ -169,7 +175,6 @@ public class NetworkingManager : MonoBehaviour, Service
         {
             host = false;
             _cl = gameObject.AddComponent<Client>();
-            _cl.id = 1;
             CreatePlayer();
         }
         else

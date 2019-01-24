@@ -28,7 +28,7 @@ public class Server : MonoBehaviour
     private int port = 55555;
     private bool started;
     private bool AllPlayersConnected;
-    string log;
+    public string log;
 
     private bool _playersConnected;
     public delegate void ServerAcceptClient(TcpClient t, string s);
@@ -47,7 +47,7 @@ public class Server : MonoBehaviour
         clients = new List<ServerClient>();
         OnAccept += SendMessage;
         _lockStepManager = gameObject.AddComponent<LockStepManager>();
-        OnAllPlayersConnected += SendTestMsg;
+        //OnAllPlayersConnected += SendTestMsg;
         OnAllPlayersConnected += _lockStepManager.StartGame;
         LockStepManager.NextTurn += incTurns;
         RunServer();
@@ -119,10 +119,6 @@ public class Server : MonoBehaviour
     public void Update()
     {
         nm.serverText.text = log;
-        if (Input.GetKey(KeyCode.B))
-        {
-            //NetworkHelper.ServerSendCommand(clients[0].tcp.GetStream(), NetworkHelper.ServerCommand.PauseGame);
-        }
     }
     private void SendData()
     {
@@ -184,7 +180,6 @@ public class Server : MonoBehaviour
                 {
                     //?
                     length = clients[i].tcp.GetStream().Read(bytes, 0, bytes.Length);
-                    print("here");
                     var incommingData = new byte[length];
                     Array.Copy(bytes, 0, incommingData, 0, length);
                     string clientMessage = Encoding.ASCII.GetString(incommingData);

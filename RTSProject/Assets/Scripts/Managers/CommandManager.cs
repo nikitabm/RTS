@@ -44,13 +44,12 @@ public class CommandManager : MonoBehaviour, Service
 
         }
         _allCommands.Clear();
-        OnCommandExecute();
+        //OnCommandExecute();
     }
 
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
     {
         PlayerCommandsData playerData = new PlayerCommandsData(turn, playerID);
-        playerData.AddCommand(new MoveCommand(new List<int> { }, Vector3.zero));
         while (_commandQueue.Count != 0)
         {
             _allCommands.Add(_commandQueue.Peek());

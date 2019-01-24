@@ -62,23 +62,6 @@ public class PlayerController : MonoBehaviour
         return _clickPoint;
     }
 
-    public void CalculateLocationInFormation(Vector3 point, List<GameObject> units)
-    {
-        var selectedLoc = point - new Vector3((_rowLength / 2) * _seperation, 0, ((units.Count / _rowLength) * _seperation) / 2);
-        for (int i = 0; i < units.Count; i++)
-        {
-            var pos = selectedLoc + new Vector3(_col * _seperation, 0, _row * _seperation);
-            _col += 1;
-            if (_col == _rowLength)
-            {
-                _col = 0;
-                _row += 1;
-            }
-        }
-        _col = 0;
-        _row = 0;
-    }
-
     public void CalculateLocationInFormation(Vector3 point, List<Unit> units)
     {
         var selectedLoc = point - new Vector3((_rowLength / 2) * _seperation, 0, ((units.Count / _rowLength) * _seperation) / 2);
@@ -91,33 +74,12 @@ public class PlayerController : MonoBehaviour
                 _col = 0;
                 _row += 1;
             }
-            var unit = units[i].gameObject.GetComponent<UnitMovement>();
+            var unit = units[i].gameObject.GetComponent<Mobile>();
             unit.SetWalkabilityOfCurrentNode(true);
             unit.RequestPath(pos);
         }
         _col = 0;
         _row = 0;
-    }
-
-    public void CalculateLocationInFormation(Vector3 point, int unitNumber)
-    {
-        var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        go.transform.position = point;
-        var selectedLoc = point - new Vector3((_rowLength / 2) * _seperation, 0, ((unitNumber / _rowLength) * _seperation) / 2);
-        for (int i = 0; i < unitNumber; i++)
-        {
-            var pos = selectedLoc - new Vector3(_col * _seperation, 0, _row * _seperation);
-            _col += 1;
-            if (_col == _rowLength)
-            {
-                _col = 0;
-                _row += 1;
-            }
-
-        }
-        _col = 0;
-        _row = 0;
-
     }
 
     public void ClickOnObjects()

@@ -22,7 +22,7 @@ public class Unit : MonoBehaviour, ISelectable
     public Material SelectMaterial;
     public Material DeselectMaterial;
     public int ID;
-    private UnitMovement _unitMovement;
+    private Mobile _unitMovement;
 
 
     public Command CurrentCommand
@@ -46,7 +46,7 @@ public class Unit : MonoBehaviour, ISelectable
 
     private void Start()
     {
-        _unitMovement = GetComponent<UnitMovement>();
+        _unitMovement = GetComponent<Mobile>();
         _gm = ServiceLocator.GetService<GameManager>();
         _gm.AddUnit(ID, this);
         CommandManager.OnCommandExecute += ExecuteCurrentCommand;
