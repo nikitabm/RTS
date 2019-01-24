@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private List<UnitScript> _units = new List<UnitScript>();
+    private List<Unit> _units = new List<Unit>();
 
     private Vector3 _clickPoint = Vector3.zero;
     private Vector3 _mousePos;
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
         _row = 0;
     }
 
-    public void CalculateLocationInFormation(Vector3 point, List<UnitScript> units)
+    public void CalculateLocationInFormation(Vector3 point, List<Unit> units)
     {
         var selectedLoc = point - new Vector3((_rowLength / 2) * _seperation, 0, ((units.Count / _rowLength) * _seperation) / 2);
         for (int i = 0; i < units.Count; i++)
@@ -133,15 +133,15 @@ public class PlayerController : MonoBehaviour
                 GameObject obj = hit.transform.gameObject;
                 if (obj.GetComponent(typeof(ISelectable)) != null)
                 {
-                    foreach (UnitScript u in _units)
+                    foreach (Unit u in _units)
                     {
                         u.Deselect();
                     }
                     _units.Clear();
-                    var unit = obj.transform.gameObject.GetComponent<UnitScript>();
+                    var unit = obj.transform.gameObject.GetComponent<Unit>();
                     _units.Add(unit);
 
-                    foreach (UnitScript u in _units)
+                    foreach (Unit u in _units)
                     {
                         u.Select();
                     }
@@ -204,7 +204,7 @@ public class PlayerController : MonoBehaviour
         return viewportBounds.Contains(camera.WorldToViewportPoint(t.position));
     }
 
-    public void CreateAndPassCommand(List<UnitScript> pUnits, Vector3 pos)
+    public void CreateAndPassCommand(List<Unit> pUnits, Vector3 pos)
     {
         List<int> temp = new List<int>();
         foreach (var unit in pUnits)

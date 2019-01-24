@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour, Service
     //unused
     private List<GameObject> _teamOneUnits = new List<GameObject>();
     private List<GameObject> _teamTwoUnits = new List<GameObject>();
-    private Dictionary<int, UnitScript> _units = new Dictionary<int, UnitScript>();
-    public Dictionary<int, UnitScript> Units
+    private Dictionary<int, Unit> _units = new Dictionary<int, Unit>();
+    public Dictionary<int, Unit> Units
     {
         get { return _units; }
     }
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour, Service
         }
         for (int i = 0; i < l.Count; i++)
         {
-            l[i].GetComponent<UnitScript>().ID = i;
+            l[i].GetComponent<Unit>().ID = i;
         }
         InitializeServices();
     }
@@ -55,11 +55,11 @@ public class GameManager : MonoBehaviour, Service
         }
     }
 
-    public void AddUnit(int id, UnitScript pUnit)
+    public void AddUnit(int id, Unit pUnit)
     {
         _units[id] = pUnit;
     }
-    public UnitScript GetUnit(int id)
+    public Unit GetUnit(int id)
     {
         return _units[id];
     }
