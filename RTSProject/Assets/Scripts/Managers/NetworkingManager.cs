@@ -80,30 +80,30 @@ public class NetworkingManager : MonoBehaviour, Service
 
     public void DecodeServerMessage(string s)
     {
-        PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
-        if (playerData.PlayerID == 0)
-        {
-            playerOne = playerData;
-        }
-        if (playerData.PlayerID == 1)
-        {
-            playerTwo = playerData;
-        }
-        if (playerOne != null && playerTwo != null)
-        {
-            _sr.log += "send data to players" + Environment.NewLine;
-            _sr.SendMessageToClients(JsonConvert.SerializeObject(playerTwo), JsonConvert.SerializeObject(playerOne));
-            playerOne = null;
-            playerTwo = null;
+        //PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
+        //if (playerData.PlayerID == 0)
+        //{
+        //    playerOne = playerData;
+        //}
+        //if (playerData.PlayerID == 1)
+        //{
+        //    playerTwo = playerData;
+        //}
+        //if (playerOne != null && playerTwo != null)
+        //{
+        //    _sr.log += "send data to players" + Environment.NewLine;
+        //    _sr.SendMessageToClients(JsonConvert.SerializeObject(playerTwo), JsonConvert.SerializeObject(playerOne));
+        //    playerOne = null;
+        //    playerTwo = null;
 
-        }
+        //}
     }
     public void DecodeMessage(string s)
     {
         if (_cl != null)
         {
 
-            if (s.Length > 10)
+            if (s.Length > 5)
             {
                 PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
                 if (playerData.commands != null && playerData.commands.Count > 0)

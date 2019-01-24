@@ -55,7 +55,7 @@ public class CommandManager : MonoBehaviour, Service
             _allCommands.Add(_commandQueue.Peek());
             playerData.AddCommand(_commandQueue.Dequeue());
         }
-
+        playerData.AddCommand(new BuildCommand(5, new List<int> { 1, 2, 3 }, Vector3.zero));
         return playerData;
     }
     #region Commands Actions
