@@ -1,20 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour, Service
 {
     public GameObject TeamOneController;
     public GameObject TeamTwoController;
+    public GameObject BuildingsRoot;
     public bool movementWithoutNetwork;
     public int formationSeparation;
     public int rowLength;
-    private bool _paused = false;
     public bool GamePaused
     {
         get { return _paused; }
         set { _paused = value; }
     }
+    private bool _paused = false;
 
 
     //unused
@@ -44,7 +46,10 @@ public class GameManager : MonoBehaviour, Service
 
     private void Start()
     {
-        
+        for (int i = 0; i < BuildingsRoot.GetComponentsInChildren<Button>().Length; i++)
+        {
+            BuildingsRoot.GetComponentsInChildren<Button>()[i].GetComponent<Button>().interactable = false;
+        }
     }
 
     private void Update()

@@ -85,33 +85,7 @@ public class PlayerController : MonoBehaviour
 
     public void ClickOnObjects()
     {
-
-        if (!_enabled) return;
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //var s = "0" + JsonConvert.SerializeObject(c);
-
-        //print(s);
-
-        //int type = int.Parse(s[0].ToString());
-        //print(type);
-        //switch (type)
-        //{
-        //    case 0:
-        //        s = s.Remove(0, 1);
-        //        print(s);
-        //        BuildCommand bc = JsonConvert.DeserializeObject<BuildCommand>(s);
-        //        print(bc.action);
-        //        print(bc.position);
-        //        print(bc.units);
-        //        break;
-        //}
-
-        //var t = JsonConvert.DeserializeObject<BuildCommand>(s);
-        //print(t.action);
-        //print(t.position);
-        //print(t.units);
-        //}
+        if (!_enabled) return;      
 
         if (Input.GetMouseButtonDown(0))
         {

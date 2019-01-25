@@ -55,11 +55,13 @@ public class Unit : MonoBehaviour, ISelectable
 
     public void Select()
     {
+        _selected = true;
         GetComponent<Renderer>().material = SelectMaterial;
     }
 
     public void Deselect()
     {
+        _selected = false;
         GetComponent<Renderer>().material = DeselectMaterial;
     }
 
