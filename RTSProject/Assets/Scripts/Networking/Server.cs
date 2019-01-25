@@ -119,6 +119,12 @@ public class Server : MonoBehaviour
     public void Update()
     {
         nm.serverText.text = log;
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    var data = new PlayerCommandsData(3000, 1000);
+        //    data.AddCommand(new BuildCommand(5, new List<int> { 1, 2, 3, 4 }, new Vector3(4, 4, 4)));
+        //    SendMessage(clients[0].tcp, Newtonsoft.Json.JsonConvert.SerializeObject(data));
+        //}
     }
     private void SendData()
     {

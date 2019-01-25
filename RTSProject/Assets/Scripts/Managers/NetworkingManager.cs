@@ -106,13 +106,50 @@ public class NetworkingManager : MonoBehaviour, Service
             if (s.Length > 5)
             {
                 PlayerCommandsData playerData = JsonConvert.DeserializeObject<PlayerCommandsData>(s);
-                if (playerData.commands != null && playerData.commands.Count > 0)
+                if (playerData.commands != null)
                 {
                     for (int i = 0; i < playerData.commands.Count; i++)
                     {
-                        ServiceLocator.GetService<CommandManager>()._allCommands.Add(playerData.commands[i]);
+                        int type = int.Parse(playerData.commands[i][0].ToString());
+                        string lCommand = playerData.commands[i].Remove(0, 1);
+                        print(playerData.commands[i]);
+                        switch (type)
+                        {
+                            case 0:
+                                AttackCommand c = JsonConvert.DeserializeObject<AttackCommand>(lCommand);
+                                ServiceLocator.GetService<CommandManager>().allCommands.Add(c);
+                                break;
+                            case 1:
+                                BuildCommand bc = JsonConvert.DeserializeObject<BuildCommand>(lCommand);
+                                ServiceLocator.GetService<CommandManager>().allCommands.Add(bc);
+                                print(ServiceLocator.GetService<CommandManager>().allCommands.Count);
+
+                                break;
+                            case 2:
+                                HireCommand hc = JsonConvert.DeserializeObject<HireCommand>(lCommand);
+                                ServiceLocator.GetService<CommandManager>().allCommands.Add(hc);
+
+                                break;
+                            case 3:
+                                PauseCommand pc = JsonConvert.DeserializeObject<PauseCommand>(lCommand);
+                                ServiceLocator.GetService<CommandManager>().allCommands.Add(pc);
+
+                                break;
+                            case 4:
+                                MoveCommand mc = JsonConvert.DeserializeObject<MoveCommand>(lCommand);
+                                ServiceLocator.GetService<CommandManager>().allCommands.Add(mc);
+
+                                break;
+                            case 5:
+                                EmptyCommand ec = JsonConvert.DeserializeObject<EmptyCommand>(lCommand);
+                                ServiceLocator.GetService<CommandManager>().allCommands.Add(ec);
+                                break;
+                        }
+                        //Command c = (Command)JsonConvert.DeserializeObject(playerData.commands[i],
+                        //    CommandManager.commandTypes[type].GetType());
+
                     }
-                    proccessCommands();
+                    //proccessCommands();
                 }
             }
             else

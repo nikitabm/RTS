@@ -10,7 +10,6 @@ public class ServiceLocator : MonoBehaviour
 
     public static Service GetService(Type type)
     {
-
         return _services.Find(s => s.GetType() == type);
     }
     public static T GetService<T>() where T : Service

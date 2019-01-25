@@ -7,25 +7,27 @@ using Newtonsoft.Json;
 public class PlayerCommandsData
 {
 
-    public int PlayerID { get; set; }
+    public int PlayerID;
 
-    public int Turn { get; set; }
-    public List<Command> commands { get; set; }
-
+    public int Turn;
+    public List<string> commands;
     public PlayerCommandsData(int pTurn, int pPlayerID)
     {
-        commands = new List<Command>();
+        commands = new List<string>();
         Turn = pTurn;
         PlayerID = pPlayerID;
     }
 
     public void AddCommand(Command c)
     {
-        commands.Add(c);
+        commands.Add(ConvertCommandToString(c));
     }
 
-    public void AddCommand(MoveCommand c)
+    public string ConvertCommandToString(Command c)
     {
-        commands.Add(c);
+        string s = "";
+        s += CommandManager.commandTypes.IndexOf(c.GetType());
+        s += JsonConvert.SerializeObject(c);
+        return s;
     }
 }

@@ -145,6 +145,7 @@ public class Client : MonoBehaviour
                     Array.Copy(bytes, 0, incommingData, 0, length);
                     string serverMessage = Encoding.ASCII.GetString(incommingData);
                     log += "server message received as: " + serverMessage + Environment.NewLine;
+                    print(serverMessage);
                     OnMessageReceived(serverMessage);
                 }
             }
