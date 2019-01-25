@@ -202,7 +202,7 @@ public class PlayerController : MonoBehaviour
             temp.Add(unit.ID);
         }
 
-        Command issuedCommand;
+        MoveCommand issuedCommand;
         issuedCommand = Command.CreateCommand<MoveCommand>(temp, pos);
         CommandCreated(issuedCommand);
         if (ServiceLocator.GetService<GameManager>().movementWithoutNetwork)

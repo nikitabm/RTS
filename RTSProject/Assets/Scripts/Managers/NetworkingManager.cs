@@ -149,7 +149,7 @@ public class NetworkingManager : MonoBehaviour, Service
                         //    CommandManager.commandTypes[type].GetType());
 
                     }
-                    //proccessCommands();
+                    proccessCommands();
                 }
             }
             else
