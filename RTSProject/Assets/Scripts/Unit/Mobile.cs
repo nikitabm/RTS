@@ -30,7 +30,7 @@ public class Mobile : MonoBehaviour
     {
         _currentSpeed = _speedValue;
         grid = GameObject.FindGameObjectWithTag("A*").GetComponent<Grid>();
-        CommandManager.GamePause += ToggleSpeed;
+        CommandManager.GamePaused += ToggleSpeed;
     }
     void ToggleSpeed()
     {

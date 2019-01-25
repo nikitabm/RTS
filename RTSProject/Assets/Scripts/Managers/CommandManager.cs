@@ -9,10 +9,10 @@ public class CommandManager : MonoBehaviour, Service
     public Queue<Command> _commandQueue = new Queue<Command>();
     public List<Command> allCommands = new List<Command>();
     private GameManager _gm;
-    public delegate void ExecuteCommand();
-    public static ExecuteCommand OnCommandExecute;
-    public delegate void OnPause();
-    public static OnPause GamePause;
+    public delegate void ExecutingCommand();
+    public static ExecutingCommand CommandExecuted;
+    public delegate void GamePausing();
+    public static GamePausing GamePaused;
     // public Queue<Command> _allCommands = new Queue<Command>();
 
     private void Awake()
@@ -33,7 +33,7 @@ public class CommandManager : MonoBehaviour, Service
     private void Start()
     {
         _gm = ServiceLocator.GetService<GameManager>();
-        NetworkingManager.proccessCommands += PassCommandsToUnits;
+        NetworkingManager.ProccessedCommands += PassCommandsToUnits;
     }
 
     public void AddToQueue(Command c)
@@ -103,7 +103,7 @@ public class CommandManager : MonoBehaviour, Service
     public void CommandExecute(PauseCommand c)
     {
         _gm.GamePaused = !_gm.GamePaused;
-        GamePause();
+        GamePaused();
     }
 
     public void CommandExecute(HireCommand c)

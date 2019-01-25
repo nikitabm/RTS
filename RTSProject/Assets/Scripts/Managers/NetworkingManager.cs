@@ -25,8 +25,8 @@ public class NetworkingManager : MonoBehaviour, Service
     PlayerCommandsData playerTwo;
     public PlayerCommandsData newData;
     PlayerCommandsData turnData;
-    public delegate void OnProccessCommands();
-    public static OnProccessCommands proccessCommands;
+    public delegate void ProccessingCommands();
+    public static ProccessingCommands ProccessedCommands;
 
 
     private Client _cl;
@@ -149,7 +149,7 @@ public class NetworkingManager : MonoBehaviour, Service
                         //    CommandManager.commandTypes[type].GetType());
 
                     }
-                    proccessCommands();
+                    ProccessedCommands();
                 }
             }
             else

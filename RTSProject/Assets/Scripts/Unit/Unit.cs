@@ -49,7 +49,7 @@ public class Unit : MonoBehaviour, ISelectable
         _unitMovement = GetComponent<Mobile>();
         _gm = ServiceLocator.GetService<GameManager>();
         _gm.AddUnit(ID, this);
-        CommandManager.OnCommandExecute += ExecuteCurrentCommand;
+        CommandManager.CommandExecuted += ExecuteCurrentCommand;
     }
 
 

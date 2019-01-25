@@ -19,8 +19,8 @@ public class PlayerController : MonoBehaviour
     private int _row;
     private int _seperation = 5;
 
-    public delegate void OnCommandCreated(Command m);
-    public static event OnCommandCreated CommandCreated;
+    public delegate void OnCommandCreating(Command m);
+    public static event OnCommandCreating CommandCreated;
 
     public enum StateOfPlayer
     {

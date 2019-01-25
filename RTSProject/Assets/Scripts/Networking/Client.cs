@@ -28,8 +28,8 @@ public class Client : MonoBehaviour
     public bool readyToTurnWheel;
     public bool myDataConfirmed;
     NetworkingManager nm;
-    public delegate void MessageReceived(string s);
-    public static event MessageReceived OnMessageReceived;
+    public delegate void MessageReceiving(string s);
+    public static event MessageReceiving MessageReceived;
     string log;
     public enum TurnState
     {
@@ -73,7 +73,7 @@ public class Client : MonoBehaviour
         _clientState = ClientState.none;
         nm = ServiceLocator.GetService<NetworkingManager>();
         ConnectToTcpServer();
-        OnMessageReceived += nm.DecodeMessage;
+        MessageReceived += nm.DecodeMessage;
     }
 
     private void Update()
@@ -146,7 +146,7 @@ public class Client : MonoBehaviour
                     string serverMessage = Encoding.ASCII.GetString(incommingData);
                     log += "server message received as: " + serverMessage + Environment.NewLine;
                     print(serverMessage);
-                    OnMessageReceived(serverMessage);
+                    MessageReceived(serverMessage);
                 }
             }
             catch (SocketException socketException)

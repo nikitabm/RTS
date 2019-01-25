@@ -27,28 +27,27 @@ public class Server : MonoBehaviour
 
     private int port = 55555;
     private bool started;
-    private bool AllPlayersConnected;
     public string log;
 
     private bool _playersConnected;
-    public delegate void ServerAcceptClient(TcpClient t, string s);
-    public static event ServerAcceptClient OnAccept;
+    public delegate void ServerAcceptingClient(TcpClient t, string s);
+    public static event ServerAcceptingClient ClientAccepted;
 
-    public delegate void BothPlayersConnected();
-    public static event BothPlayersConnected OnAllPlayersConnected;
-    public delegate void ReceivedMessage(string s);
-    public static event ReceivedMessage OnMessageReceive;
+    public delegate void AllPlayersConnecting();
+    public static event AllPlayersConnecting AllPlayersConnected;
+    public delegate void ReceivingMessage(string s);
+    public static event ReceivingMessage MessageReceived;
     NetworkingManager nm;
 
     void Start()
 
     {
-        OnMessageReceive += ServiceLocator.GetService<NetworkingManager>().DecodeServerMessage;
+        MessageReceived += ServiceLocator.GetService<NetworkingManager>().DecodeServerMessage;
         clients = new List<ServerClient>();
-        OnAccept += SendMessage;
+        ClientAccepted += SendMessage;
         _lockStepManager = gameObject.AddComponent<LockStepManager>();
         //OnAllPlayersConnected += SendTestMsg;
-        OnAllPlayersConnected += _lockStepManager.StartGame;
+        AllPlayersConnected += _lockStepManager.StartGame;
         LockStepManager.NextTurn += incTurns;
         RunServer();
     }
@@ -141,11 +140,11 @@ public class Server : MonoBehaviour
                 print("Server registered client to client list");
                 log += "registered client to client list, client count: " + clients.Count + Environment.NewLine;
                 print(clients.Count);
-                OnAccept(client, clients.IndexOf(cl).ToString());
+                ClientAccepted(client, clients.IndexOf(cl).ToString());
                 if (clients.Count == 2)
                 {
                     _playersConnected = true;
-                    OnAllPlayersConnected();
+                    AllPlayersConnected();
                 }
             }
 
@@ -191,7 +190,7 @@ public class Server : MonoBehaviour
                     string clientMessage = Encoding.ASCII.GetString(incommingData);
                     string s = "server receives msg from client # " + i + ": " + clientMessage;
                     log += s + Environment.NewLine;
-                    OnMessageReceive(clientMessage);
+                    MessageReceived(clientMessage);
                 }
             }
         }
