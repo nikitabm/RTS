@@ -1337,6 +1337,11 @@ Prefab:
       propertyPath: rowLength
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 114932851466687554, guid: b9c79891c29be5542b82b8fb95641a0f,
+        type: 2}
+      propertyPath: BuildingsRoot
+      value: 
+      objectReference: {fileID: 1128194375}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9c79891c29be5542b82b8fb95641a0f, type: 2}
   m_IsPrefabAsset: 0
@@ -1666,6 +1671,11 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e9c461f55ac3f74bbdbc01e1ea15cee, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &1128194375 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1126192197986208, guid: 4788af2afd431fd4eb659ffd7f81bc77,
+    type: 2}
+  m_PrefabInternal: {fileID: 2028734161}
 --- !u!1001 &1160778979
 Prefab:
   m_ObjectHideFlags: 0
