@@ -85,7 +85,15 @@ public class PlayerController : MonoBehaviour
 
     public void ClickOnObjects()
     {
-        if (!_enabled) return;      
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            CreateAndPassCommand(new MoveCommand(new List<int> { 1, 2, 3, 4, 5 }, new Vector3(3, 8, 2)));
+            CreateAndPassCommand(new MoveCommand(new List<int> { 1, 9 }, new Vector3(5, 8, 10)));
+            CreateAndPassCommand(new BuildCommand(5, new List<int> { 10 }, new Vector3(4, 3, 1)));
+
+            print(JsonConvert.SerializeObject(ServiceLocator.GetService<CommandManager>().CreateTurnData(3, 0)));
+        }
+        if (!_enabled) return;
 
         if (Input.GetMouseButtonDown(0))
         {

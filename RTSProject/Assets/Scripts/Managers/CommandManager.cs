@@ -56,7 +56,6 @@ public class CommandManager : MonoBehaviour, Service
 
         }
         allCommands.Clear();
-        //OnCommandExecute();
     }
 
     public PlayerCommandsData CreateTurnData(int turn, int playerID)
@@ -67,12 +66,11 @@ public class CommandManager : MonoBehaviour, Service
             allCommands.Add(_commandQueue.Peek());
             playerData.AddCommand(_commandQueue.Dequeue());
         }
-        //playerData.AddCommand(new BuildCommand(5, new List<int> { 1, 2, 3 }, Vector3.zero));
         return playerData;
     }
 
 
-    #region Commands Actions
+    #region Commands Logic
 
     public void CommandExecute(Command c)
     {
@@ -82,7 +80,6 @@ public class CommandManager : MonoBehaviour, Service
     public void CommandExecute(MoveCommand c)
     {
         c.AssignCommand();
-        //Debug.Log(c.ToString());
     }
 
     public void CommandExecute(EmptyCommand c)
